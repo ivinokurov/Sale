@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "closure #3 in MobileCashboxViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Products.productsCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MobileCashboxViewController.updateSearchResults(for:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "filteredProductNames">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in MobileCashboxViewController.showPurchaseView():MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "navigationBarHeight">
+            </PersistentString>
+            <PersistentString
+               value = "self.navigationController?.navigationBar.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MobileCashboxViewController.purchaseProduct(_:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.purchasedProductNames">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MobileCashboxViewController.viewDidLoad():MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationBarHeight">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MobileCashboxViewController.viewWillAppear(_:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "selectedProductRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in MobileCashboxViewController.updateSearchResults(for:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.searchController.searchBar.text!.lowercased()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
