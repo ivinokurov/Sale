@@ -38,7 +38,13 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     let showPurchaseViewImage = UIImage(named: "ArrowsLeft")
     let hidePurchaseViewImage = UIImage(named: "ArrowsRight")
     
+    var getFromScaner: Bool = false
+    
     var selectedProductRow: Int?
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.landscape
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +53,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationItem.rightBarButtonItem = selectBuildingButton
         self.navigationItem.rightBarButtonItem?.tintColor = .red
         
-        self.navigationBarHeight = self.searchController.searchBar.frame.height
+        self.navigationBarHeight = (self.navigationController?.navigationBar.frame.height)! + self.searchController.searchBar.frame.height + 20
         
         self.purchaseContainerView.frame.origin.x = self.view.frame.width
         self.purchaseContainerView.frame.origin.y = self.navigationBarHeight!
@@ -67,6 +73,9 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.productTypesCollectionView.dataSource = self
         self.productTypesCollectionView.delegate = self
+        
+        lib.addDelegate(self)
+        lib.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,10 +83,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func customizeSearchBar() {
-        self.navigationItem.titleView = self.searchController.searchBar
+    //    self.navigationItem.titleView = self.searchController.searchBar
+        self.navigationItem.searchController = self.searchController
         self.searchController.searchResultsUpdater = self
         self.searchController.dimsBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = false
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         self.searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         self.searchController.searchBar.tintColor = UIColor.red
         if let textfield = self.searchController.searchBar.value(forKey: "searchField") as? UITextField {
@@ -110,6 +121,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 name.lowercased().range(of: self.searchController.searchBar.text!.lowercased()) != nil
             })
         } else {
+            self.productsTableView.reloadData()
             return
         }
         self.filteredProductImages.removeAll()
@@ -134,12 +146,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    /*
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        self.productsTableView.cellForRow(at: indexPath)?.accessoryType = .none
-    }
-    */
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.productsTableView {
             if !self.searchBarIsEmpty() {
@@ -159,12 +165,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             if !self.searchBarIsEmpty() {
                 cell.productImageView.image = UIImage(named: self.filteredProductImages[indexPath.row])
                 cell.productNameLabel.text = self.filteredProductNames[indexPath.row]
-                cell.productPriceLabel.text = String(self.filteredProductPrices[indexPath.row]) + " руб/кг"
+                cell.productPriceLabel.text = String(self.filteredProductPrices[indexPath.row]) + " руб/кг(шт)"
                 cell.productBarcodeLabel.text = "Код: " + self.filteredProductBarcodes[indexPath.row]
             } else {
                 cell.productImageView.image = UIImage(named: Utilities.productImages[indexPath.row])
                 cell.productNameLabel.text = Utilities.productNames[indexPath.row]
-                cell.productPriceLabel.text = String(Utilities.productPrices[indexPath.row]) + " руб/кг"
+                cell.productPriceLabel.text = String(Utilities.productPrices[indexPath.row]) + " руб/кг(шт)"
                 cell.productBarcodeLabel.text = "Код: " + Utilities.barcodes[indexPath.row]
             }
             
@@ -179,7 +185,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             let productCount = Utilities.productsCount[self.purchasedProductNames[indexPath.row]]!
             let productPrice = self.purchasedProductPrices[indexPath.row]
             
-            cell.purchasePriceLabel.text = String(format: "%d кг × %.2f руб/кг = %.2f руб", productCount, productPrice, Double(productCount) * productPrice)
+            cell.purchasePriceLabel.text = String(format: "%d × %.2f руб/кг(шт) = %.2f руб", productCount, productPrice, Double(productCount) * productPrice)
             
             self.setCellSelectedColor(cellToSetSelectedColor: cell)
             return cell
@@ -187,11 +193,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView == self.productsTableView {
-            return 100.0
-        } else {
-            return 44.0
-        }
+        return 100.0
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -242,7 +244,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func purchaseProduct(_ sender: Any) {
         if let index = self.selectedProductRow {
-            if !self.searchBarIsEmpty() {
+            if !self.searchBarIsEmpty() && !self.getFromScaner {
                 
                 Utilities.productsCount[self.filteredProductNames[index]] = Utilities.productsCount[self.filteredProductNames[index]]! + 1
                 
@@ -251,14 +253,20 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.purchasedProductNames.append(self.filteredProductNames[index])
                     self.purchasedProductPrices.append(self.filteredProductPrices[index])
                     
-                    self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
+                    self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                 } else {
                     let purchasedIndex = self.purchasedProductNames.firstIndex(of: self.filteredProductNames[index])
-                    self.purchaseTableView.reloadRows(at: [IndexPath(row: purchasedIndex!, section: 0)], with: .fade)
+                    self.purchaseTableView.reloadData()
+                    
+               //     let scrollToIndexPath = IndexPath(row: purchasedIndex!, section: 0)
+               //     self.purchaseTableView.scrollToRow(at: scrollToIndexPath, at: UITableView.ScrollPosition.middle, animated: true)
+                    
+                    let cell = self.purchaseTableView.cellForRow(at: IndexPath(row: purchasedIndex!, section: 0))
+                    if cell != nil {
+                        self.decorateCellSelectionWhileSelect(cellToDecorate: cell!)
+                    }
                 }
-                
             } else {
-                
                 Utilities.productsCount[Utilities.productNames[index]] = Utilities.productsCount[Utilities.productNames[index]]! + 1
                 
                 if !self.purchasedProductNames.contains(Utilities.productNames[index]) {
@@ -266,17 +274,27 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.purchasedProductNames.append(Utilities.productNames[index])
                     self.purchasedProductPrices.append(Utilities.productPrices[index])
                     
-                    self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
+                    self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                 } else {
                     let purchasedIndex = self.purchasedProductNames.firstIndex(of: Utilities.productNames[index])
-                    self.purchaseTableView.reloadRows(at: [IndexPath(row: purchasedIndex!, section: 0)], with: .fade)
-                    self.decorateCellSelectionWhileSelect(cellToDecorate: self.purchaseTableView.cellForRow(at: IndexPath(row: purchasedIndex!, section: 0))!)
+                    self.purchaseTableView.reloadData()
+                    
+                //    let scrollToIndexPath = IndexPath(row: purchasedIndex!, section: 0)
+                //    self.purchaseTableView.scrollToRow(at: scrollToIndexPath, at: UITableView.ScrollPosition.middle, animated: true)
+                    
+                    let cell = self.purchaseTableView.cellForRow(at: IndexPath(row: purchasedIndex!, section: 0))
+                    if cell != nil {
+                        self.decorateCellSelectionWhileSelect(cellToDecorate: cell!)
+                    }
                 }
             }
-            self.calulateAndPrintPurchaseSumm()
         } else {
             Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Ошибка!", alertMessage: "Продукт не выбран", alertButtonHandler: nil)
         }
+        
+        self.calulateAndPrintPurchaseSumm()
+        
+        self.getFromScaner = false
     }
     
     func decorateCellSelectionWhileSelect(cellToDecorate cell: UITableViewCell) {
@@ -298,7 +316,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
         self.calulateAndPrintPurchaseSumm()
-    //    self.selectedProductRow = nil
     }
     
     func calulateAndPrintPurchaseSumm() {
@@ -312,7 +329,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         if purchaseCommonPrice != 0.0 {
             self.purchaseSummLabel.text = String(format: "ПОКУПКА НА СУММУ: %0.2f руб", purchaseCommonPrice)
         } else {
-            self.purchaseSummLabel.text = "ПОКУПКА НА СУММУ:"
+            self.purchaseSummLabel.text = "ПОКУПКА НА СУММУ: 0.0 руб"
         }
     }
     
@@ -327,7 +344,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func showPurchaseView() {
         UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseInOut, animations: { () -> Void in
             self.purchaseContainerView.frame.origin.x =  self.view.frame.width -  self.purchaseContainerView.frame.width - 36 // (self.navigationController?.navigationBar.frame.height)!
-            self.purchaseContainerView.frame.origin.y = self.navigationBarHeight! // (self.navigationController?.navigationBar.frame.height)!
+            self.purchaseContainerView.frame.origin.y = self.navigationBarHeight!
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
             self.isPurchaseViewShowed = true
@@ -337,7 +354,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func hidePurchaseView() {
         UIView.animate(withDuration: 0.8, delay: 0.0, options: .curveEaseInOut, animations: { () -> Void in
             self.purchaseContainerView.frame.origin.x = self.view.frame.width
-            self.purchaseContainerView.frame.origin.y = self.navigationBarHeight! //(self.navigationController?.navigationBar.frame.height)!
+            self.purchaseContainerView.frame.origin.y = self.navigationBarHeight!
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.showPurchaseViewImage
             self.isPurchaseViewShowed = false
@@ -345,14 +362,17 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Utilities.productCount
+    //    return Utilities.productCount
+        return Utilities.catigories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "productTypeId", for: indexPath) as! ProductTypeCollectionViewCell
         
-        let fullProductName = Utilities.productNames[indexPath.row]
-        cell.productTypeNameLabel.text = String(fullProductName[fullProductName.startIndex..<fullProductName.firstIndex(of: ".")!])
+        cell.productTypeNameLabel.text = Utilities.catigories[indexPath.row]
+        
+   //     let fullProductName = Utilities.productNames[indexPath.row]
+   //     cell.productTypeNameLabel.text = String(fullProductName[fullProductName.startIndex..<fullProductName.firstIndex(of: ".")!])
         
         self.decorateCollectionViewCell(cellToDecorate: cell)
         
@@ -380,11 +400,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
         
     @IBAction func getProductBarCode(_ sender: Any) {
-        self.onScanDown()
-    }
-    
-    func onScanDown()
-    {
         do {
             var scanMode = SCAN_MODES.MODE_SINGLE_SCAN
             try lib.barcodeGetScanMode(&scanMode)
@@ -405,6 +420,27 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func barcodeData(_ barcode: String!, type: Int32) {
-        Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Штрикод получен!", alertMessage: barcode, alertButtonHandler: nil)
+    //    Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Штрикод получен!", alertMessage: barcode, alertButtonHandler: nil)
+        
+        self.selectedProductRow = Utilities.barcodes.firstIndex(of: barcode)
+        self.getFromScaner = true
+        self.purchaseProduct(self.buyProductsButton)
+    }
+    
+    
+    @IBAction func buyProducts(_ sender: Any) {
+        Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Удаление продукта", alertMessage: "В демо версии не реализовано", alertButtonHandler: nil)
+    }
+    
+    func connectionState(_ state: Int32) {
+        do {
+            if state == CONN_STATES.CONNECTED.rawValue {
+                self.barCodeButton.isEnabled = true
+                self.barCodeButton.layer.borderColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor
+            } else {
+                self.barCodeButton.isEnabled = false
+                self.barCodeButton.layer.borderColor = UIColor.red.cgColor
+            }
+        }
     }
 }

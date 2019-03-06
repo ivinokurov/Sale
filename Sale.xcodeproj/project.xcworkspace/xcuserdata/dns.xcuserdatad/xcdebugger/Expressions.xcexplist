@@ -19,6 +19,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "CashboxViewController.viewDidLoad():CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.searchController.searchBar.frame.height">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in MobileCashboxViewController.showPurchaseView():MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
