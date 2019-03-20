@@ -24,6 +24,7 @@
 		EA4C7E2F2227C17900425BE8 /* CashboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */; };
 		EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */; };
 		EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA536B2E223F56D900919926 /* ProductsDBRules.swift */; };
+		EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */; };
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
 		EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */; };
 		EAAA59E3223D11BF0096D990 /* CategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */; };
@@ -54,6 +55,7 @@
 		EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CashboxViewController.swift; sourceTree = "<group>"; };
 		EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		EA536B2E223F56D900919926 /* ProductsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsDBRules.swift; sourceTree = "<group>"; };
+		EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDBRules.swift; sourceTree = "<group>"; };
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
 		EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSplitViewController.swift; sourceTree = "<group>"; };
 		EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */,
 				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
+				EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */,
 			);
 			path = Cashbox;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */,
 				EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */,
 				EAAA59E7223E02E10096D990 /* CategoriesDBRules.swift in Sources */,
+				EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */,
 				EAAA59E3223D11BF0096D990 /* CategoriesTableViewController.swift in Sources */,
 				EAAA59E9223E03190096D990 /* CommonDBRules.swift in Sources */,
 				EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */,

@@ -12,8 +12,13 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
+    <entity name="Purchase" representedClassName="Purchase" syncable="YES" codeGenerationType="class">
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="count" optional="YES" attributeType="Float" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Categories" positionX="-116.625" positionY="-206.8125" width="128" height="73"/>
+        <element name="Categories" positionX="-97.296875" positionY="-241.3828125" width="128" height="73"/>
         <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
+        <element name="Purchase" positionX="-60.19140625" positionY="-88.51953125" width="128" height="73"/>
     </elements>
 </model>

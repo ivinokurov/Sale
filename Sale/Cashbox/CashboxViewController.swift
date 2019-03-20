@@ -243,7 +243,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.selectedBackgroundView = bgkColorView
     }
     
-    @IBAction func purchaseProduct(_ sender: Any) {
+    @IBAction func purchaseProducts(_ sender: Any) {
         if let index = self.selectedProductRow {
             if !self.searchBarIsEmpty() && !self.getFromScaner {
                 
@@ -422,7 +422,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func barcodeData(_ barcode: String!, type: Int32) {
         self.selectedProductRow = Utilities.barcodes.firstIndex(of: barcode)
         self.getFromScaner = true
-        self.purchaseProduct(self.buyProductsButton)
+        self.purchaseProducts(self.buyProductsButton)
     
         self.productsTableView.selectRow(at: IndexPath(row: self.selectedProductRow!, section: 0), animated: true, scrollPosition: .none)
     }

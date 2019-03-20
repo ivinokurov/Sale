@@ -55,11 +55,14 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
 
     func setProductViewActionTitles() {
+        let titlePrefix = (self.getSelectedCategoryName()?.uppercased())!
         if !self.isProductEditing {
-            self.productViewTitleLabel.text = "НОВЫЙ ТОВАР"
+            self.productViewTitleLabel.text = titlePrefix +  ". НОВЫЙ ТОВАР"
+            self.productBarcodeTextField.isUserInteractionEnabled = true
             self.addOrEditProductButton.setTitle("ДОБАВИТЬ", for: .normal)
         } else {
-            self.productViewTitleLabel.text = "ИЗМЕНЕНИЕ ТОВАРА"
+            self.productViewTitleLabel.text = titlePrefix +  ". ИЗМЕНЕНИЕ ТОВАРА"
+            self.productBarcodeTextField.isUserInteractionEnabled = false
             self.addOrEditProductButton.setTitle("ИЗМЕНИТЬ", for: .normal)
         }
     }
