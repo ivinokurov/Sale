@@ -19,10 +19,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="МОБИЛЬНАЯ КАССА" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aCX-T7-bYi">
-                                <rect key="frame" x="437" y="402.5" width="246" height="29"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
+                                <rect key="frame" x="375.5" y="395.5" width="369" height="43"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="36"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="-2" height="-2"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Демонстрационная версия. 2019." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yM0-P1-wyI">
                                 <rect key="frame" x="381" y="439" width="351" height="21"/>
@@ -39,7 +40,7 @@
                             <constraint firstItem="aCX-T7-bYi" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="4" id="6pw-vr-wGT"/>
                             <constraint firstItem="aCX-T7-bYi" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="d1s-TW-dyb"/>
                             <constraint firstItem="yM0-P1-wyI" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="0.5" id="gL7-as-rDX"/>
-                            <constraint firstItem="yM0-P1-wyI" firstAttribute="top" secondItem="aCX-T7-bYi" secondAttribute="bottom" constant="8" id="loz-jd-Xpa"/>
+                            <constraint firstItem="yM0-P1-wyI" firstAttribute="top" secondItem="aCX-T7-bYi" secondAttribute="bottom" constant="0.5" id="loz-jd-Xpa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

@@ -27,8 +27,10 @@ class CategoriesTableViewController: UITableViewController {
         
         self.addNewCategoryBarItem()
         
-        self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .top)
-        self.selectedCategoryName = CategoriesDBRules.getAllCategories()![0].value(forKeyPath: "name") as? String
+        if (CategoriesDBRules.getAllCategories()?.count)! > 0 {
+            self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .top)
+            self.selectedCategoryName = CategoriesDBRules.getAllCategories()![0].value(forKeyPath: "name") as? String
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,16 +49,10 @@ class CategoriesTableViewController: UITableViewController {
     
     func addNewCategoryBarItem() {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCategoryView))
-        rightItemBarButton.tintColor = Utilities.accentColor
+        rightItemBarButton.tintColor = Utilities.barButtonItemColor
         self.navigationItem.rightBarButtonItem = rightItemBarButton
         
-        self.customizeCategoryView()
-    }
-    
-    func customizeCategoryView() {
-        self.categoryView.layer.cornerRadius = 4
-        self.categoryView.layer.borderColor = Utilities.accentColor.cgColor
-        self.categoryView.layer.borderWidth = 0.4
+        Utilities.customizePopoverView(customizedView: self.categoryView)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -102,14 +98,16 @@ class CategoriesTableViewController: UITableViewController {
         self.categoryView.alpha = 0.94
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.categoryView)
+        
+        Utilities.makeViewFlexibleAppearance(view: self.categoryView)
     }
     
     func removeCategoryView() {
-        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+        Utilities.removeOverlayView()
+        
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.categoryView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            Utilities.removeOverlayView()
-            self.categoryView.removeFromSuperview()
             self.isCategoryViewPresented = false
         })
     }
@@ -118,21 +116,23 @@ class CategoriesTableViewController: UITableViewController {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
         
-        if let newCategoryName = self.categoryNameTextField.text  {
-            if !CategoriesDBRules.isTheSameCategoryPresents(categoryName: newCategoryName) {
-                if newCategoryName != "" {
-                    if self.isCategoryEditing {
-                        let originCategoryName = CategoriesDBRules.getAllCategories()![self.swipedRowIndex!].value(forKeyPath: "name") as? String
-                        CategoriesDBRules.changeCategory(originCategoryName: originCategoryName!, newCategoryName: newCategoryName)
-                        self.isCategoryEditing = false
-                    } else {
-                        CategoriesDBRules.addNewCategory(categoryName: newCategoryName)
+        if self.checkCategoryInfo() {
+            if let newCategoryName = self.categoryNameTextField.text  {
+                if !CategoriesDBRules.isTheSameCategoryPresents(categoryName: newCategoryName) {
+                    if newCategoryName != "" {
+                        if self.isCategoryEditing {
+                            let originCategoryName = CategoriesDBRules.getAllCategories()![self.swipedRowIndex!].value(forKeyPath: "name") as? String
+                            CategoriesDBRules.changeCategory(originCategoryName: originCategoryName!, newCategoryName: newCategoryName)
+                            self.isCategoryEditing = false
+                        } else {
+                            CategoriesDBRules.addNewCategory(categoryName: newCategoryName)
+                        }
+                        self.removeCategoryView()
+                        self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                     }
-                    self.removeCategoryView()
-                    self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
+                } else {
+                    Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!", alertButtonHandler: nil)
                 }
-            } else {
-                Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует", alertButtonHandler: nil)
             }
         }
     }
@@ -140,10 +140,15 @@ class CategoriesTableViewController: UITableViewController {
     @IBAction func cancelAddOrRenameCategory(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
-        self.isCategoryEditing = false
-        self.removeCategoryView()
+        Utilities.removeOverlayView()
+        
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.categoryView.alpha = 0.0
+        }), completion: { (completed: Bool) in
+            self.isCategoryEditing = false
+        })
     }
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -163,6 +168,15 @@ class CategoriesTableViewController: UITableViewController {
         
         self.reloadProducts()
     }
+    
+    func checkCategoryInfo() -> Bool {
+        if self.categoryNameTextField.text == "" {
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "КАТЕГОРИИ", alertMessage: "Отсутствует название категории!", alertButtonHandler: nil)
+            return false
+        } else {
+            return true
+        }
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCellId", for: indexPath)
@@ -180,6 +194,7 @@ class CategoriesTableViewController: UITableViewController {
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
             let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
+                ProductsDBRules.deleteCategoryProducts(productCategory: CategoriesDBRules.getCategiryByName(categoryName: name!)!)
                 CategoriesDBRules.deleteCategory(categoryName: name!)
                 
                 self.tableView.beginUpdates()

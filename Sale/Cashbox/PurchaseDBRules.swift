@@ -9,12 +9,13 @@ import CoreData
 
 class PurchaseDBRules: Any {
     
-    class func addNewProductInPurchase(productBarCode code: String) {
+    class func addNewProductInPurchase(productName name: String, productBarcode code: String) {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let newProductInPurchase = NSEntityDescription.insertNewObject(forEntityName: "Purchase", into: viewContext!)
+            newProductInPurchase.setValue(code, forKey: "name")
             newProductInPurchase.setValue(code, forKey: "code")
-            newProductInPurchase.setValue(0.0, forKey: "count")
+            newProductInPurchase.setValue(1.0, forKey: "count")
             do {
                 try viewContext!.save()
             } catch let error as NSError {
@@ -23,10 +24,10 @@ class PurchaseDBRules: Any {
         }
     }
     
-    class func isTheSameProductPresentsInPurchase(productBarcode code: String) -> Bool {
+    class func isTheSameProductPresentsInPurchase(productBarcode barcode: String) -> Bool {
         if let allProductsInPurchase = self.getAllProductsInPurchase() {
             if allProductsInPurchase.count != 0 {
-                if allProductsInPurchase.filter ({ $0.value(forKeyPath: "code") as! String == code }).count > 0 {
+                if allProductsInPurchase.filter ({ $0.value(forKeyPath: "code") as! String == barcode }).count > 0 {
                     return true
                 }
             }
@@ -40,7 +41,7 @@ class PurchaseDBRules: Any {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
             do {
                 let allProductsInPurchase = try viewContext!.fetch(fetchRequest) as? [NSManagedObject]
-                return allProductsInPurchase?.sorted(by: {($0.value(forKeyPath: "code") as! String) < ($1.value(forKeyPath: "code") as! String)})
+                return allProductsInPurchase?.sorted(by: {($0.value(forKeyPath: "name") as! String) < ($1.value(forKeyPath: "name") as! String)})
             } catch let error as NSError {
                 NSLog("Ошибка извлечения списка товаров покупки: " + error.localizedDescription)
             }
@@ -48,7 +49,24 @@ class PurchaseDBRules: Any {
         return nil
     }
     
-    class func deleteAllProductsInPurchase() -> [NSManagedObject]? {
+    class func deleteProductInPurchaseByBarcode(productBarcode code: String) {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let productsToDelete = try viewContext!.fetch(fetchRequest) as? [NSManagedObject]
+                if productsToDelete != nil {
+                    viewContext!.delete((productsToDelete?.first)!)
+                    try viewContext!.save()
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка удаления товара из покупки: " + error.localizedDescription)
+            }
+        }
+    }
+    
+    class func deleteAllProductsInPurchase() {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
@@ -58,15 +76,35 @@ class PurchaseDBRules: Any {
                     for product in allProductsInPurchase! {
                         viewContext!.delete(product)
                     }
+                    try viewContext!.save()
                 }
             } catch let error as NSError {
                 NSLog("Ошибка удаления товаров из покупки: " + error.localizedDescription)
             }
         }
-        return nil
     }
     
-    class func changeProductInPurchaseCount(productBarcode code: String, productNewCount newCount: Float) {
+    class func updatePurchasedProductsCount() {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
+            do {
+                let allProductsInPurchase = try viewContext!.fetch(fetchRequest) as? [NSManagedObject]
+                if allProductsInPurchase != nil {
+                    for product in allProductsInPurchase! {
+                        if let productBarcode = product.value(forKey: "code") as? String {
+                            let productNewCount = ProductsDBRules.getProductsCountByBarcode(productBarcode: productBarcode)! - (product.value(forKey: "count") as? Float)!
+                            ProductsDBRules.changeProductCount(productBarcode: productBarcode, productCount: productNewCount)
+                        }
+                    }
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка обновления количества товаров после покупки: " + error.localizedDescription)
+            }
+        }
+    }
+    
+    class func addProductInPurchase(productBarcode code: String) {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
@@ -75,13 +113,76 @@ class PurchaseDBRules: Any {
                 let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
                 if fetchResult.count > 0 {
                     let product = fetchResult.first
-                    product!.setValue(newCount, forKey: "count")
+                    let productCount = product!.value(forKey: "count") as? Float
+                    product!.setValue(productCount! + 1, forKey: "count")
                     try viewContext!.save()
                 }
             } catch let error as NSError {
                 NSLog("Ошибка изменения количества товара в покупке: " + error.localizedDescription)
             }
         }
+    }
+    
+    class func getProductIndexByBarcode(productBarcode code: String) -> Int? {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return self.getAllProductsInPurchase()?.firstIndex(of: fetchResult.first!)
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка изменения количества товара в покупке: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    class func getProductsCountInPurchase(productBarcode code: String) -> Float? {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return fetchResult.first!.value(forKey: "count") as? Float
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка получения количества товара в покупке: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    class func isProductCanBeAddedToPurchase(controller: UIViewController, productBarcode code: String) -> Bool {
+        if ProductsDBRules.getProductsCountByBarcode(productBarcode: code)! - (self.getProductsCountInPurchase(productBarcode: code) ?? 0 ) > 0 {
+            return true
+        } else {
+            Utilities.showOneButtonAlert(controllerInPresented: controller, alertTitle: "ПОКУПКА", alertMessage: "Невозможно добавить этот товар в покупку!", alertButtonHandler: nil)
+            return false
+        }
+    }
+    
+    class func getPurchaseTotalPrice() -> Float {
+        var purchasePrice: Float = 0.0
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
+            do {
+                let allProductsInPurchase = try viewContext!.fetch(fetchRequest) as? [NSManagedObject]
+                if allProductsInPurchase != nil {
+                    for product in allProductsInPurchase! {
+                        purchasePrice = purchasePrice + (self.getProductsCountInPurchase(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0) * (ProductsDBRules.getProductPriceByBarcode(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0)
+                    }
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка удаления товаров из покупки: " + error.localizedDescription)
+            }
+        }
+        return purchasePrice
     }
 
 }

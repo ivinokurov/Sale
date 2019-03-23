@@ -30,7 +30,7 @@ class ProductsDBRules: Any {
         }
     }
     
-    class func getCategoryProducts(productCategory category: NSManagedObject) -> [NSManagedObject]? {
+    class func getAllProductsForCategory(productCategory category: NSManagedObject) -> [NSManagedObject]? {
         let categoryProducts = category.mutableSetValue(forKey: "products").allObjects as? [NSManagedObject]
         return (categoryProducts?.sorted(by: {($0.value(forKeyPath: "name") as! String) < ($1.value(forKeyPath: "name") as! String)}) ?? nil)
         }
@@ -46,6 +46,23 @@ class ProductsDBRules: Any {
                     viewContext!.delete(fetchResult.first!)
                     try viewContext!.save()
                 }
+            } catch let error as NSError {
+                NSLog("Ошибка удаления продукта: " + error.localizedDescription)
+            }
+        }
+    }
+    
+    class func deleteCategoryProducts(productCategory category: NSManagedObject) {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            do {
+                if self.getAllProductsForCategory(productCategory: category)?.count == 0 {
+                    return
+                }
+                for product in self.getAllProductsForCategory(productCategory: category)! {
+                    viewContext!.delete(product)
+                }
+                try viewContext!.save()
             } catch let error as NSError {
                 NSLog("Ошибка удаления продукта: " + error.localizedDescription)
             }
@@ -71,6 +88,23 @@ class ProductsDBRules: Any {
         return nil
     }
     
+    class func getProductNameByBarcode(code: String) -> String?{
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return fetchResult.first!.value(forKeyPath: "name") as? String
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка извлечения названия продукта: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
     class func getAllProducts() -> [NSManagedObject]? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
@@ -85,15 +119,33 @@ class ProductsDBRules: Any {
         return nil
     }
     
-    class func isTheSameBarcodePresents(productBarcode code: String) -> Bool {
+    class func isTheSameBarcodePresents(productBarcode barcode: String) -> Bool {
         if let allProducts = self.getAllProducts() {
             if allProducts.count != 0 {
-                if allProducts.filter ({ $0.value(forKeyPath: "code") as! String == code }).count > 0 {
+                if allProducts.filter ({ $0.value(forKeyPath: "code") as! String == barcode }).count > 0 {
                     return true
                 }
             }
         }
         return false
+    }
+    
+    class func changeProductCount(productBarcode barcode: String, productCount newCount: Float) {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [barcode])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    let product = fetchResult.first
+                    product!.setValue(newCount, forKey: "count")
+                    try viewContext!.save()
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка изменения количества товара: " + error.localizedDescription)
+            }
+        }
     }
     
     class func changeProduct(originBarcode originCode: String, productNewName newName: String, productNewDesc newDesc: String, productNewCount newCount: Float, productNewMeasure newMeasure: Int16, productNewPrice newPrice: Float, productNewBarcode newCode: String) {
@@ -120,12 +172,68 @@ class ProductsDBRules: Any {
     }
     
     class func filterProductsByName(productName name: String, productCategory category: NSManagedObject) -> [NSManagedObject]? {
-        if let allProducts = self.getCategoryProducts(productCategory: category) {
+        if let allProducts = self.getAllProductsForCategory(productCategory: category) {
             return allProducts.filter({(product: NSManagedObject) -> Bool in
                 (product.value(forKeyPath: "name") as? String)!.lowercased().range(of: name.lowercased()) != nil
             })
         }
         return nil
+    }
+    
+    class func getProductsCountByBarcode(productBarcode barcode: String) -> Float? {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [barcode])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return fetchResult.first!.value(forKeyPath: "count") as? Float
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка извлечения количества продукта: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    class func getProductPriceByBarcode(productBarcode barcode: String) -> Float? {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [barcode])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return fetchResult.first!.value(forKeyPath: "price") as? Float
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка извлечения цены продукта: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    class func getProductMeasure(product: NSManagedObject) -> String {
+        let measure: Int = Int((product.value(forKeyPath: "measure") as? Int16)!)
+    
+        var measureTail: String!
+        switch measure {
+            case Utilities.measures.items.rawValue:
+            do {
+                measureTail = " шт."
+            }
+            case Utilities.measures.kilos.rawValue:
+            do {
+                measureTail = " кг."
+            }
+            case Utilities.measures.liters.rawValue:
+            do {
+                measureTail = " л."
+            }
+            default: break
+        }
+        return measureTail
     }
 }
 

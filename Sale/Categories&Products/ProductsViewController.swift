@@ -29,7 +29,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     var isProductViewPresented: Bool = false
     var isProductEditing: Bool = false
     var swipedRowIndex: Int? = nil
-    var selcctedProductMeasure: Int = Utilities.measures.items.rawValue
+    var selectedProductMeasure: Int = Utilities.measures.items.rawValue
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,17 +89,17 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         case Utilities.measures.items.rawValue:
             do {
                 self.itemsButton.setImage(UIImage(named: "Check"), for: .normal)
-                self.selcctedProductMeasure = Utilities.measures.items.rawValue
+                self.selectedProductMeasure = Utilities.measures.items.rawValue
             }
         case Utilities.measures.kilos.rawValue:
             do {
                 self.kilosButton.setImage(UIImage(named: "Check"), for: .normal)
-                self.selcctedProductMeasure = Utilities.measures.kilos.rawValue
+                self.selectedProductMeasure = Utilities.measures.kilos.rawValue
             }
         case Utilities.measures.liters.rawValue:
             do {
                 self.litersButton.setImage(UIImage(named: "Check"), for: .normal)
-                self.selcctedProductMeasure = Utilities.measures.liters.rawValue
+                self.selectedProductMeasure = Utilities.measures.liters.rawValue
             }
         default: break
         }
@@ -108,35 +108,27 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     @IBAction func cancelAddOrRenameProduct(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
+        Utilities.removeOverlayView()
         
-        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.productView.alpha = 0.0
         }), completion: { (completed: Bool) in
             self.isProductViewPresented = false
             self.isProductEditing = false
-            Utilities.removeOverlayView()
         })
     }
     
     func addNewProductBarItem() {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showProductView))
-        rightItemBarButton.tintColor = Utilities.accentColor
+        rightItemBarButton.tintColor = Utilities.barButtonItemColor
         self.navigationItem.rightBarButtonItem = rightItemBarButton
-        self.customizeProductView()
-    }
-    
-    func customizeProductView() {
-        self.productView.layer.cornerRadius = 4
-        self.productView.layer.borderColor = Utilities.accentColor.cgColor
-        self.productView.layer.borderWidth = 0.4
+        Utilities.customizePopoverView(customizedView: self.productView)
     }
 
     func setProductViewFrame() {
-        let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)!
-        
-        self.productView.center.x = centerX
-        self.productView.center.y = centerY - (centerY / 2 - 2 * ((self.navigationController?.navigationBar.frame.height)!))
+        self.productView.center.x = (self.parentView?.center.x)!
+        self.productView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
     }
     
     func getSelectedCategoryName() -> String? {
@@ -147,7 +139,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     
     @objc func showProductView() {
         if self.getSelectedCategoryName() == nil {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Не выбрана категория товара", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Не выбрана категория товара!", alertButtonHandler: nil)
             return
         }
         
@@ -175,13 +167,16 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.productView)
+        
+        Utilities.makeViewFlexibleAppearance(view: self.productView)
     }
     
     func removeProductView() {
-        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+        Utilities.removeOverlayView()
+        
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.productView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            Utilities.removeOverlayView()
             self.isProductViewPresented = false
         })
     }
@@ -209,26 +204,30 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: self.getSelectedCategoryName()!)
             
             let newName = self.productNameTextField.text!
-            let newDesc = self.productDescTextField.text == "" ? "Без описания" : self.productDescTextField.text!
+            let newDesc = self.productDescTextField.text!
             let newPrice = Float(self.productPriceTextField.text!)!
             let newCount = Float(self.productCountTextField.text!)!
-            let newMeasure = Int16(self.selcctedProductMeasure)
+            let newMeasure = Int16(self.selectedProductMeasure)
             let newCode = self.productBarcodeTextField.text!
             
             if !self.isProductEditing {
                 if !ProductsDBRules.isTheSameBarcodePresents(productBarcode: newCode) {
                     ProductsDBRules.addNewProduct(productCategory: selectedCategory!, productName: newName, productDesc: newDesc, productCount: newCount, productMeasure: newMeasure, productPrice: newPrice, productBarCode: newCode)
                 } else {
-                    Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Товар с таким штрих кодом уже присутствует", alertButtonHandler: nil)
+                    Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Товар с таким штрих кодом уже присутствует!", alertButtonHandler: nil)
                     return
                 }
             } else {
                     let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: self.getSelectedCategoryName()!)
-                    let product = ProductsDBRules.getCategoryProducts(productCategory: selectedCategory!)?[self.swipedRowIndex!]
+                    let product = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)?[self.swipedRowIndex!]
                     let originCode = product?.value(forKey: "code") as? String
                     
                     ProductsDBRules.changeProduct(originBarcode: originCode!, productNewName: newName, productNewDesc: newDesc, productNewCount: newCount, productNewMeasure: newMeasure, productNewPrice: newPrice, productNewBarcode: newCode)
+                
+                    self.isProductEditing = false
+                    self.setProductMeasure(self.itemsButton)
                 }
+            
             self.removeProductView()
             self.productsTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
         }
@@ -237,22 +236,22 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     func checkProductInfo() -> Bool {
 
         if self.productNameTextField.text == "" {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует название товара", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует название товара!", alertButtonHandler: nil)
             return false
         }
         
         if self.productCountTextField.text == "" {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует количество товара", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует количество товара!", alertButtonHandler: nil)
             return false
         }
         
         if self.productPriceTextField.text == "" {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует цена товара", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует цена товара!", alertButtonHandler: nil)
             return false
         }
         
         if self.productBarcodeTextField.text == "" {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует штрих код товара", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует штрих код товара!", alertButtonHandler: nil)
             return false
         }
         
@@ -265,7 +264,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             if selectedCategory == nil {
                 return 0
             } else {
-                let products = ProductsDBRules.getCategoryProducts(productCategory: selectedCategory!)
+                let products = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)
                 return products?.count ?? 0
             }
         } else {
@@ -289,13 +288,13 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let code = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
+        let barcode = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
         
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
             let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
                 
-                ProductsDBRules.deleteProductByBarcode(code: code!)
+                ProductsDBRules.deleteProductByBarcode(code: barcode!)
                 
                 self.productsTableView.beginUpdates()
                 self.productsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
@@ -307,6 +306,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             success(true)
         })
         deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
+        deleteAction.image = UIImage(named: "Delete")
         
         let editAction = UIContextualAction(style: .normal, title:  "Изменить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
@@ -316,7 +316,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             
             let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: self.getSelectedCategoryName()!)
             
-            let product = ProductsDBRules.getCategoryProducts(productCategory: selectedCategory!)?[indexPath.row]
+            let product = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)?[indexPath.row]
             self.productNameTextField.text = product?.value(forKey: "name") as? String
             self.productDescTextField.text = product?.value(forKey: "desc") as? String
             self.productCountTextField.text = (product?.value(forKeyPath: "count") as? Float)?.description
@@ -334,6 +334,13 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         return UISwipeActionsConfiguration(actions: [editAction, deleteAction])
     }
+    
+    @IBAction func checkBarcodeStringLength(_ sender: UITextField) {
+        if (self.productBarcodeTextField.text!.count > 13) {
+            self.productBarcodeTextField.deleteBackward()
+        }
+    }
+    
 
 }
 
