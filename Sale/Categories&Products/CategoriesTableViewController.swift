@@ -33,22 +33,6 @@ class CategoriesTableViewController: UITableViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if self.isCategoryViewPresented {
-            self.categoryView.isHidden = false
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        if self.isCategoryViewPresented {
-            self.categoryView.isHidden = true
-        }
-    }
-    
     func setCategoryViewActionTitles() {
         if !self.isCategoryEditing {
             self.categoryViewTitleLabel.text = "НОВАЯ КАТЕГОРИЯ ТОВАРОВ"
@@ -74,10 +58,8 @@ class CategoriesTableViewController: UITableViewController {
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isCategoryViewPresented {
-                self.categoryView.alpha = 0.94
                 self.parentView?.addSubview(self.categoryView)
                 self.categoryView.center = self.getCategoriesViewCenterPoint()
-                self.categoryNameTextField.becomeFirstResponder()
             }
         })
     }
@@ -94,11 +76,11 @@ class CategoriesTableViewController: UITableViewController {
         if !self.isCategoryEditing {
             self.categoryNameTextField.text = ""
         }
-        
-        self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
+
         self.categoryView.center = self.getCategoriesViewCenterPoint()
         self.categoryView.alpha = 0.0
         self.categoryNameTextField.becomeFirstResponder()
+        self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
             
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.categoryView.alpha = 1.0
@@ -143,7 +125,7 @@ class CategoriesTableViewController: UITableViewController {
                         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                     }
                 } else {
-                    Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!", alertButtonHandler: nil)
+                    Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
                 }
             }
         }
@@ -184,7 +166,7 @@ class CategoriesTableViewController: UITableViewController {
     
     func checkCategoryInfo() -> Bool {
         if self.categoryNameTextField.text == "" {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "КАТЕГОРИИ", alertMessage: "Отсутствует название категории!", alertButtonHandler: nil)
+            Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИИ", alertMessage: "Отсутствует название категории!")
             return false
         } else {
             return true

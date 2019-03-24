@@ -18,6 +18,7 @@
 		EA0FFA63222676BF00703EB0 /* PurchaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA62222676BF00703EB0 /* PurchaseButton.swift */; };
 		EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */; };
 		EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */; };
+		EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */; };
 		EA4C7E1A2227B7C600425BE8 /* libdtdev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4C7E152227B7C600425BE8 /* libdtdev.a */; };
 		EA4C7E1F2227B80200425BE8 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4C7E1E2227B80200425BE8 /* ExternalAccessory.framework */; };
 		EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */; };
@@ -47,6 +48,7 @@
 		EA0FFA62222676BF00703EB0 /* PurchaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseButton.swift; sourceTree = "<group>"; };
 		EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarCodeButton.swift; path = Sale/Buttons/BarCodeButton.swift; sourceTree = SOURCE_ROOT; };
+		EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EA4C7E142227B7C500425BE8 /* DTDevices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTDevices.h; sourceTree = "<group>"; };
 		EA4C7E152227B7C600425BE8 /* libdtdev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdtdev.a; sourceTree = "<group>"; };
 		EA4C7E1E2227B80200425BE8 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -104,6 +106,7 @@
 				EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */,
 				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
+				EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */,
 				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
 				EA0FFA49222510AB00703EB0 /* LaunchScreen.storyboard */,
 				EA0FFA4C222510AB00703EB0 /* Info.plist */,
@@ -241,6 +244,7 @@
 			files = (
 				EA0FFA46222510AB00703EB0 /* Sale.xcdatamodeld in Sources */,
 				EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */,
+				EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */,
 				EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */,
 				EA4C7E2F2227C17900425BE8 /* CashboxViewController.swift in Sources */,
 				EA0FFA5F2225880500703EB0 /* BuyButton.swift in Sources */,

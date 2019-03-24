@@ -23,12 +23,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let searchController = UISearchController(searchResultsController: nil)
     var selectBuildingButton: UIBarButtonItem?
-    var isPurchaseViewShowed: Bool = false
+    var isPurchaseViewPresented: Bool = false
     var selectedCategoryIndexPath: IndexPath = IndexPath(row: 0, section: 0)
     var getFromScaner: Bool = false
     var selectedProductRow: Int?
     var productToPurchaseBarcode: String?
-    var purchaseViewUpperRightCornerOffest: Dictionary<String, CGFloat> = ["x" : 21.0, "y" : 8.8]
+    var purchaseViewUpperRightCornerOffest: Dictionary<String, CGFloat> = ["x" : 21.0, "y" : 6]
     
     let showPurchaseViewImage = UIImage(named: "ArrowsLeft")
     let hidePurchaseViewImage = UIImage(named: "ArrowsRight")
@@ -73,7 +73,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.isPurchaseViewShowed {
+        if self.isPurchaseViewPresented {
 
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
@@ -273,7 +273,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } else {
-                Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!", alertButtonHandler: nil)
+                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!")
                 }
             self.calulateAndPrintPurchaseSumm()
             self.getFromScaner = false
@@ -295,7 +295,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     }
         } else {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!", alertButtonHandler: nil)
+            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!")
         }
         self.calulateAndPrintPurchaseSumm()
         self.getFromScaner = false
@@ -316,7 +316,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } else {
-                Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Нет товара с таким штрих кодом!", alertButtonHandler: nil)
+                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Нет товара с таким штрих кодом!")
             }
         }
         self.calulateAndPrintPurchaseSumm()
@@ -339,11 +339,11 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func calulateAndPrintPurchaseSumm() {
-        self.purchaseSummLabel.text = String(format: "ПОКУПКА НА СУММУ: %0.2f руб", PurchaseDBRules.getPurchaseTotalPrice())
+        self.purchaseSummLabel.text = String(format: "ПОКУПКА НА СУММУ: %0.2f руб.", PurchaseDBRules.getPurchaseTotalPrice())
     }
     
     @objc func showOrHidePurchaseView(_ sender: UIBarButtonItem) -> Void {
-        if self.isPurchaseViewShowed == false {
+        if self.isPurchaseViewPresented == false {
             self.showPurchaseView()
         } else {
             self.hidePurchaseView()
@@ -356,7 +356,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
             
-            self.isPurchaseViewShowed = true
+            self.isPurchaseViewPresented = true
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
             self.purchaseContainerView.isHidden = false
@@ -368,7 +368,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.purchaseContainerView.frame.origin.x = self.view.frame.width
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
             
-            self.isPurchaseViewShowed = false
+            self.isPurchaseViewPresented = false
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.showPurchaseViewImage
         })
@@ -423,7 +423,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 try lib.barcodeStartScan()
             }
         } catch let error as NSError {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: error.localizedDescription, alertButtonHandler: nil)
+            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: error.localizedDescription)
         }
     }
     
@@ -440,13 +440,13 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             PurchaseDBRules.updatePurchasedProductsCount()
             PurchaseDBRules.deleteAllProductsInPurchase()
             
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!", alertButtonHandler: nil)
+            Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
             self.calulateAndPrintPurchaseSumm()
             
             self.productsTableView.reloadData()
             self.purchaseTableView.reloadData()
         } else {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ПОКУПКА", alertMessage: "Нет продуктов для покупки!", alertButtonHandler: nil)
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет продуктов для покупки!")
         }
     }
     
@@ -465,7 +465,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size , with: coordinator)
 
-        if self.isPurchaseViewShowed {
+        if self.isPurchaseViewPresented {
             self.hidePurchaseView()
             self.purchaseContainerView.isHidden = false
             

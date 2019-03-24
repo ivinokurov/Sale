@@ -161,7 +161,7 @@ class PurchaseDBRules: Any {
         if ProductsDBRules.getProductsCountByBarcode(productBarcode: code)! - (self.getProductsCountInPurchase(productBarcode: code) ?? 0 ) > 0 {
             return true
         } else {
-            Utilities.showOneButtonAlert(controllerInPresented: controller, alertTitle: "ПОКУПКА", alertMessage: "Невозможно добавить этот товар в покупку!", alertButtonHandler: nil)
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Невозможно добавить этот товар в покупку!")
             return false
         }
     }

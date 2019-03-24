@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.viewControllers![1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MobileCashboxViewController.purchaseProduct(_:):MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -122,10 +130,10 @@
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
