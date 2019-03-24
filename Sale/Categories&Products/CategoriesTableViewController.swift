@@ -23,7 +23,7 @@ class CategoriesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.parentView = Utilities.splitController!.view // self.parent!.parent!.view
+        self.parentView = Utilities.splitController!.parent!.view // self.parent!.parent!.view
         
         self.addNewCategoryBarItem()
         
@@ -35,6 +35,18 @@ class CategoriesTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if self.isCategoryViewPresented {
+            self.categoryView.isHidden = false
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.isCategoryViewPresented {
+            self.categoryView.isHidden = true
+        }
     }
     
     func setCategoryViewActionTitles() {
@@ -57,7 +69,7 @@ class CategoriesTableViewController: UITableViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size , with: coordinator)
-        
+
         self.categoryView.removeFromSuperview()
         
         coordinator.animate(alongsideTransition: { _ in
@@ -145,6 +157,7 @@ class CategoriesTableViewController: UITableViewController {
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.categoryView.alpha = 0.0
         }), completion: { (completed: Bool) in
+            self.isCategoryViewPresented = false
             self.isCategoryEditing = false
         })
     }

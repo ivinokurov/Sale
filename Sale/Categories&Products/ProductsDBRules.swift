@@ -148,6 +148,23 @@ class ProductsDBRules: Any {
         }
     }
     
+    class func isBarcodePresents(productBarcode code: String) -> Bool {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return true
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка определения товара: " + error.localizedDescription)
+            }
+        }
+        return false
+    }
+    
     class func changeProduct(originBarcode originCode: String, productNewName newName: String, productNewDesc newDesc: String, productNewCount newCount: Float, productNewMeasure newMeasure: Int16, productNewPrice newPrice: Float, productNewBarcode newCode: String) {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {

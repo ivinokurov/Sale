@@ -34,7 +34,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.parentView = Utilities.splitController?.view
+        self.parentView = Utilities.splitController!.parent!.view //Utilities.splitController?.view
         
         Utilities.makeButtonRounded(button: self.itemsButton)
         Utilities.makeButtonRounded(button: self.kilosButton)
@@ -42,6 +42,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         self.addNewProductBarItem()
         
+        self.productCountTextField.delegate = self
         self.productPriceTextField.delegate = self
         self.productBarcodeTextField.delegate = self
         
@@ -52,6 +53,24 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
 
         Utilities.makeLeftViewForTextField(textEdit: self.productPriceTextField, imageName: "Ruble")
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.productsTableView.reloadData()
+        
+        if self.isProductViewPresented {
+            self.productView.isHidden = false
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.isProductViewPresented {
+            self.productView.isHidden = true
+        }
     }
 
     func setProductViewActionTitles() {
@@ -283,7 +302,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 138.0
+        return 140.0
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -341,6 +360,5 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         }
     }
     
-
 }
 

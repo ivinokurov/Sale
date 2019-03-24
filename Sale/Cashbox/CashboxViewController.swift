@@ -80,7 +80,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
             
             self.purchaseTableView.reloadData()
-            
         }
         
         self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
@@ -115,8 +114,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.searchController.searchBar.barStyle = .default
         
         if let textfield = self.searchController.searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.placeholder = "Найти продукты по названию"
-            textfield.tintColor = Utilities.accentColor
+            textfield.placeholder = "Найти продукты для выбранной категории"
+            textfield.tintColor = Utilities.barButtonItemColor
             if let backgroundview = textfield.subviews.first {
                 backgroundview.backgroundColor = UIColor.white
             }
@@ -226,6 +225,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.purchaseTableView.beginUpdates()
                         self.purchaseTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                         self.purchaseTableView.endUpdates()
+                        
+                        self.calulateAndPrintPurchaseSumm()
                     }
                 }
                 
@@ -247,26 +248,20 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 138.0
+        return 140.0
     }
     
     @IBAction func addProductInPurchase(_ sender: Any) {
-        if let index = self.selectedProductRow {
-            let selectedCategoryName = self.getSelectedCategoryName()
-            let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName!)
-            if !self.searchBarIsEmpty() && !self.getFromScaner {
+        
+        let selectedCategoryName = self.getSelectedCategoryName()
+        let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName!)
+        
+        // Покупка продукта из отфильтрованного списка
+        if !self.searchBarIsEmpty() && !self.getFromScaner {
+            if let index = self.selectedProductRow {
                 
-               self.productToPurchaseBarcode = ProductsDBRules.filteredProducts?[index].value(forKeyPath: "code") as? String
-                if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
-                    PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
-                } else {
-                    PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
-                }
-                DispatchQueue.main.async {
-                    self.purchaseTableView.reloadData()
-                }
-            } else {
-                self.productToPurchaseBarcode = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)?[index].value(forKeyPath: "code") as? String
+                self.productToPurchaseBarcode = ProductsDBRules.filteredProducts?[index].value(forKeyPath: "code") as? String
+                
                 if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
                     if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
                         PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
@@ -277,13 +272,54 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.purchaseTableView.reloadData()
                     }
                 }
-            }
+            } else {
+                Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!", alertButtonHandler: nil)
+                }
+            self.calulateAndPrintPurchaseSumm()
+            self.getFromScaner = false
+            return
+       }
+        
+       // Покупка продукта из нефильтрованного списка
+       if self.searchBarIsEmpty() && !self.getFromScaner {
+            if let index = self.selectedProductRow {
+                self.productToPurchaseBarcode = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)?[index].value(forKeyPath: "code") as? String
+                    if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
+                        if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
+                            PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
+                        } else {
+                            PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
+                        }
+                        DispatchQueue.main.async {
+                            self.purchaseTableView.reloadData()
+                        }
+                    }
         } else {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Ошибка!", alertMessage: "Продукт не выбран!", alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!", alertButtonHandler: nil)
+        }
+        self.calulateAndPrintPurchaseSumm()
+        self.getFromScaner = false
+        return
         }
         
+        // Покупка продукта сканером штрих кода
+        if self.getFromScaner {
+            if ProductsDBRules.isBarcodePresents(productBarcode: self.productToPurchaseBarcode!) {
+                if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
+                    if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
+                        PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
+                    } else {
+                        PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
+                    }
+                    DispatchQueue.main.async {
+                        self.purchaseTableView.reloadData()
+                    }
+                }
+            } else {
+                Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: "Нет товара с таким штрих кодом!", alertButtonHandler: nil)
+            }
+        }
         self.calulateAndPrintPurchaseSumm()
-        
         self.getFromScaner = false
     }
     
@@ -370,13 +406,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.layer.cornerRadius = 4
         cell.layer.borderColor = Utilities.accentColor.withAlphaComponent(0.4).cgColor
     }
-    
-    func decorateCollectionViewCellWhileSelect(cellToDecorate cell: UICollectionViewCell) {
-    //    cell.backgroundColor = Utilities.accentColor.withAlphaComponent(0.2)
-    //    UIView.animate(withDuration: 0.4, animations: { () -> Void in
-    //        cell.backgroundColor = UIColor.white
-    //    })
-    }
         
     @IBAction func getProductBarCode(_ sender: Any) {
         do {
@@ -394,28 +423,31 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 try lib.barcodeStartScan()
             }
         } catch let error as NSError {
-            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "Ошибка сканирования!", alertMessage: error.localizedDescription, alertButtonHandler: nil)
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ОШИБКА", alertMessage: error.localizedDescription, alertButtonHandler: nil)
         }
     }
     
     func barcodeData(_ barcode: String!, type: Int32) {
-        if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: barcode) {
-            PurchaseDBRules.addProductInPurchase(productBarcode: barcode)
-        }
         self.getFromScaner = true
+        self.productToPurchaseBarcode = barcode
         self.addProductInPurchase(self.buyProductsButton)
-    
-        self.productsTableView.selectRow(at: IndexPath(row: self.selectedProductRow!, section: 0), animated: true, scrollPosition: .none)
     }
     
     
     @IBAction func makePurchase(_ sender: Any) {
-        PurchaseDBRules.updatePurchasedProductsCount()
-        PurchaseDBRules.deleteAllProductsInPurchase()
         
-        Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!", alertButtonHandler: nil)
-        self.productsTableView.reloadData()
-        self.purchaseTableView.reloadData()
+        if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
+            PurchaseDBRules.updatePurchasedProductsCount()
+            PurchaseDBRules.deleteAllProductsInPurchase()
+            
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!", alertButtonHandler: nil)
+            self.calulateAndPrintPurchaseSumm()
+            
+            self.productsTableView.reloadData()
+            self.purchaseTableView.reloadData()
+        } else {
+            Utilities.showOneButtonAlert(controllerInPresented: self, alertTitle: "ПОКУПКА", alertMessage: "Нет продуктов для покупки!", alertButtonHandler: nil)
+        }
     }
     
     func connectionState(_ state: Int32) {

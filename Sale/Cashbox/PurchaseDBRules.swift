@@ -13,7 +13,7 @@ class PurchaseDBRules: Any {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let newProductInPurchase = NSEntityDescription.insertNewObject(forEntityName: "Purchase", into: viewContext!)
-            newProductInPurchase.setValue(code, forKey: "name")
+            newProductInPurchase.setValue(name, forKey: "name")
             newProductInPurchase.setValue(code, forKey: "code")
             newProductInPurchase.setValue(1.0, forKey: "count")
             do {

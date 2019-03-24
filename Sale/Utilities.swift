@@ -16,7 +16,7 @@ class Utilities: Any {
     
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)
     static let editActionBackgroundColor = UIColor.green.withAlphaComponent(0.6)
-    static let animationDuration = 0.5
+    static let animationDuration = 0.4
     static let alpha = 0.94
     static let overlayView: UIView = UIView()
     static let barButtonItemColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
@@ -24,12 +24,12 @@ class Utilities: Any {
     static let buyProductButtonColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
     static let deleteProductsButtonColor = UIColor.red
-    static let accentColor: UIColor = .red // UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
+    static let accentColor: UIColor = .red
     
     class func addOverlayView() {
-        self.overlayView.frame = CGRect(x: 0, y: 0, width: 5000, height: 5000)
+        self.overlayView.frame = CGRect(x: 0, y: 0, width: 5000, height: 5000) // my little joke :)
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.2
+        self.overlayView.alpha = 0.4
         self.overlayView.backgroundColor = UIColor.darkGray
         self.splitController!.view.addSubview(self.overlayView)
     }
