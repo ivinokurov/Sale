@@ -54,7 +54,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.customizeSearchBar()
         
         Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
-         Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
+        Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
         
         self.productTypesCollectionView.dataSource = self
         self.productTypesCollectionView.delegate = self
@@ -74,7 +74,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewWillAppear(animated)
         
         if self.isPurchaseViewPresented {
-
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
@@ -114,7 +113,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.searchController.searchBar.barStyle = .default
         
         if let textfield = self.searchController.searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.placeholder = "Найти продукты для выбранной категории"
+            textfield.placeholder = "Найти товары для выбранной категории"
             textfield.tintColor = Utilities.barButtonItemColor
             if let backgroundview = textfield.subviews.first {
                 backgroundview.backgroundColor = UIColor.white
@@ -256,7 +255,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         let selectedCategoryName = self.getSelectedCategoryName()
         let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName!)
         
-        // Покупка продукта из отфильтрованного списка
+        // Покупка товаров из отфильтрованного списка
         if !self.searchBarIsEmpty() && !self.getFromScaner {
             if let index = self.selectedProductRow {
                 
@@ -273,14 +272,14 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } else {
-                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!")
+                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Товар не выбран!")
                 }
             self.calulateAndPrintPurchaseSumm()
             self.getFromScaner = false
             return
        }
         
-       // Покупка продукта из нефильтрованного списка
+       // Покупка товаров из нефильтрованного списка
        if self.searchBarIsEmpty() && !self.getFromScaner {
             if let index = self.selectedProductRow {
                 self.productToPurchaseBarcode = ProductsDBRules.getAllProductsForCategory(productCategory: selectedCategory!)?[index].value(forKeyPath: "code") as? String
@@ -295,7 +294,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     }
         } else {
-            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Продукт не выбран!")
+            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Товар не выбран!")
         }
         self.calulateAndPrintPurchaseSumm()
         self.getFromScaner = false
@@ -344,6 +343,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func showOrHidePurchaseView(_ sender: UIBarButtonItem) -> Void {
         if self.isPurchaseViewPresented == false {
+            self.purchaseContainerView.isHidden = false
             self.showPurchaseView()
         } else {
             self.hidePurchaseView()
@@ -446,7 +446,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.productsTableView.reloadData()
             self.purchaseTableView.reloadData()
         } else {
-            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет продуктов для покупки!")
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет товаров для покупки!")
         }
     }
     

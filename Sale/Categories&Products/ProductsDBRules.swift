@@ -47,7 +47,7 @@ class ProductsDBRules: Any {
                     try viewContext!.save()
                 }
             } catch let error as NSError {
-                NSLog("Ошибка удаления продукта: " + error.localizedDescription)
+                NSLog("Ошибка удаления товара: " + error.localizedDescription)
             }
         }
     }
@@ -64,7 +64,7 @@ class ProductsDBRules: Any {
                 }
                 try viewContext!.save()
             } catch let error as NSError {
-                NSLog("Ошибка удаления продукта: " + error.localizedDescription)
+                NSLog("Ошибка удаления товара: " + error.localizedDescription)
             }
         }
     }
@@ -82,7 +82,7 @@ class ProductsDBRules: Any {
                     return nil
                 }
             } catch let error as NSError {
-                NSLog("Ошибка извлечения продукта: " + error.localizedDescription)
+                NSLog("Ошибка извлечения товара: " + error.localizedDescription)
             }
         }
         return nil
@@ -99,7 +99,7 @@ class ProductsDBRules: Any {
                     return fetchResult.first!.value(forKeyPath: "name") as? String
                 }
             } catch let error as NSError {
-                NSLog("Ошибка извлечения названия продукта: " + error.localizedDescription)
+                NSLog("Ошибка извлечения названия товара: " + error.localizedDescription)
             }
         }
         return nil
@@ -208,7 +208,7 @@ class ProductsDBRules: Any {
                     return fetchResult.first!.value(forKeyPath: "count") as? Float
                 }
             } catch let error as NSError {
-                NSLog("Ошибка извлечения количества продукта: " + error.localizedDescription)
+                NSLog("Ошибка извлечения количества товара: " + error.localizedDescription)
             }
         }
         return nil
@@ -225,10 +225,14 @@ class ProductsDBRules: Any {
                     return fetchResult.first!.value(forKeyPath: "price") as? Float
                 }
             } catch let error as NSError {
-                NSLog("Ошибка извлечения цены продукта: " + error.localizedDescription)
+                NSLog("Ошибка извлечения цены товара: " + error.localizedDescription)
             }
         }
         return nil
+    }
+    
+    class func getCategoryProductIndexByName(productCategory category: NSManagedObject, productBarcode barcode: String) -> Int? {
+        return self.getAllProductsForCategory(productCategory: category)?.firstIndex(of: self.getProductByBarcode(code: barcode)!)
     }
     
     class func getProductMeasure(product: NSManagedObject) -> String {

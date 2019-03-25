@@ -117,12 +117,17 @@ class CategoriesTableViewController: UITableViewController {
                         if self.isCategoryEditing {
                             let originCategoryName = CategoriesDBRules.getAllCategories()![self.swipedRowIndex!].value(forKeyPath: "name") as? String
                             CategoriesDBRules.changeCategory(originCategoryName: originCategoryName!, newCategoryName: newCategoryName)
-                            self.isCategoryEditing = false
                         } else {
                             CategoriesDBRules.addNewCategory(categoryName: newCategoryName)
                         }
                         self.removeCategoryView()
                         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
+                        if self.isCategoryEditing {
+                            self.tableView.selectRow(at: IndexPath(row: self.swipedRowIndex!, section: 0), animated: true, scrollPosition: .none)
+                            self.isCategoryEditing = false
+                        } else {
+                            self.tableView.selectRow(at: IndexPath(row: CategoriesDBRules.getCategoryIndexByName(categoryName: self.selectedCategoryName!) ?? 0, section: 0), animated: true, scrollPosition: .none)
+                        }
                     }
                 } else {
                     Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
@@ -160,7 +165,6 @@ class CategoriesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCategoryName = CategoriesDBRules.getAllCategories()![indexPath.row].value(forKeyPath: "name") as? String
-        
         self.reloadProducts()
     }
     

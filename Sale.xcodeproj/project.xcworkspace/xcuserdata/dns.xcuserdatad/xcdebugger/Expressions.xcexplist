@@ -130,10 +130,10 @@
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -256,6 +256,14 @@
          <PersistentStrings>
             <PersistentString
                value = "PurchaseDBRules.getAllProductsInPurchase()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.showOrHidePurchaseView(_:):CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.purchaseContainerView.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

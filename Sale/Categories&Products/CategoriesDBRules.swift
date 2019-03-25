@@ -90,5 +90,9 @@ class CategoriesDBRules: Any {
         }
         return nil
     }
+    
+    class func getCategoryIndexByName(categoryName name: String) -> Int? {
+        return self.getAllCategories()?.firstIndex(of: self.getCategiryByName(categoryName: name)!)
+    }
 
 }

@@ -28,7 +28,7 @@ class Utilities: Any {
     static let accentColor: UIColor = .red
     
     class func addOverlayView() {
-        self.overlayView.frame = CGRect(x: 0, y: 0, width: 5000, height: 5000) // my little joke :)
+        self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
         self.overlayView.alpha = 0.4
         self.overlayView.backgroundColor = UIColor.darkGray
@@ -36,7 +36,7 @@ class Utilities: Any {
     }
     
     class func addAlertOverlayView() {
-        self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 5000, height: 5000) // my little joke :)
+        self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.alertOverlayView.isOpaque = false
         self.alertOverlayView.alpha = 0.4
         self.alertOverlayView.backgroundColor = UIColor.darkGray
@@ -60,11 +60,11 @@ class Utilities: Any {
     }
     
     class func showOkAlertView(alertTitle title: String, alertMessage message: String) {
-        (self.splitController as! ProductsSplitViewController).initAndShowAlertView(imageName: "Ok", text: message)
+        self.splitController!.initAndShowAlertView(imageName: "Ok", text: message)
     }
 
     class func showErrorAlertView(alertTitle title: String, alertMessage message: String) {
-        (self.splitController as! ProductsSplitViewController).initAndShowAlertView(imageName: "Error", text: message)
+        self.splitController!.initAndShowAlertView(imageName: "Error", text: message)
     }
     
     class func showTwoButtonsAlert(controllerInPresented controller: UIViewController, alertTitle title: String, alertMessage message: String, okButtonHandler okHandler: ((UIAlertAction) -> Void)?, cancelButtonHandler cancelHandler: ((UIAlertAction) -> Void)?) {
@@ -93,13 +93,13 @@ class Utilities: Any {
     
     class func setCellSelectedColor(cellToSetSelectedColor cell: UITableViewCell) {
         let bgkColorView = UIView()
-        bgkColorView.backgroundColor = self.accentColor.withAlphaComponent(0.04)
+        bgkColorView.backgroundColor = self.accentColor.withAlphaComponent(0.08)
         cell.selectedBackgroundView = bgkColorView
     }
     
     class func setCollectionViewCellSelectedColor(cellToSetSelectedColor cell: UICollectionViewCell) {
         let bgkColorView = UIView()
-        bgkColorView.backgroundColor = self.accentColor.withAlphaComponent(0.04)
+        bgkColorView.backgroundColor = self.accentColor.withAlphaComponent(0.08)
         cell.selectedBackgroundView = bgkColorView
     }
     

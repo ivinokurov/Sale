@@ -40,8 +40,6 @@ class ProductsTableViewCell: UITableViewCell {
         
         let price: Float = ((products![indexPath.row] as NSObject).value(forKeyPath: "price") as? Float)!
         let count: Float = ((products![indexPath.row] as NSObject).value(forKeyPath: "count") as? Float)!
-        let measure: Int = Int(((products![indexPath.row] as NSObject).value(forKeyPath: "measure") as? Int16)!)
-        
         let productDesc = products![indexPath.row].value(forKeyPath: "desc") as? String
         
         self.productNameLabel.text = products![indexPath.row].value(forKeyPath: "name") as? String

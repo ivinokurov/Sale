@@ -161,7 +161,7 @@ class PurchaseDBRules: Any {
         if ProductsDBRules.getProductsCountByBarcode(productBarcode: code)! - (self.getProductsCountInPurchase(productBarcode: code) ?? 0 ) > 0 {
             return true
         } else {
-            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Невозможно добавить этот товар в покупку!")
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Этот товар отсутствует!")
             return false
         }
     }

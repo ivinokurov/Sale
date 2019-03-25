@@ -157,6 +157,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             self.productCountTextField.text = ""
             self.productPriceTextField.text = ""
             self.productBarcodeTextField.text = ""
+            self.setProductMeasure(self.itemsButton)
         }
         
         self.productView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
@@ -233,12 +234,16 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                     
                     ProductsDBRules.changeProduct(originBarcode: originCode!, productNewName: newName, productNewDesc: newDesc, productNewCount: newCount, productNewMeasure: newMeasure, productNewPrice: newPrice, productNewBarcode: newCode)
                 
-                    self.isProductEditing = false
                     self.setProductMeasure(self.itemsButton)
                 }
             
             self.removeProductView()
             self.productsTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
+            
+            if self.isProductEditing {
+                self.productsTableView.selectRow(at: IndexPath(row: ProductsDBRules.getCategoryProductIndexByName(productCategory: selectedCategory!, productBarcode: newCode)!, section: 0), animated: true, scrollPosition: .none)
+                self.isProductEditing = false
+            }
         }
     }
     
