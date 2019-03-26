@@ -77,12 +77,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == self.productPriceTextField || textField == self.productCountTextField {
-            let allowedCharacters = CharacterSet(charactersIn:"0123456789.")
+            let allowedCharacters = CharacterSet(charactersIn: Utilities.floatNumbersOnly)
             let characterSet = CharacterSet(charactersIn: string)
             return allowedCharacters.isSuperset(of: characterSet)
         }
         if textField == self.productBarcodeTextField {
-            let allowedCharacters = CharacterSet(charactersIn:"0123456789")
+            let allowedCharacters = CharacterSet(charactersIn: Utilities.digitsOny)
             let characterSet = CharacterSet(charactersIn: string)
             return allowedCharacters.isSuperset(of: characterSet)
         }
@@ -113,7 +113,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         }
     }
         
-    @IBAction func cancelAddOrRenameProduct(_ sender: UIButton) {
+    @IBAction func cancelAddOrEditProduct(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
         Utilities.removeOverlayView()
@@ -253,17 +253,14 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует название товара!")
             return false
         }
-        
         if self.productCountTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует количество товара!")
             return false
         }
-        
         if self.productPriceTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует цена товара!")
             return false
         }
-        
         if self.productBarcodeTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует штрих код товара!")
             return false
@@ -304,7 +301,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         let barcode = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
         
-        let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+        let deleteAction = UIContextualAction(style: .normal, title:  "Удалить\nтовар", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
             let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
                 
@@ -322,7 +319,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
         deleteAction.image = UIImage(named: "Delete")
         
-        let editAction = UIContextualAction(style: .normal, title:  "Изменить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+        let editAction = UIContextualAction(style: .normal, title:  "Изменить\nтовар", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
             self.isProductEditing = true
             self.swipedRowIndex = indexPath.row
@@ -339,13 +336,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             
             let pseudoButton = UIButton()
             pseudoButton.tag = Int(product?.value(forKey: "measure") as! Int16)
-            
             self.setProductMeasure(pseudoButton)
             
             success(true)
         })
         editAction.backgroundColor = Utilities.editActionBackgroundColor
-    //    editAction.image = UIImage(named: "Edit")
+        editAction.image = UIImage(named: "Edit")
         
         return UISwipeActionsConfiguration(actions: [editAction, deleteAction])
     }

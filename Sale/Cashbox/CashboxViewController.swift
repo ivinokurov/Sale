@@ -323,7 +323,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func decorateCellSelectionWhileSelect(cellToDecorate cell: UITableViewCell) {
-        cell.backgroundColor = Utilities.accentColor.withAlphaComponent(0.02)
+        cell.backgroundColor = Utilities.accentColor.withAlphaComponent(0.08)
         cell.layer.cornerRadius = 4
         UIView.animate(withDuration: 0.4, animations: { () -> Void in
             cell.backgroundColor = UIColor.white
@@ -338,7 +338,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func calulateAndPrintPurchaseSumm() {
-        self.purchaseSummLabel.text = String(format: "ПОКУПКА НА СУММУ: %0.2f руб.", PurchaseDBRules.getPurchaseTotalPrice())
+        self.purchaseSummLabel.text = String(format: "ТОВАРОВ НА СУММУ: %0.2f руб.", PurchaseDBRules.getPurchaseTotalPrice())
     }
     
     @objc func showOrHidePurchaseView(_ sender: UIBarButtonItem) -> Void {

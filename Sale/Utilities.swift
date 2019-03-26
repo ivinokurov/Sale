@@ -12,6 +12,15 @@ class Utilities: Any {
         case items = 1, kilos = 2, liters = 3
     }
     
+    enum personRole: Int {
+        case admin = 1, merchandiser = 2, cashier = 3
+    }
+    
+    static let roleNames = [1: "Администратор", 2: "Товаровед", 3: "Кассир"]
+    
+    static let digitsOny = "0123456789"
+    static let floatNumbersOnly = "0123456789."
+    
     static var splitController: ProductsSplitViewController? = nil
     
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)

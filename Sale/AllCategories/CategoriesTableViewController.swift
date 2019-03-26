@@ -8,8 +8,8 @@ import UIKit
 
 class CategoriesTableViewController: UITableViewController {
     
-    @IBOutlet weak var categoryViewTitleLabel: UILabel!
     @IBOutlet var categoryView: UIView!
+    @IBOutlet weak var categoryViewTitleLabel: UILabel!
     @IBOutlet weak var categoryNameTextField: UITextField!
     @IBOutlet weak var addOrRenameCategoryButton: UIButton!
     @IBOutlet weak var cancelCategoryButton: UIButton!
@@ -180,7 +180,10 @@ class CategoriesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCellId", for: indexPath)
 
-        cell.textLabel?.text = CategoriesDBRules.getAllCategories()![indexPath.row].value(forKeyPath: "name") as? String
+        let categoryName = CategoriesDBRules.getAllCategories()![indexPath.row].value(forKeyPath: "name") as? String
+        cell.textLabel?.text = categoryName
+        cell.detailTextLabel!.text = "Товаров категории: " + String(ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count.description)
+        
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
 
         return cell
