@@ -3,64 +3,48 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
+         contextName = "CashboxViewController.getSelectedCategoryName():CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.viewControllers![1]">
+               value = " CategoriesDBRules.getAllCategories()">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "PersonalTableViewController.tableView(_:cellForRowAt:):PersonalTableViewController.swift">
+         contextName = "ProductsViewController.setProductViewFrame():ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "person.value(forKeyPath: &quot;name&quot;) as? String">
+               value = "self.productView.center">
+            </PersistentString>
+            <PersistentString
+               value = "self.parentView?.center">
+            </PersistentString>
+            <PersistentString
+               value = "self.navigationController?.navigationBar.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "MobileCashboxViewController.purchaseProduct(_:):MobileCashboxViewController.swift">
+         contextName = "closure #3 in MobileCashboxViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.purchasedProductNames">
+               value = "Products.productsCount">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ProductsTableViewCell.initCell(categoryName:indexPath:):ProductsTableViewCell.swift">
+         contextName = "MobileCashboxViewController.updateSearchResults(for:):MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "ProductsDBRules.getCategoryProducts(productCategory: selectedCategory!)">
+               value = "filteredProductNames">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CategoriesTableViewController.addNewCategory():CategoriesTableViewController.swift">
+         contextName = "PersonalTableViewController.addNewPerson(_:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.newCategoryView.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.viewWillAppear(_:):CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.selectedCategoryIndexPath">
-            </PersistentString>
-            <PersistentString
-               value = "isPurchaseViewShowed">
-            </PersistentString>
-            <PersistentString
-               value = "self.productTypesCollectionView">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CategoriesTableViewController.addNewCategory(_:):CategoriesTableViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "tableView.indexPathForSelectedRow!.row">
+               value = "PersonalDBRules.selectedPerson">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -73,25 +57,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in CashboxViewController.hidePurchaseView():CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.view.frame.width">
-            </PersistentString>
-            <PersistentString
-               value = "self.view.frame.height">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CategoriesTableViewController.tableView(_:cellForRowAt:):CategoriesTableViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "static PurchaseDBRules.isProductCanBeAddedToPurchase(controller:productBarcode:):PurchaseDBRules.swift">
          <PersistentStrings>
             <PersistentString
@@ -100,18 +65,29 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static PurchaseDBRules.getPurchaseTotalPrice():PurchaseDBRules.swift">
+         contextName = "closure #1 in MobileCashboxViewController.showPurchaseView():MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "product.value(forKey: &quot;count&quot;)">
+               value = "navigationBarHeight">
+            </PersistentString>
+            <PersistentString
+               value = "self.navigationController?.navigationBar.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CashboxViewController.viewDidLoad():CashboxViewController.swift">
+         contextName = "CategoriesTableViewController.tableView(_:numberOfRowsInSection:):CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.searchController.searchBar.frame.height">
+               value = "CategoriesDBRules.getAllCategories()?.count ?? 0">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.tableView(_:cellForRowAt:):CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PurchaseDBRules.getAllProductsInPurchase()">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -127,29 +103,51 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "MobileCashboxViewController.viewWillAppear(_:):MobileCashboxViewController.swift">
+         contextName = "CashboxViewController.viewWillTransition(to:with:):CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "selectedProductRow">
+               value = "self.isPurchaseViewShowed">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
+         contextName = "CategoriesTableViewController.addNewCategory():CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "error.localizedDescription">
+               value = "self.newCategoryView.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
+         contextName = "CashboxViewController.viewWillAppear(_:):CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "sender.tag">
+               value = "self.productTypesCollectionView">
             </PersistentString>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "self.selectedCategoryIndexPath">
+            </PersistentString>
+            <PersistentString
+               value = "lib.connected">
+            </PersistentString>
+            <PersistentString
+               value = "isPurchaseViewShowed">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in CategoriesTableViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):CategoriesTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "CategoriesDBRules.getCategiryByName(categoryName: name!)!">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProductsTableViewCell.initCell(categoryName:indexPath:):ProductsTableViewCell.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "ProductsDBRules.getCategoryProducts(productCategory: selectedCategory!)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -162,10 +160,107 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in CashboxViewController.hidePurchaseView():CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame.width">
+            </PersistentString>
+            <PersistentString
+               value = "self.view.frame.height">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.measures.items.rawValue">
+            </PersistentString>
+            <PersistentString
+               value = "sender.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MainTabBarController.getCurrentPersonRole():MainTabBarController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CategoriesTableViewController.tableView(_:cellForRowAt:):CategoriesTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MobileCashboxViewController.purchaseProduct(_:):MobileCashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.purchasedProductNames">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static PurchaseDBRules.getPurchaseTotalPrice():PurchaseDBRules.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "product.value(forKey: &quot;count&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PersonalTableViewController.tableView(_:cellForRowAt:):PersonalTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "person.value(forKeyPath: &quot;name&quot;) as? String">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MobileCashboxViewController.viewDidLoad():MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
                value = "self.navigationBarHeight">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.showOrHidePurchaseView(_:):CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.purchaseContainerView.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CategoriesTableViewController.addNewCategory(_:):CategoriesTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tableView.indexPathForSelectedRow!.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.customizeSearchBar():CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "textfield.subviews">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.viewDidLoad():CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PersonalDBRules.selectedPerson">
+            </PersistentString>
+            <PersistentString
+               value = "self.searchController.searchBar.frame.height">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -187,99 +282,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ProductsViewController.setProductViewFrame():ProductsViewController.swift">
+         contextName = "MobileCashboxViewController.viewWillAppear(_:):MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.productView.center">
-            </PersistentString>
-            <PersistentString
-               value = "self.parentView?.center">
-            </PersistentString>
-            <PersistentString
-               value = "self.navigationController?.navigationBar.frame">
+               value = "selectedProductRow">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CategoriesTableViewController.tableView(_:numberOfRowsInSection:):CategoriesTableViewController.swift">
+         contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "CategoriesDBRules.getAllCategories()?.count ?? 0">
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+            <PersistentString
+               value = "self.viewControllers![1]">
+            </PersistentString>
+            <PersistentString
+               value = "self.tabBarController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #3 in MobileCashboxViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):MobileCashboxViewController.swift">
+         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Products.productsCount">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.customizeSearchBar():CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "textfield.subviews">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "MobileCashboxViewController.updateSearchResults(for:):MobileCashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "filteredProductNames">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.getSelectedCategoryName():CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = " CategoriesDBRules.getAllCategories()">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.viewWillTransition(to:with:):CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.isPurchaseViewShowed">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in MobileCashboxViewController.showPurchaseView():MobileCashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "navigationBarHeight">
-            </PersistentString>
-            <PersistentString
-               value = "self.navigationController?.navigationBar.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in closure #1 in CategoriesTableViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):CategoriesTableViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "CategoriesDBRules.getCategiryByName(categoryName: name!)!">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.tableView(_:cellForRowAt:):CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "PurchaseDBRules.getAllProductsInPurchase()">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.showOrHidePurchaseView(_:):CashboxViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.purchaseContainerView.isHidden">
+               value = "error.localizedDescription">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

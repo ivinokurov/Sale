@@ -5,6 +5,7 @@
 
 
 import UIKit
+import CoreData
 
 class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
@@ -19,7 +20,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var addOrEditPersonButton: UIButton!
     @IBOutlet weak var cancelPersonButton: UIButton!    
     @IBOutlet weak var personViewTitleLabel: UILabel!
-    
+    @IBOutlet weak var passwordVisibilityButton: UIButton!
     var parentView: UIView? = nil
     var isPersonEditing: Bool = false
     var isPersonViewPresented: Bool = false
@@ -29,15 +30,21 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.parentView = Utilities.splitController!.parent!.view
+        self.parentView = Utilities.mainController!.view
         
         Utilities.makeButtonRounded(button: self.adminPersonButton)
+        self.adminPersonButton.layer.borderColor = Utilities.accentColor.cgColor
+        self.adminPersonButton.tintColor = Utilities.accentColor
         Utilities.makeButtonRounded(button: self.merchPersonButton)
         Utilities.makeButtonRounded(button: self.cashPersonButton)
         
         self.itnPersonTextField.delegate = self
         
-        self.addNewPersonaBarItem()
+        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+        
+        if personRole == Utilities.personRole.admin.rawValue {
+            self.addNewPersonaBarItem()
+        } 
     }
     
     func addNewPersonaBarItem() {
@@ -111,6 +118,9 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.parentView?.addSubview(self.personView)
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
+        
+        self.pwdPersonTextField.isSecureTextEntry = true
+        self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
     }
     
     func setPersonaViewActionTitles() {
@@ -127,7 +137,13 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PersonalDBRules.getAllPersons()?.count ?? 0
+        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+        
+        if personRole == Utilities.personRole.admin.rawValue {
+            return PersonalDBRules.getAllPersons()?.count ?? 0
+        } else {
+            return 1
+        }
     }
     
     func isLoginMuchTheSame(personLogin login: String, personNewLogin newLogin: String) -> Bool {
@@ -141,8 +157,12 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
         
-        let person = PersonalDBRules.getAllPersons()![self.swipedRowIndex!]
-        
+        if let personIndex = self.swipedRowIndex {
+            PersonalDBRules.selectedPerson = PersonalDBRules.getAllPersons()?[personIndex]
+        } else {
+            PersonalDBRules.selectedPerson = nil
+        }
+
         let newName = self.fullPersonNameTextField.text!
         let itn = self.itnPersonTextField.text!
         let newLogin = self.loginPersonTextField.text!
@@ -160,13 +180,14 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                     Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Такой логин уже присутствует!")
                 }
             } else {
-                if !self.isLoginMuchTheSame(personLogin: person.value(forKeyPath: "login") as! String, personNewLogin: newLogin)
+                if !self.isLoginMuchTheSame(personLogin: PersonalDBRules.selectedPerson!.value(forKeyPath: "login") as? String ?? "", personNewLogin: newLogin)
                 {
                     if !PersonalDBRules.isTheSamePersonPresents(personLogin: newLogin) {
                         PersonalDBRules.changePerson(originItn: itn, personNewName: newName, personNewLogin: newLogin, personNewPassword: newPassword, personNewRole: newRole)
                         
                         self.removePersonView()
                         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
+                        self.self.swipedRowIndex = nil
                     } else {
                         Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Такой логин уже присутствует!")
                     }
@@ -176,6 +197,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                     self.removePersonView()
                     self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                 }
+                self.isPersonEditing = false
             }
         }
     }
@@ -219,13 +241,16 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         super.viewWillTransition(to: size , with: coordinator)
         
         self.personView.removeFromSuperview()
-        self.tableView.reloadData()
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isPersonViewPresented {
                 self.personView.alpha = CGFloat(Utilities.alpha)
                 self.parentView?.addSubview(self.personView)
                 self.setPersonViewFrame()
+                
+                if (Utilities.splitController?.isAlertViewPresented)! {
+                    self.checkPersonInfo() 
+                }
             }
         })
     }
@@ -254,20 +279,56 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCellId", for: indexPath)
-
-        let person = PersonalDBRules.getAllPersons()![indexPath.row]
         
-        cell.textLabel!.text = person.value(forKeyPath: "name") as? String
+        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+        
+        var person: NSManagedObject!
+        
+        if personRole == Utilities.personRole.admin.rawValue {
+            person = PersonalDBRules.getAllPersons()![indexPath.row]
+        } else {
+            person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+        }
+
+        let name = person.value(forKeyPath: "name") as! String
+        let role = person.value(forKeyPath: "role") as! Int16
+        
+        cell.textLabel!.text = name
         cell.detailTextLabel?.text = self.getPersonRoleByCode(personRole: Int(person.value(forKeyPath: "role") as! Int16))
-        if (Int)(person.value(forKeyPath: "role") as! Int16) == Utilities.personRole.admin.rawValue {
+        if Int(role) == Utilities.personRole.admin.rawValue {
             cell.detailTextLabel?.textColor = Utilities.accentColor
         } else {
             cell.detailTextLabel?.textColor = UIColor.black
         }
         
+        if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!) == PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) {
+            
+            cell.accessoryView = self.createLougoutButton()
+        }
+        
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
         
         return cell
+    }
+    
+    func createLougoutButton() -> UIButton {
+        let accessoryButton = LogoutButton(type: .custom)
+        accessoryButton.setImage(UIImage(named: "Logout"), for: .normal)
+        accessoryButton.addTarget(self, action: #selector(logoutPerson(sender:)), for: .touchUpInside)
+        accessoryButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        accessoryButton.contentMode = .scaleAspectFit
+        return accessoryButton
+    }
+    
+    @objc func logoutPerson(sender: AnyObject) {
+        let logoutHandler: ((UIAlertAction) -> Void)? = { _ in
+            let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            let initialController = storyboard.instantiateViewController(withIdentifier: "authorizeControllerId")
+            self.present(initialController, animated: true, completion: nil)
+            Utilities.isPersonLogout = true
+        }
+        
+        Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "ВЫХОД", alertMessage: "Выйти из приложения?", okButtonHandler: logoutHandler,  cancelButtonHandler: nil)
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -315,5 +376,21 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     func getPersonRoleByCode(personRole roleCode: Int) -> String {
         return Utilities.roleNames[roleCode]!
     }
-
+    
+    @IBAction func checkITNStringLength(_ sender: UITextField) {
+        if (self.itnPersonTextField.text!.count > 12) {
+            self.itnPersonTextField.deleteBackward()
+        }
+    }
+    
+    @IBAction func showOrHidePassword(_ sender: UIButton) {
+        if self.pwdPersonTextField.isSecureTextEntry {
+            self.pwdPersonTextField.isSecureTextEntry = false
+            self.passwordVisibilityButton.setImage(UIImage(named: "OpenPwd"), for: .normal)
+        } else {
+            self.pwdPersonTextField.isSecureTextEntry = true
+            self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        }
+    }
+    
 }

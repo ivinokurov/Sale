@@ -34,7 +34,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.parentView = Utilities.splitController!.parent!.view 
+        self.parentView = Utilities.mainController!.view 
         self.productsTableView.estimatedRowHeight = 140
         
         Utilities.makeButtonRounded(button: self.itemsButton)
@@ -53,6 +53,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.productsTableView.reloadData()
 
         Utilities.makeLeftViewForTextField(textEdit: self.productPriceTextField, imageName: "Ruble")
+        self.productPriceTextField.leftView?.tintColor = Utilities.accentColor
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
     }
     
@@ -145,6 +146,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         return categoriesController.selectedCategoryName
     }
     
+    func updateCategoriesTable() {
+        let navController = Utilities.splitController!.viewControllers[0] as! UINavigationController
+        let categoriesController = navController.topViewController as! CategoriesTableViewController
+        categoriesController.tableView.reloadData()
+    }
+    
     @objc func showProductView() {
         if self.getSelectedCategoryName() == nil {
             Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Не выбрана категория товара!")
@@ -194,7 +201,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         super.viewWillTransition(to: size , with: coordinator)
         
         self.productView.removeFromSuperview()
-        self.productsTableView.reloadData()
+    //    self.productsTableView.reloadData()
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isProductViewPresented {
@@ -235,6 +242,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                     ProductsDBRules.changeProduct(originBarcode: originCode!, productNewName: newName, productNewDesc: newDesc, productNewCount: newCount, productNewMeasure: newMeasure, productNewPrice: newPrice, productNewBarcode: newCode)
                 
                     self.setProductMeasure(self.itemsButton)
+                    self.updateCategoriesTable()
                 }
             
             self.removeProductView()

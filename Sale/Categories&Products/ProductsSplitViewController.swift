@@ -36,8 +36,7 @@ class ProductsSplitViewController: UISplitViewController {
             self.alertView.isHidden = true
         }
     }
-    
-    
+        
     func initAndShowAlertView(imageName: String, text: String) {
         self.alertImageView.image = UIImage(named: imageName)
         self.alertTextLabel.text = text
@@ -46,7 +45,9 @@ class ProductsSplitViewController: UISplitViewController {
     }
     
     func showAlertView() {
+        self.isAlertViewPresented = true
         Utilities.addAlertOverlayView()
+        
         self.alertView.center = self.parent!.view.center
         self.parent!.view.addSubview(self.alertView)
         self.isAlertViewPresented = true
@@ -56,7 +57,7 @@ class ProductsSplitViewController: UISplitViewController {
         }), completion: { (completed: Bool) in
         })
         
-        Utilities.makeViewFlexibleAppearance(view: self.alertView)
+    //    Utilities.makeViewFlexibleAppearance(view: self.alertView)
     }
     
      @IBAction func dismissAlertView(_ sender: Any) {

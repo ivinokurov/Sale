@@ -21,8 +21,8 @@ class Utilities: Any {
     static let digitsOny = "0123456789"
     static let floatNumbersOnly = "0123456789."
     
+    static var mainController: MainTabBarController? = nil    
     static var splitController: ProductsSplitViewController? = nil
-    
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)
     static let editActionBackgroundColor = UIColor.green.withAlphaComponent(0.6)
     static let animationDuration = 0.4
@@ -35,13 +35,14 @@ class Utilities: Any {
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
     static let deleteProductsButtonColor = UIColor.red
     static let accentColor: UIColor = .red
+    static var isPersonLogout: Bool = false
     
     class func addOverlayView() {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
         self.overlayView.alpha = 0.4
         self.overlayView.backgroundColor = UIColor.darkGray
-        self.splitController!.parent!.view.addSubview(self.overlayView)
+        self.mainController!.view.addSubview(self.overlayView)
     }
     
     class func addAlertOverlayView() {
@@ -49,7 +50,7 @@ class Utilities: Any {
         self.alertOverlayView.isOpaque = false
         self.alertOverlayView.alpha = 0.4
         self.alertOverlayView.backgroundColor = UIColor.darkGray
-        self.splitController!.parent!.view.addSubview(self.alertOverlayView)
+        self.mainController!.view.addSubview(self.alertOverlayView)
     }
     
     class func removeOverlayView() {

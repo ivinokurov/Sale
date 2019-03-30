@@ -23,7 +23,7 @@ class CategoriesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.parentView = Utilities.splitController!.parent!.view // self.parent!.parent!.view
+        self.parentView = Utilities.mainController!.view
         
         self.addNewCategoryBarItem()
         
@@ -130,7 +130,12 @@ class CategoriesTableViewController: UITableViewController {
                         }
                     }
                 } else {
-                    Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
+                    if !self.isCategoryEditing {
+                        Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
+                    } else {
+                        self.removeCategoryView()
+                        self.isCategoryEditing = false
+                    }
                 }
             }
         }
@@ -157,7 +162,7 @@ class CategoriesTableViewController: UITableViewController {
         return CategoriesDBRules.getAllCategories()?.count ?? 0
     }
     
-    func reloadProducts() {
+    func updateProductsTable() {
         let navController = Utilities.splitController!.viewControllers[1] as! UINavigationController
         let categoriesController = navController.topViewController as! ProductsViewController
         categoriesController.productsTableView.reloadData()
@@ -165,7 +170,7 @@ class CategoriesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCategoryName = CategoriesDBRules.getAllCategories()![indexPath.row].value(forKeyPath: "name") as? String
-        self.reloadProducts()
+        self.updateProductsTable()
     }
     
     func checkCategoryInfo() -> Bool {
@@ -182,7 +187,10 @@ class CategoriesTableViewController: UITableViewController {
 
         let categoryName = CategoriesDBRules.getAllCategories()![indexPath.row].value(forKeyPath: "name") as? String
         cell.textLabel?.text = categoryName
-        cell.detailTextLabel!.text = "Товаров категории: " + String(ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count.description)
+        
+        let category = CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!
+        
+        cell.detailTextLabel!.text = "Товаров " + String(ProductsDBRules.getAllProductsForCategory(productCategory: category)!.count.description) + " на сумму " + ProductsDBRules.getCategoryProductsTotalPrice(productCategory: category).description + " руб."
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
 
@@ -203,7 +211,7 @@ class CategoriesTableViewController: UITableViewController {
                 self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                 self.tableView.endUpdates()
                 
-                self.reloadProducts()
+                self.updateProductsTable()
             }
             
             Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ КАТЕГОРИИ ТОВАРОВ", alertMessage: "Удалить эту категорию?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)

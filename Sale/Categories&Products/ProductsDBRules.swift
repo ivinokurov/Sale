@@ -35,6 +35,19 @@ class ProductsDBRules: Any {
         return (categoryProducts?.sorted(by: {($0.value(forKeyPath: "name") as! String) < ($1.value(forKeyPath: "name") as! String)}) ?? nil)
         }
     
+    class func getCategoryProductsTotalPrice(productCategory category: NSManagedObject) -> Float {
+        let categoryProducts = category.mutableSetValue(forKey: "products").allObjects as? [NSManagedObject]
+        var price: Float = 0.0
+        if (categoryProducts?.count)! > 0 {
+            for product in categoryProducts! {
+                let productCount = product.value(forKey: "count") as! Float
+                let productPrice = product.value(forKey: "price") as! Float
+                price = price + productCount * productPrice
+            }
+        }
+        return price
+    }
+    
     class func deleteProductByBarcode(code: String) {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {

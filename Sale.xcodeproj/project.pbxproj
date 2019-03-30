@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA00626D224CCFF70083F56D /* LogoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00626C224CCFF70083F56D /* LogoutButton.swift */; };
 		EA0FFA3E222510AB00703EB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */; };
 		EA0FFA40222510AB00703EB0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA3F222510AB00703EB0 /* ViewController.swift */; };
 		EA0FFA43222510AB00703EB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA0FFA41222510AB00703EB0 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 		EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */; };
 		EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */; };
 		EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */; };
+		EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA26536D224C80AA00586769 /* AuthorizeViewController.swift */; };
 		EA4C7E1A2227B7C600425BE8 /* libdtdev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4C7E152227B7C600425BE8 /* libdtdev.a */; };
 		EA4C7E1F2227B80200425BE8 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4C7E1E2227B80200425BE8 /* ExternalAccessory.framework */; };
 		EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */; };
@@ -26,6 +28,8 @@
 		EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */; };
 		EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA536B2E223F56D900919926 /* ProductsDBRules.swift */; };
 		EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */; };
+		EA743056224F3AFB00333B9D /* CashboxNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */; };
+		EA743058224F3B7000333B9D /* PersonalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743057224F3B7000333B9D /* PersonalNavigationController.swift */; };
 		EA93EB472249F6AB006B3F4D /* PersonalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA93EB462249F6AB006B3F4D /* PersonalTableViewController.swift */; };
 		EA93EB4A224A0F87006B3F4D /* PersonalDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA93EB49224A0F87006B3F4D /* PersonalDBRules.swift */; };
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
@@ -37,6 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EA00626C224CCFF70083F56D /* LogoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutButton.swift; sourceTree = "<group>"; };
 		EA0FFA3A222510AB00703EB0 /* Sale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA0FFA3F222510AB00703EB0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -51,6 +56,7 @@
 		EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarCodeButton.swift; path = Sale/Buttons/BarCodeButton.swift; sourceTree = SOURCE_ROOT; };
 		EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		EA26536D224C80AA00586769 /* AuthorizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeViewController.swift; sourceTree = "<group>"; };
 		EA4C7E142227B7C500425BE8 /* DTDevices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTDevices.h; sourceTree = "<group>"; };
 		EA4C7E152227B7C600425BE8 /* libdtdev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdtdev.a; sourceTree = "<group>"; };
 		EA4C7E1E2227B80200425BE8 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -60,6 +66,8 @@
 		EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		EA536B2E223F56D900919926 /* ProductsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsDBRules.swift; sourceTree = "<group>"; };
 		EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDBRules.swift; sourceTree = "<group>"; };
+		EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashboxNavigationController.swift; sourceTree = "<group>"; };
+		EA743057224F3B7000333B9D /* PersonalNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalNavigationController.swift; sourceTree = "<group>"; };
 		EA93EB462249F6AB006B3F4D /* PersonalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalTableViewController.swift; sourceTree = "<group>"; };
 		EA93EB49224A0F87006B3F4D /* PersonalDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalDBRules.swift; sourceTree = "<group>"; };
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
@@ -111,6 +119,7 @@
 				EA4C7E112227B60D00425BE8 /* Library */,
 				EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */,
 				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
+				EA26536D224C80AA00586769 /* AuthorizeViewController.swift */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
 				EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */,
 				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
@@ -154,6 +163,7 @@
 		EA4C7E292227C17900425BE8 /* Cashbox */ = {
 			isa = PBXGroup;
 			children = (
+				EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */,
 				EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */,
 				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
@@ -169,6 +179,7 @@
 				EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */,
 				EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */,
 				EA0FFA62222676BF00703EB0 /* PurchaseButton.swift */,
+				EA00626C224CCFF70083F56D /* LogoutButton.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -176,6 +187,7 @@
 		EA93EB482249F6B7006B3F4D /* Personal */ = {
 			isa = PBXGroup;
 			children = (
+				EA743057224F3B7000333B9D /* PersonalNavigationController.swift */,
 				EA93EB462249F6AB006B3F4D /* PersonalTableViewController.swift */,
 				EA93EB49224A0F87006B3F4D /* PersonalDBRules.swift */,
 			);
@@ -267,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA0FFA46222510AB00703EB0 /* Sale.xcdatamodeld in Sources */,
+				EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */,
 				EA93EB4A224A0F87006B3F4D /* PersonalDBRules.swift in Sources */,
 				EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */,
 				EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */,
@@ -274,6 +287,7 @@
 				EA4C7E2F2227C17900425BE8 /* CashboxViewController.swift in Sources */,
 				EA0FFA5F2225880500703EB0 /* BuyButton.swift in Sources */,
 				EA0FFA63222676BF00703EB0 /* PurchaseButton.swift in Sources */,
+				EA743058224F3B7000333B9D /* PersonalNavigationController.swift in Sources */,
 				EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */,
 				EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */,
 				EAAA59EB223E2C6F0096D990 /* ProductsViewController.swift in Sources */,
@@ -282,8 +296,10 @@
 				EAAA59E7223E02E10096D990 /* CategoriesDBRules.swift in Sources */,
 				EA93EB472249F6AB006B3F4D /* PersonalTableViewController.swift in Sources */,
 				EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */,
+				EA743056224F3AFB00333B9D /* CashboxNavigationController.swift in Sources */,
 				EAAA59E3223D11BF0096D990 /* CategoriesTableViewController.swift in Sources */,
 				EAAA59E9223E03190096D990 /* CommonDBRules.swift in Sources */,
+				EA00626D224CCFF70083F56D /* LogoutButton.swift in Sources */,
 				EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */,
 				EA0FFA5D22256FF700703EB0 /* Utilities.swift in Sources */,
 				EA0FFA40222510AB00703EB0 /* ViewController.swift in Sources */,

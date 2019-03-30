@@ -21,9 +21,16 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var deleteProductsButton: UIButton!
     @IBOutlet weak var productTypesCollectionView: UICollectionView!
     
+    @IBOutlet var personView: UIView!
+    @IBOutlet weak var currentPersonNameLabel: UILabel!
+    @IBOutlet weak var currentPersonRoleLabel: UILabel!
+    @IBOutlet weak var dismissPersonViewButton: UIButton!
+    
+    var parentView: UIView? = nil
     let searchController = UISearchController(searchResultsController: nil)
     var selectBuildingButton: UIBarButtonItem?
     var isPurchaseViewPresented: Bool = false
+    var isPersonViewPresented: Bool = false
     var selectedCategoryIndexPath: IndexPath = IndexPath(row: 0, section: 0)
     var getFromScaner: Bool = false
     var selectedProductRow: Int?
@@ -35,6 +42,69 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.landscape
+    }
+    
+    func getPersonViewCenterPoint() -> CGPoint {
+        let centerX = (self.parentView?.center.x)!
+        let centerY = (self.parentView?.center.y)! * 0.5
+        
+        return CGPoint(x: centerX, y: centerY)
+    }
+    
+    @objc func showPersonView() {
+
+        self.personView.center = self.getPersonViewCenterPoint()
+        self.personView.alpha = 0.0
+        
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.personView.alpha = 1.0
+        }), completion: { (completed: Bool) in
+        })
+        
+        self.personView.alpha = 0.94
+        Utilities.addOverlayView()
+        self.parentView?.addSubview(self.personView)
+        
+        self.currentPersonNameLabel.text = PersonalDBRules.getPersonNameByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
+        self.currentPersonRoleLabel.text = self.getRolePersmissions()
+        
+        Utilities.makeViewFlexibleAppearance(view: self.personView)
+    }
+    
+    func getRolePersmissions() -> String {
+        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+
+        switch Int(personRole) {
+            case Utilities.personRole.admin.rawValue:
+                do {
+                    self.currentPersonRoleLabel.textAlignment = .center
+                    return "Для вас доступны все операции."
+                }
+            case Utilities.personRole.merchandiser.rawValue:
+                do {
+                    self.currentPersonRoleLabel.textAlignment = .left
+                    return "Для вас доступны:\n" +
+                    "1. Кассовые операции.\n" + "2. Операции ведения складского учета." + "3. Операции с персоналом."
+                }
+            case Utilities.personRole.cashier.rawValue:
+                do {
+                    self.currentPersonRoleLabel.textAlignment = .center
+                    return "Для вас доступны:\n" +
+                        "1. Кассовые операции.\n" + "2. Операции с персоналом."
+                }
+            default: return ""
+        }
+    }
+    
+    @IBAction func dismissPersonView(_ sender: Any) {
+        Utilities.decorateButtonTap(buttonToDecorate: self.dismissPersonViewButton)
+        Utilities.removeOverlayView()
+        
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.personView.alpha = 0.0
+        }), completion: { (completed: Bool) in
+            self.isPersonViewPresented = false
+        })
     }
     
     override func viewDidLoad() {
@@ -66,8 +136,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.purchaseTableView.delegate = self
         self.purchaseTableView.estimatedRowHeight = 138
         
-        lib.addDelegate(self)
-        lib.connect()
+        self.parentView = Utilities.mainController!.view
+        Utilities.customizePopoverView(customizedView: self.personView!)
+        self.showPersonView()
+        self.isPersonViewPresented = true
+        
+    //    if !Utilities.isPersonLogout {
+            lib.addDelegate(self)
+            lib.connect()
+    //    }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -433,7 +510,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.addProductInPurchase(self.buyProductsButton)
     }
     
-    
     @IBAction func makePurchase(_ sender: Any) {
         
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
@@ -453,10 +529,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func connectionState(_ state: Int32) {
         do {
             if state == CONN_STATES.CONNECTED.rawValue {
-                self.barCodeButton.isEnabled = true
+                self.barCodeButton.isHidden = false
                 self.barCodeButton.layer.borderColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor
             } else {
-                self.barCodeButton.isEnabled = false
+                self.barCodeButton.isHidden = true
                 self.barCodeButton.layer.borderColor = Utilities.accentColor.cgColor
             }
         }
@@ -474,6 +550,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
         } else {
             self.purchaseContainerView.isHidden = true
+        }
+    
+        if self.isPersonViewPresented {
+            self.personView.removeFromSuperview()
+        
+            coordinator.animate(alongsideTransition: { _ in
+                self.parentView?.addSubview(self.personView)
+                self.personView.center = self.getPersonViewCenterPoint()
+            })
         }
     }
 

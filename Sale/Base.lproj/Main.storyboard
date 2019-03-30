@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="RQx-i7-2q5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Cwp-Se-yn1">
     <device id="ipad10_5" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--ПОКУПКИ-->
+        <!--КАССА-->
         <scene sceneID="miw-px-3hp">
             <objects>
                 <viewController id="sVV-Ky-VVb" customClass="CashboxViewController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
@@ -195,21 +195,21 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Цена:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RRl-83-DhI">
-                                                            <rect key="frame" x="15" y="67" width="127" height="26"/>
+                                                            <rect key="frame" x="15" y="72" width="127" height="26"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Цена" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k9l-NH-lU2">
-                                                            <rect key="frame" x="150" y="67" width="225" height="21"/>
+                                                            <rect key="frame" x="150" y="72" width="311" height="26"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                                             <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Количество" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCE-YV-3qh">
-                                                            <rect key="frame" x="150" y="105" width="225" height="21"/>
+                                                            <rect key="frame" x="150" y="102" width="311" height="26"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                                             <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -279,7 +279,7 @@
                                     <action selector="addProductInPurchase:" destination="sVV-Ky-VVb" eventType="touchUpInside" id="01Y-47-SU5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hW-B6-TpA" customClass="BarCodeButton" customModule="Sale" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hW-B6-TpA" customClass="BarCodeButton" customModule="Sale" customModuleProvider="target">
                                 <rect key="frame" x="876" y="608" width="80" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -309,14 +309,18 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Jnn-dn-fNM"/>
                     </view>
-                    <navigationItem key="navigationItem" title="ПОКУПКИ" id="QdF-bF-lXv">
+                    <navigationItem key="navigationItem" title="КАССА" id="QdF-bF-lXv">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="ArrowsLeft" style="done" id="dGI-1e-VcZ"/>
                     </navigationItem>
                     <connections>
                         <outlet property="barCodeButton" destination="6hW-B6-TpA" id="23T-ti-w4J"/>
                         <outlet property="buyProductButton" destination="aUI-9L-VJr" id="90B-0T-k30"/>
                         <outlet property="buyProductsButton" destination="ovH-99-ohf" id="X8M-Rn-DPY"/>
+                        <outlet property="currentPersonNameLabel" destination="Vky-DE-Z6w" id="adr-NU-oE5"/>
+                        <outlet property="currentPersonRoleLabel" destination="C8q-75-8Bi" id="DmA-kk-XWs"/>
                         <outlet property="deleteProductsButton" destination="5Ve-km-hdM" id="NNJ-Bd-mwg"/>
+                        <outlet property="dismissPersonViewButton" destination="Xis-QL-gnd" id="sH0-0h-p0J"/>
+                        <outlet property="personView" destination="aF9-qZ-rxI" id="PvX-0l-hQ4"/>
                         <outlet property="productTypesCollectionView" destination="KUp-e6-p7S" id="gga-IL-Ugr"/>
                         <outlet property="productsTableView" destination="fPQ-E3-an7" id="qNK-xl-JCn"/>
                         <outlet property="purchaseContainerView" destination="naC-bb-8oK" id="RDz-tL-qe2"/>
@@ -326,6 +330,40 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gqs-8a-sX1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="aF9-qZ-rxI">
+                    <rect key="frame" x="0.0" y="0.0" width="700" height="240"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xis-QL-gnd">
+                            <rect key="frame" x="230" y="193" width="240" height="36"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                            <state key="normal" title="ОК"/>
+                            <connections>
+                                <action selector="cancelAddOrRenameCategory:" destination="Cki-k7-GeH" eventType="touchUpInside" id="zcF-Kc-cGg"/>
+                                <action selector="dismissPersonView:" destination="sVV-Ky-VVb" eventType="touchUpInside" id="uae-D0-nSV"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vky-DE-Z6w">
+                            <rect key="frame" x="20" y="20" width="660" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <size key="shadowOffset" width="-2" height="-2"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C8q-75-8Bi">
+                            <rect key="frame" x="136" y="54" width="429" height="133"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <size key="shadowOffset" width="-2" height="-2"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <viewLayoutGuide key="safeArea" id="1qz-uI-3DI"/>
+                </view>
                 <searchDisplayController id="SSp-EE-Mqf">
                     <connections>
                         <outlet property="delegate" destination="sVV-Ky-VVb" id="9Kv-m7-IxA"/>
@@ -336,6 +374,106 @@
                 </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1643.5251798561151" y="-319.42446043165472"/>
+        </scene>
+        <!--Authorize View Controller-->
+        <scene sceneID="G3Q-lg-2Fi">
+            <objects>
+                <viewController storyboardIdentifier="authorizeControllerId" id="Cwp-Se-yn1" customClass="AuthorizeViewController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bK7-Si-F5Z" customClass="Au">
+                        <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cwj-AE-3Zq">
+                                <rect key="frame" x="335" y="130" width="442" height="297"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Введите логин" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="tdd-Og-1u3">
+                                        <rect key="frame" x="20" y="66" width="403" height="49"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="23"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <connections>
+                                            <action selector="checkITNStringLength:" destination="kbW-RM-Zr4" eventType="editingChanged" id="cNW-Nb-xgu"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sse-8q-Jfq">
+                                        <rect key="frame" x="20" y="111" width="403" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="0.10000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ЛОГИН" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cAo-Zc-6EL">
+                                        <rect key="frame" x="20" y="24" width="172" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Введите пароль" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="GCd-MF-TMR">
+                                        <rect key="frame" x="20" y="183" width="362" height="49"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="23"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                    </textField>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EjV-gN-rmc">
+                                        <rect key="frame" x="20" y="228" width="403" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="0.10000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ПАРОЛЬ" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tC-Av-IdC">
+                                        <rect key="frame" x="20" y="141" width="172" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rLG-uY-Mw8">
+                                        <rect key="frame" x="108" y="250" width="240" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <state key="normal" title="ВОЙТИ"/>
+                                        <connections>
+                                            <action selector="enterAppForSomePerson:" destination="Cwp-Se-yn1" eventType="touchUpInside" id="rSI-sa-CGk"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QJk-iX-XBG">
+                                        <rect key="frame" x="392" y="194" width="26" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="Hide-25"/>
+                                        <connections>
+                                            <action selector="showOrHidePassword:" destination="Cwp-Se-yn1" eventType="touchUpInside" id="P9D-8i-xIb"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="FW9-Lo-v8D"/>
+                    </view>
+                    <connections>
+                        <outlet property="authorizeView" destination="cwj-AE-3Zq" id="LwV-Rx-P4b"/>
+                        <outlet property="enterButton" destination="rLG-uY-Mw8" id="QTD-Xt-un4"/>
+                        <outlet property="loginTextField" destination="tdd-Og-1u3" id="fV1-pQ-W8l"/>
+                        <outlet property="passwordVisibilityButton" destination="QJk-iX-XBG" id="sUE-mU-cTd"/>
+                        <outlet property="pwdTextField" destination="GCd-MF-TMR" id="AH6-L6-fYy"/>
+                        <segue destination="RQx-i7-2q5" kind="show" identifier="enterForSomePerson" id="3C6-kc-39D"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nzS-bU-h5h" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-682" y="939"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="ba3-jg-hel">
@@ -356,7 +494,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1o8-yS-ljp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="105" y="747"/>
+            <point key="canvasLocation" x="114" y="939"/>
         </scene>
         <!--ТОВАРЫ-->
         <scene sceneID="E18-nk-sIY">
@@ -743,7 +881,7 @@
                                             <rect key="frame" x="16" y="30.5" width="58" height="20"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -789,7 +927,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TUo-EO-6Ie">
-                            <rect key="frame" x="100" y="134" width="240" height="36"/>
+                            <rect key="frame" x="100" y="133" width="240" height="36"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                             <state key="normal" title="ДОБАВИТЬ"/>
@@ -845,8 +983,8 @@
         <!--ТОВАРЫ-->
         <scene sceneID="hLQ-NA-nzl">
             <objects>
-                <splitViewController extendedLayoutIncludesOpaqueBars="YES" preferredPrimaryColumnWidthFraction="1" id="wPS-RY-OK4" customClass="ProductsSplitViewController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="ТОВАРЫ" image="Tab2-25" selectedImage="Tab2Filled-25" id="ueU-zK-0Ly"/>
+                <splitViewController storyboardIdentifier="splitControllerId" extendedLayoutIncludesOpaqueBars="YES" preferredPrimaryColumnWidthFraction="1" id="wPS-RY-OK4" customClass="ProductsSplitViewController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="ТОВАРЫ" id="ueU-zK-0Ly"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="alertImageView" destination="6mc-cS-EW2" id="R8z-Jm-lnz"/>
@@ -903,11 +1041,11 @@
             </objects>
             <point key="canvasLocation" x="911" y="985"/>
         </scene>
-        <!--ПОКУПКИ-->
+        <!--КАССА-->
         <scene sceneID="CkC-8T-lfe">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hns-vf-h0M" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="ПОКУПКИ" image="Tab1-25" selectedImage="Tab1Filled-25" id="7mL-y2-uwU"/>
+                <navigationController storyboardIdentifier="cashboxControllerId" automaticallyAdjustsScrollViewInsets="NO" id="hns-vf-h0M" customClass="CashboxNavigationController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="КАССА" id="7mL-y2-uwU"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Eps-CX-kA4">
                         <rect key="frame" x="0.0" y="20" width="1112" height="50"/>
@@ -990,6 +1128,7 @@
                         <outlet property="itnPersonTextField" destination="Z0k-0V-tMO" id="Aqy-7L-Kka"/>
                         <outlet property="loginPersonTextField" destination="J9J-38-aIX" id="jgQ-v7-btZ"/>
                         <outlet property="merchPersonButton" destination="ZTx-7Q-glK" id="0XV-yF-2eN"/>
+                        <outlet property="passwordVisibilityButton" destination="JaH-rj-w1J" id="iTe-Wt-8OQ"/>
                         <outlet property="personView" destination="2Kj-JE-LLz" id="gkH-zw-B3S"/>
                         <outlet property="personViewTitleLabel" destination="htq-2G-bwW" id="uh8-nE-TuH"/>
                         <outlet property="pwdPersonTextField" destination="l8Q-Nx-D4O" id="Frd-d3-vqL"/>
@@ -1056,7 +1195,10 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="23"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            <connections>
+                                <action selector="checkITNStringLength:" destination="kbW-RM-Zr4" eventType="editingChanged" id="QkQ-6M-T0k"/>
+                            </connections>
                         </textField>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fSO-Lc-s69">
                             <rect key="frame" x="20" y="282" width="660" height="1"/>
@@ -1103,7 +1245,7 @@
                             <rect key="frame" x="54" y="499" width="157" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ТОВАРОВЕД" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XXY-hH-UCe">
@@ -1147,7 +1289,7 @@
                             </connections>
                         </button>
                         <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Введите пароль" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="l8Q-Nx-D4O">
-                            <rect key="frame" x="360" y="354" width="320" height="49"/>
+                            <rect key="frame" x="360" y="354" width="284" height="49"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="23"/>
                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
@@ -1177,18 +1319,26 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JaH-rj-w1J">
+                            <rect key="frame" x="650" y="366" width="26" height="26"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="Hide-25"/>
+                            <connections>
+                                <action selector="showOrHidePassword:" destination="kbW-RM-Zr4" eventType="touchUpInside" id="nPT-EO-P60"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <viewLayoutGuide key="safeArea" id="Y9E-0c-mMM"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="2353.0575539568345" y="2184.8920863309354"/>
+            <point key="canvasLocation" x="2433" y="2185"/>
         </scene>
         <!--ПЕРСОНАЛ-->
         <scene sceneID="dIk-fX-OaW">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ozO-0Q-JG0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="ПЕРСОНАЛ" image="Tab3-25" selectedImage="Tab3Filled-25" id="o8y-o9-UsN"/>
+                <navigationController storyboardIdentifier="personalControllerId" automaticallyAdjustsScrollViewInsets="NO" id="ozO-0Q-JG0" customClass="PersonalNavigationController" customModule="Sale" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="ПЕРСОНАЛ" id="o8y-o9-UsN"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="1ck-tF-vDA">
                         <rect key="frame" x="0.0" y="20" width="1112" height="50"/>
@@ -1213,12 +1363,7 @@
         <image name="Code" width="22.5" height="22.5"/>
         <image name="Delete" width="50" height="50"/>
         <image name="Error" width="153.60000610351562" height="153.60000610351562"/>
+        <image name="Hide-25" width="37.5" height="37.5"/>
         <image name="Purchase" width="50" height="50"/>
-        <image name="Tab1-25" width="18.75" height="18.75"/>
-        <image name="Tab1Filled-25" width="18.75" height="18.75"/>
-        <image name="Tab2-25" width="18.75" height="18.75"/>
-        <image name="Tab2Filled-25" width="18.75" height="18.75"/>
-        <image name="Tab3-25" width="18.75" height="18.75"/>
-        <image name="Tab3Filled-25" width="18.75" height="18.75"/>
     </resources>
 </document>
