@@ -4,6 +4,14 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Products" syncable="YES"/>
     </entity>
+    <entity name="OrgInfo" representedClassName="OrgInfo" syncable="YES" codeGenerationType="class">
+        <attribute name="itn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="kpp" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="orgName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pointAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pointName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taxType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <entity name="Persons" representedClassName="Persons" syncable="YES" codeGenerationType="class">
         <attribute name="itn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="login" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,9 +37,10 @@
     </entity>
     <elements>
         <element name="Categories" positionX="-97.296875" positionY="-241.3828125" width="128" height="73"/>
+        <element name="OrgInfo" positionX="315.83984375" positionY="-222.87890625" width="128" height="133"/>
         <element name="Persons" positionX="140.6328125" positionY="-319.0234375" width="128" height="120"/>
         <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
-        <element name="Purchase" positionX="-60.19140625" positionY="-88.51953125" width="128" height="90"/>
-        <element name="Settings" positionX="292.97265625" positionY="-316.359375" width="128" height="60"/>
+        <element name="Purchase" positionX="-96.01953125" positionY="-114.4609375" width="128" height="90"/>
+        <element name="Settings" positionX="312.8359375" positionY="-317.5859375" width="128" height="60"/>
     </elements>
 </model>

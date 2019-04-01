@@ -271,8 +271,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         })
     }
     
-    func checkPersonInfo() -> Bool {
-        
+    func checkPersonInfo() -> Bool {        
         if self.fullPersonNameTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует имя сотрудника!")
             return false

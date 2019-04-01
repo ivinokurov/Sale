@@ -142,7 +142,7 @@ class CategoriesTableViewController: UITableViewController {
                             self.tableView.selectRow(at: IndexPath(row: self.swipedRowIndex!, section: 0), animated: true, scrollPosition: .none)
                             self.isCategoryEditing = false
                         } else {
-                            self.tableView.selectRow(at: IndexPath(row: CategoriesDBRules.getCategoryIndexByName(categoryName: self.selectedCategoryName!) ?? 0, section: 0), animated: true, scrollPosition: .none)
+                        //    self.tableView.selectRow(at: IndexPath(row: CategoriesDBRules.getCategoryIndexByName(categoryName: self.selectedCategoryName!) ?? 0, section: 0), animated: true, scrollPosition: .none)
                         }
                     }
                 } else {
