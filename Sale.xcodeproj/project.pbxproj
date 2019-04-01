@@ -30,9 +30,13 @@
 		EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */; };
 		EA743056224F3AFB00333B9D /* CashboxNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */; };
 		EA743058224F3B7000333B9D /* PersonalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743057224F3B7000333B9D /* PersonalNavigationController.swift */; };
+		EA74305A224F50A700333B9D /* ReportsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743059224F50A700333B9D /* ReportsNavigationController.swift */; };
+		EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305B224F534500333B9D /* SettingsNavigationController.swift */; };
+		EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305D224F608600333B9D /* SettingsTableViewController.swift */; };
 		EA93EB472249F6AB006B3F4D /* PersonalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA93EB462249F6AB006B3F4D /* PersonalTableViewController.swift */; };
 		EA93EB4A224A0F87006B3F4D /* PersonalDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA93EB49224A0F87006B3F4D /* PersonalDBRules.swift */; };
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
+		EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA01FB2225082E600C46257 /* SettingsDBRules.swift */; };
 		EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */; };
 		EAAA59E3223D11BF0096D990 /* CategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */; };
 		EAAA59E7223E02E10096D990 /* CategoriesDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59E6223E02E10096D990 /* CategoriesDBRules.swift */; };
@@ -68,9 +72,13 @@
 		EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDBRules.swift; sourceTree = "<group>"; };
 		EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashboxNavigationController.swift; sourceTree = "<group>"; };
 		EA743057224F3B7000333B9D /* PersonalNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalNavigationController.swift; sourceTree = "<group>"; };
+		EA743059224F50A700333B9D /* ReportsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsNavigationController.swift; sourceTree = "<group>"; };
+		EA74305B224F534500333B9D /* SettingsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationController.swift; sourceTree = "<group>"; };
+		EA74305D224F608600333B9D /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		EA93EB462249F6AB006B3F4D /* PersonalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalTableViewController.swift; sourceTree = "<group>"; };
 		EA93EB49224A0F87006B3F4D /* PersonalDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalDBRules.swift; sourceTree = "<group>"; };
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
+		EAA01FB2225082E600C46257 /* SettingsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDBRules.swift; sourceTree = "<group>"; };
 		EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSplitViewController.swift; sourceTree = "<group>"; };
 		EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewController.swift; sourceTree = "<group>"; };
 		EAAA59E6223E02E10096D990 /* CategoriesDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesDBRules.swift; sourceTree = "<group>"; };
@@ -111,6 +119,7 @@
 		EA0FFA3C222510AB00703EB0 /* Sale */ = {
 			isa = PBXGroup;
 			children = (
+				EA74305F224F60D200333B9D /* Settings */,
 				EA93EB482249F6B7006B3F4D /* Personal */,
 				EA4BEB1822489BA3008BFEDD /* AllCategories */,
 				EAAA59E5223D140A0096D990 /* AllProducts */,
@@ -121,6 +130,7 @@
 				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
 				EA26536D224C80AA00586769 /* AuthorizeViewController.swift */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
+				EA743059224F50A700333B9D /* ReportsNavigationController.swift */,
 				EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */,
 				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
 				EA0FFA49222510AB00703EB0 /* LaunchScreen.storyboard */,
@@ -182,6 +192,16 @@
 				EA00626C224CCFF70083F56D /* LogoutButton.swift */,
 			);
 			path = Buttons;
+			sourceTree = "<group>";
+		};
+		EA74305F224F60D200333B9D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				EA74305D224F608600333B9D /* SettingsTableViewController.swift */,
+				EA74305B224F534500333B9D /* SettingsNavigationController.swift */,
+				EAA01FB2225082E600C46257 /* SettingsDBRules.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		EA93EB482249F6B7006B3F4D /* Personal */ = {
@@ -284,11 +304,14 @@
 				EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */,
 				EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */,
 				EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */,
+				EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */,
 				EA4C7E2F2227C17900425BE8 /* CashboxViewController.swift in Sources */,
 				EA0FFA5F2225880500703EB0 /* BuyButton.swift in Sources */,
 				EA0FFA63222676BF00703EB0 /* PurchaseButton.swift in Sources */,
 				EA743058224F3B7000333B9D /* PersonalNavigationController.swift in Sources */,
+				EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */,
 				EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */,
+				EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */,
 				EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */,
 				EAAA59EB223E2C6F0096D990 /* ProductsViewController.swift in Sources */,
 				EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */,
@@ -301,6 +324,7 @@
 				EAAA59E9223E03190096D990 /* CommonDBRules.swift in Sources */,
 				EA00626D224CCFF70083F56D /* LogoutButton.swift in Sources */,
 				EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */,
+				EA74305A224F50A700333B9D /* ReportsNavigationController.swift in Sources */,
 				EA0FFA5D22256FF700703EB0 /* Utilities.swift in Sources */,
 				EA0FFA40222510AB00703EB0 /* ViewController.swift in Sources */,
 				EA0FFA3E222510AB00703EB0 /* AppDelegate.swift in Sources */,

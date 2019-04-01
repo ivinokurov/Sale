@@ -17,11 +17,13 @@ class MainTabBarController: UITabBarController {
         let cashboxController = storyboard.instantiateViewController(withIdentifier: "cashboxControllerId") as! CashboxNavigationController
         let splitController = storyboard.instantiateViewController(withIdentifier: "splitControllerId") as! ProductsSplitViewController
         let personalController = storyboard.instantiateViewController(withIdentifier: "personalControllerId") as! PersonalNavigationController
+        let reportsController = storyboard.instantiateViewController(withIdentifier: "reportsControllerId") as! ReportsNavigationController
+        let settingsController = storyboard.instantiateViewController(withIdentifier: "settingsControllerId") as! SettingsNavigationController
         
         switch self.getCurrentPersonRole() {
             case Utilities.personRole.admin.rawValue:
             do {
-                self.viewControllers = [cashboxController, splitController, personalController]
+                self.viewControllers = [cashboxController, splitController, personalController, reportsController, settingsController]
             }
         case Utilities.personRole.merchandiser.rawValue:
             do {
@@ -34,11 +36,16 @@ class MainTabBarController: UITabBarController {
         default: self.viewControllers = nil
         }
         
-        
         Utilities.splitController = splitController
         Utilities.customizePopoverView(customizedView: splitController.alertView)
 
         splitController.alertView.alpha = 0.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBar.tintColor = Utilities.accentColor
     }
     
     func getCurrentPersonRole () -> Int {

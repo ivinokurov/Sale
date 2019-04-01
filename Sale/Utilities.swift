@@ -16,6 +16,12 @@ class Utilities: Any {
         case admin = 1, merchandiser = 2, cashier = 3
     }
     
+    static let colors = [0: UIColor(red: 255/255, green: 59/255, blue: 48/255, alpha: 1.0),
+                         3: UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1.0),
+                         1: UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1.0),
+                         2: UIColor(red: 88/255, green: 86/255, blue: 214/255, alpha: 1.0),
+                         4: UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)]
+    
     static let roleNames = [1: "Администратор", 2: "Товаровед", 3: "Кассир"]
     
     static let digitsOny = "0123456789"
@@ -34,7 +40,7 @@ class Utilities: Any {
     static let buyProductButtonColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
     static let deleteProductsButtonColor = UIColor.red
-    static let accentColor: UIColor = .red
+    static var accentColor: UIColor = colors[0]!
     static var isPersonLogout: Bool = false
     
     class func addOverlayView() {
@@ -122,8 +128,8 @@ class Utilities: Any {
     }
     
     class func makeButtonRounded(button: UIView) {
-        button.tintColor = self.barButtonItemColor
-        button.layer.borderColor = self.barButtonItemColor.cgColor
+        button.tintColor = self.accentColor
+        button.layer.borderColor = self.accentColor.cgColor
         button.layer.cornerRadius = button.frame.width / 2
         button.layer.borderWidth = 1.0
     }
@@ -136,6 +142,18 @@ class Utilities: Any {
         view.layer.borderColor = Utilities.accentColor.cgColor
         view.layer.borderWidth = 0.4
         view.layer.cornerRadius = 8
+    }
+    
+    class func setAccentColorForSomeViews(viewsToSetAccentColor views: [UIView]) {
+        for view in views {
+           view.tintColor = Utilities.accentColor
+        }
+    }
+    
+    class func setBkgColorForSomeViews(viewsToSetAccentColor views: [UIView]) {
+        for view in views {
+            view.backgroundColor = Utilities.accentColor
+        }
     }
     
     class func makeViewFlexibleAppearance(view: UIView) {

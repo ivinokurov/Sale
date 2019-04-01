@@ -182,6 +182,24 @@ class PersonalDBRules: Any {
         return nil
     }
     
+    class func getPersonRoleByInt(personItn itn: String) -> Int16? {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
+            fetchRequest.predicate = NSPredicate(format: "itn == %@", argumentArray: [itn])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    let person = fetchResult.first
+                    return person!.value(forKeyPath: "role") as? Int16
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка извлечения роли сотрудника: " + error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
     class func getPersonByLoginAndPassword(personLogin login: String, personPassword password: String) -> NSManagedObject? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {

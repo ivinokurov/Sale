@@ -14,6 +14,8 @@ class CategoriesTableViewController: UITableViewController {
     @IBOutlet weak var addOrRenameCategoryButton: UIButton!
     @IBOutlet weak var cancelCategoryButton: UIButton!
     
+    @IBOutlet weak var categoryNameUnderView: UIView!
+    
     var parentView: UIView? = nil
     var isCategoryEditing: Bool = false
     var isCategoryViewPresented: Bool = false
@@ -33,7 +35,19 @@ class CategoriesTableViewController: UITableViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.categoryNameTextField, self.addOrRenameCategoryButton, self.cancelCategoryButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.categoryNameUnderView])
+        
+        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
+        
+        self.tableView.reloadData()
+    }
+    
     func setCategoryViewActionTitles() {
+        
         if !self.isCategoryEditing {
             self.categoryViewTitleLabel.text = "НОВАЯ КАТЕГОРИЯ ТОВАРОВ"
             self.addOrRenameCategoryButton.setTitle("ДОБАВИТЬ", for: .normal)
@@ -45,13 +59,14 @@ class CategoriesTableViewController: UITableViewController {
     
     func addNewCategoryBarItem() {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCategoryView))
-        rightItemBarButton.tintColor = Utilities.barButtonItemColor
+        rightItemBarButton.tintColor = Utilities.accentColor 
         self.navigationItem.rightBarButtonItem = rightItemBarButton
         
         Utilities.customizePopoverView(customizedView: self.categoryView)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
         super.viewWillTransition(to: size , with: coordinator)
 
         self.categoryView.removeFromSuperview()
@@ -65,6 +80,7 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     func getCategoriesViewCenterPoint() -> CGPoint {
+        
         let centerX = (self.parentView?.center.x)!
         let centerY = (self.parentView?.center.y)! * 0.5
         
@@ -130,7 +146,7 @@ class CategoriesTableViewController: UITableViewController {
                         }
                     }
                 } else {
-                    if !self.isCategoryEditing {
+                    if newCategoryName != "" {
                         Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
                     } else {
                         self.removeCategoryView()

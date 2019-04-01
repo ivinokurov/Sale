@@ -25,6 +25,10 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     @IBOutlet weak var addOrEditProductButton: UIButton!
     @IBOutlet weak var cancelProductButton: UIButton!
     
+    @IBOutlet weak var productNameUnderView: UIView!    
+    @IBOutlet weak var productDescUnderView: UIView!
+    @IBOutlet weak var productBarcodeUnderView: UIView!
+    
     var parentView: UIView? = nil
     var isProductViewPresented: Bool = false
     var isProductEditing: Bool = false
@@ -36,10 +40,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         self.parentView = Utilities.mainController!.view 
         self.productsTableView.estimatedRowHeight = 140
-        
-        Utilities.makeButtonRounded(button: self.itemsButton)
-        Utilities.makeButtonRounded(button: self.kilosButton)
-        Utilities.makeButtonRounded(button: self.litersButton)
         
         self.addNewProductBarItem()
         
@@ -53,12 +53,21 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.productsTableView.reloadData()
 
         Utilities.makeLeftViewForTextField(textEdit: self.productPriceTextField, imageName: "Ruble")
-        self.productPriceTextField.leftView?.tintColor = Utilities.accentColor
+        self.productPriceTextField.leftView?.tintColor = .red //Utilities.accentColor
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.productNameTextField, self.productDescTextField, self.productBarcodeTextField, self.itemsButton, self.kilosButton, self.litersButton, self.addOrEditProductButton, self.cancelProductButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.productNameUnderView, self.productDescUnderView, self.productBarcodeUnderView])
+        
+        Utilities.makeButtonRounded(button: self.itemsButton)
+        Utilities.makeButtonRounded(button: self.kilosButton)
+        Utilities.makeButtonRounded(button: self.litersButton)
+        
+        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
         self.productsTableView.reloadData()
     }
@@ -94,6 +103,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.itemsButton.setImage(nil, for: .normal)
         self.kilosButton.setImage(nil, for: .normal)
         self.litersButton.setImage(nil, for: .normal)
+        
         switch sender.tag {
         case Utilities.measures.items.rawValue:
             do {
@@ -129,7 +139,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     
     func addNewProductBarItem() {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showProductView))
-        rightItemBarButton.tintColor = Utilities.barButtonItemColor
+        rightItemBarButton.tintColor = Utilities.accentColor
         self.navigationItem.rightBarButtonItem = rightItemBarButton
         Utilities.customizePopoverView(customizedView: self.productView)
     }

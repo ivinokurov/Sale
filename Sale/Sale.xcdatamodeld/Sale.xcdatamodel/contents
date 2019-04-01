@@ -24,10 +24,14 @@
         <attribute name="count" optional="YES" attributeType="Float" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
+        <attribute name="colorIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Categories" positionX="-97.296875" positionY="-241.3828125" width="128" height="73"/>
+        <element name="Persons" positionX="140.6328125" positionY="-319.0234375" width="128" height="120"/>
         <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
         <element name="Purchase" positionX="-60.19140625" positionY="-88.51953125" width="128" height="90"/>
-        <element name="Persons" positionX="27" positionY="-144" width="128" height="120"/>
+        <element name="Settings" positionX="292.97265625" positionY="-316.359375" width="128" height="60"/>
     </elements>
 </model>

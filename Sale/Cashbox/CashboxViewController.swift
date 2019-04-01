@@ -45,6 +45,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getPersonViewCenterPoint() -> CGPoint {
+        
         let centerX = (self.parentView?.center.x)!
         let centerY = (self.parentView?.center.y)! * 0.5
         
@@ -69,34 +70,39 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.currentPersonRoleLabel.text = self.getRolePersmissions()
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
+        
+        self.dismissPersonViewButton.tintColor = Utilities.accentColor
     }
     
     func getRolePersmissions() -> String {
+        
         let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
 
         switch Int(personRole) {
             case Utilities.personRole.admin.rawValue:
                 do {
-                    self.currentPersonRoleLabel.textAlignment = .center
-                    return "Для вас доступны все операции."
+                    self.currentPersonRoleLabel.textAlignment = .left
+                    return "Для вас доступны:\n" +
+                        "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персоналом.\n" + "4. Формирование отчетов и настроек приложения."
                 }
             case Utilities.personRole.merchandiser.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
                     return "Для вас доступны:\n" +
-                    "1. Кассовые операции.\n" + "2. Операции ведения складского учета." + "3. Операции с персоналом."
+                        "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персональной информацией."
                 }
             case Utilities.personRole.cashier.rawValue:
                 do {
-                    self.currentPersonRoleLabel.textAlignment = .center
+                    self.currentPersonRoleLabel.textAlignment = .left
                     return "Для вас доступны:\n" +
-                        "1. Кассовые операции.\n" + "2. Операции с персоналом."
+                        "1. Кассовые операции.\n" + "2. Операции с персональной информацией."
                 }
             default: return ""
         }
     }
     
     @IBAction func dismissPersonView(_ sender: Any) {
+        
         Utilities.decorateButtonTap(buttonToDecorate: self.dismissPersonViewButton)
         Utilities.removeOverlayView()
         
@@ -108,11 +114,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         selectBuildingButton = UIBarButtonItem(image: showPurchaseViewImage, style: .plain, target: self, action: #selector(showOrHidePurchaseView(_:)))
         self.navigationItem.rightBarButtonItem = selectBuildingButton
-        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.barButtonItemColor
+        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
         self.purchaseContainerView.frame.origin.x = self.view.frame.width
         self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
@@ -148,6 +155,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
         
         if self.isPurchaseViewPresented {
@@ -175,7 +183,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         self.productsTableView.reloadData()
-    //    self.productsTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
+        
+        self.productTypesCollectionView.layer.borderColor = Utilities.accentColor.cgColor
+        
+        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
+        
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Utilities.accentColor], for: .normal)
     }
     
     func customizeSearchBar() {
@@ -186,12 +199,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.searchController.dimsBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = false
         self.searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
-        self.searchController.searchBar.tintColor = Utilities.barButtonItemColor
+        self.searchController.searchBar.tintColor = Utilities.accentColor
         self.searchController.searchBar.barStyle = .default
         
         if let textfield = self.searchController.searchBar.value(forKey: "searchField") as? UITextField {
             textfield.placeholder = "Найти товары для выбранной категории"
-            textfield.tintColor = Utilities.barButtonItemColor
+            textfield.tintColor = Utilities.accentColor
             if let backgroundview = textfield.subviews.first {
                 backgroundview.backgroundColor = UIColor.white
             }
@@ -432,7 +445,13 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
 
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
-            
+            /*
+            if !UIDevice.current.orientation.isLandscape {
+                self.purchaseContainerView.frame.size.height = 700
+            } else {
+                self.purchaseContainerView.frame.size.height = 472
+            }
+            */
             self.isPurchaseViewPresented = true
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
@@ -464,6 +483,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         Utilities.setCollectionViewCellSelectedColor(cellToSetSelectedColor: cell)
         
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 64)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

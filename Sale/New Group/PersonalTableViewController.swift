@@ -21,22 +21,23 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var cancelPersonButton: UIButton!    
     @IBOutlet weak var personViewTitleLabel: UILabel!
     @IBOutlet weak var passwordVisibilityButton: UIButton!
+    
+    @IBOutlet weak var personNameUnderView: UIView!
+    @IBOutlet weak var personItnUnderView: UIView!
+    @IBOutlet weak var personLoginUnderView: UIView!
+    @IBOutlet weak var personPwdUnderView: UIView!
+    
     var parentView: UIView? = nil
     var isPersonEditing: Bool = false
     var isPersonViewPresented: Bool = false
     var swipedRowIndex: Int? = nil
     var selectedPersonRole: Int = Utilities.personRole.admin.rawValue
+    var currentPersonItn: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.parentView = Utilities.mainController!.view
-        
-        Utilities.makeButtonRounded(button: self.adminPersonButton)
-        self.adminPersonButton.layer.borderColor = Utilities.accentColor.cgColor
-        self.adminPersonButton.tintColor = Utilities.accentColor
-        Utilities.makeButtonRounded(button: self.merchPersonButton)
-        Utilities.makeButtonRounded(button: self.cashPersonButton)
         
         self.itnPersonTextField.delegate = self
         
@@ -44,7 +45,26 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         if personRole == Utilities.personRole.admin.rawValue {
             self.addNewPersonaBarItem()
-        } 
+        }
+        
+        self.currentPersonItn = PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.fullPersonNameTextField, self.itnPersonTextField, self.loginPersonTextField, self.pwdPersonTextField, self.addOrEditPersonButton, self.cancelPersonButton, self.passwordVisibilityButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.personNameUnderView, self.personItnUnderView, self.personLoginUnderView, self.personPwdUnderView])
+        
+        Utilities.makeButtonRounded(button: self.adminPersonButton)
+        self.adminPersonButton.layer.borderColor = UIColor.red.cgColor
+        self.adminPersonButton.tintColor = UIColor.red
+        Utilities.makeButtonRounded(button: self.merchPersonButton)
+        Utilities.makeButtonRounded(button: self.cashPersonButton)
+        
+        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
+        
+        self.tableView.reloadData()
     }
     
     func addNewPersonaBarItem() {
@@ -137,13 +157,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
-        
-        if personRole == Utilities.personRole.admin.rawValue {
-            return PersonalDBRules.getAllPersons()?.count ?? 0
-        } else {
-            return 1
-        }
+        return PersonalDBRules.getAllPersons()?.count ?? 0
     }
     
     func isLoginMuchTheSame(personLogin login: String, personNewLogin newLogin: String) -> Bool {
@@ -186,6 +200,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                         PersonalDBRules.changePerson(originItn: itn, personNewName: newName, personNewLogin: newLogin, personNewPassword: newPassword, personNewRole: newRole)
                         
                         self.removePersonView()
+                        
                         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                         self.self.swipedRowIndex = nil
                     } else {
@@ -195,6 +210,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                     PersonalDBRules.changePerson(originItn: itn, personNewName: newName, personNewLogin: newLogin, personNewPassword: newPassword, personNewRole: newRole)
                     
                     self.removePersonView()
+                    
                     self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                 }
                 self.isPersonEditing = false
@@ -280,16 +296,10 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCellId", for: indexPath)
         
-        let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
-        
-        var person: NSManagedObject!
-        
-        if personRole == Utilities.personRole.admin.rawValue {
-            person = PersonalDBRules.getAllPersons()![indexPath.row]
-        } else {
-            person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
-        }
+        let person = PersonalDBRules.getAllPersons()![indexPath.row]
 
+        let login = person.value(forKeyPath: "login") as! String
+        let password = person.value(forKeyPath: "password") as! String
         let name = person.value(forKeyPath: "name") as! String
         let role = person.value(forKeyPath: "role") as! Int16
         
@@ -301,9 +311,13 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             cell.detailTextLabel?.textColor = UIColor.black
         }
         
-        if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!) == PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) {
+        if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn {
             
             cell.accessoryView = self.createLougoutButton()
+            cell.selectionStyle = .default
+        } else {
+            cell.accessoryView = nil
+            cell.selectionStyle = .none
         }
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
@@ -311,9 +325,28 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        if Int(PersonalDBRules.getPersonRoleByInt(personItn: self.currentPersonItn!)!) == Utilities.personRole.admin.rawValue {
+            return true
+        } else {
+            let person = PersonalDBRules.getAllPersons()![indexPath.row]
+            
+            let login = person.value(forKeyPath: "login") as! String
+            let password = person.value(forKeyPath: "password") as! String
+            
+            if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
     func createLougoutButton() -> UIButton {
         let accessoryButton = LogoutButton(type: .custom)
         accessoryButton.setImage(UIImage(named: "Logout"), for: .normal)
+        accessoryButton.tintColor = Utilities.accentColor
         accessoryButton.addTarget(self, action: #selector(logoutPerson(sender:)), for: .touchUpInside)
         accessoryButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         accessoryButton.contentMode = .scaleAspectFit
@@ -332,6 +365,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
         let person = PersonalDBRules.getAllPersons()?[indexPath.row]
         let name = person!.value(forKeyPath: "name") as? String
         let role = person!.value(forKeyPath: "role") as? Int16

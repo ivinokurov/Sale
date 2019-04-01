@@ -13,19 +13,29 @@ class AuthorizeViewController: UIViewController {
     @IBOutlet weak var pwdTextField: UITextField!
     @IBOutlet weak var enterButton: UIButton!
     @IBOutlet weak var passwordVisibilityButton: UIButton!
+    @IBOutlet weak var loginUnderView: UIView!    
+    @IBOutlet weak var passwordUnderView: UIView!
     
     var keyboardHeight: CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        Utilities.customizePopoverView(customizedView: self.authorizeView)
         
         self.pwdTextField.isSecureTextEntry = true
         self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        self.enterButton.tintColor = Utilities.accentColor
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
         )
+        
+        if SettingsDBRules.isColorIndexPresents() {
+            if let colorIndex = SettingsDBRules.getAccentColorIndex() {
+                Utilities.accentColor = Utilities.colors[Int(colorIndex)]!
+            }
+        } else {
+            SettingsDBRules.addNewAccentColorIndex(colorIndex: 0)
+            Utilities.accentColor = Utilities.colors[0]!
+        }
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
@@ -38,6 +48,11 @@ class AuthorizeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        Utilities.customizePopoverView(customizedView: self.authorizeView)
+        
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.loginTextField, self.loginUnderView, self.pwdTextField, self.passwordUnderView, self.enterButton, self.passwordVisibilityButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.loginUnderView, self.passwordUnderView])
         
         self.setAuthorizeViewFrame()
         self.showPersonView()

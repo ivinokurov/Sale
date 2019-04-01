@@ -40,6 +40,7 @@ class ProductsSplitViewController: UISplitViewController {
     func initAndShowAlertView(imageName: String, text: String) {
         self.alertImageView.image = UIImage(named: imageName)
         self.alertTextLabel.text = text
+    //    self.dismissAlertButton.tintColor = Utilities.accentColor
         
         self.showAlertView()
     }
@@ -48,8 +49,8 @@ class ProductsSplitViewController: UISplitViewController {
         self.isAlertViewPresented = true
         Utilities.addAlertOverlayView()
         
-        self.alertView.center = self.parent!.view.center
-        self.parent!.view.addSubview(self.alertView)
+        self.alertView.center = Utilities.mainController!.view.center
+        Utilities.mainController!.view.addSubview(self.alertView)
         self.isAlertViewPresented = true
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
@@ -57,6 +58,7 @@ class ProductsSplitViewController: UISplitViewController {
         }), completion: { (completed: Bool) in
         })
         
+        self.dismissAlertButton.tintColor = Utilities.accentColor
     //    Utilities.makeViewFlexibleAppearance(view: self.alertView)
     }
     
@@ -80,7 +82,7 @@ class ProductsSplitViewController: UISplitViewController {
             coordinator.animate(alongsideTransition: { _ in
                 self.alertView.center = self.parent!.view.center
                 Utilities.addAlertOverlayView()
-                self.parent!.view.addSubview(self.alertView)
+                Utilities.mainController!.view.addSubview(self.alertView)
             })
         }
 

@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "PersonalTableViewController.viewDidLoad():PersonalTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentPersonItn">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CashboxViewController.getSelectedCategoryName():CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -136,6 +144,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "static PersonalDBRules.getPersonItnByLoginAndPassword(personLogin:personPassword:):PersonalDBRules.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "person!.value(forKeyPath: &quot;itn&quot;) as? String">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in CategoriesTableViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -174,10 +190,10 @@
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -217,6 +233,15 @@
          contextName = "PersonalTableViewController.tableView(_:cellForRowAt:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password)">
+            </PersistentString>
+            <PersistentString
+               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn">
+            </PersistentString>
+            <PersistentString
+               value = "currentPersonItn">
+            </PersistentString>
+            <PersistentString
                value = "person.value(forKeyPath: &quot;name&quot;) as? String">
             </PersistentString>
          </PersistentStrings>
@@ -234,6 +259,20 @@
          <PersistentStrings>
             <PersistentString
                value = "self.purchaseContainerView.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PersonalTableViewController.tableView(_:numberOfRowsInSection:):PersonalTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "originPassword">
+            </PersistentString>
+            <PersistentString
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+            <PersistentString
+               value = "originLogin">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
