@@ -39,8 +39,10 @@ class Utilities: Any {
     static let barCodeButtonColor = UIColor.blue
     static let buyProductButtonColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
+    static let titlesColor = UIColor(red: 7/255, green: 50/255, blue: 89/255, alpha: 1.0)
     static let deleteProductsButtonColor = UIColor.red
     static var accentColor: UIColor = colors[0]!
+    static let inactiveColor: UIColor = UIColor.lightGray.withAlphaComponent(0.3)
     static var isPersonLogout: Bool = false
     
     class func addOverlayView() {
@@ -83,6 +85,12 @@ class Utilities: Any {
         self.splitController!.initAndShowAlertView(imageName: "Error", text: message)
     }
     
+    class func showSimpleAlert(controllerToShowFor controller: UIViewController, messageToShow message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Ок", style: UIAlertAction.Style.destructive, handler: nil))
+        controller.present(alert, animated: true, completion: nil)
+    }
+    
     class func showTwoButtonsAlert(controllerInPresented controller: UIViewController, alertTitle title: String, alertMessage message: String, okButtonHandler okHandler: ((UIAlertAction) -> Void)?, cancelButtonHandler cancelHandler: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         
@@ -95,6 +103,7 @@ class Utilities: Any {
     class func decorateButton(buttonToDecorate button: UIButton) {
         button.layer.borderWidth = 0.4
         button.layer.cornerRadius = 4
+        button.backgroundColor = self.accentColor
         button.layer.borderColor = self.accentColor.withAlphaComponent(0.2).cgColor
     }
     
@@ -128,8 +137,8 @@ class Utilities: Any {
     }
     
     class func makeButtonRounded(button: UIView) {
-        button.tintColor = self.accentColor
-        button.layer.borderColor = self.accentColor.cgColor
+        button.tintColor = self.titlesColor // self.accentColor
+        button.layer.borderColor = self.titlesColor.cgColor
         button.layer.cornerRadius = button.frame.width / 2
         button.layer.borderWidth = 1.0
     }
@@ -152,7 +161,7 @@ class Utilities: Any {
     
     class func setBkgColorForSomeViews(viewsToSetAccentColor views: [UIView]) {
         for view in views {
-            view.backgroundColor = Utilities.accentColor
+            view.backgroundColor = self.inactiveColor // Utilities.accentColor
         }
     }
     
@@ -171,6 +180,33 @@ class Utilities: Any {
                     view.transform = previousTransform
                 })
             })
+        })
+    }
+    
+    class func localizeStorybordView(staticViewTitles dic: Dictionary<UIView, String>) {
+        for staticView in dic {
+            if staticView.key.isKind(of: UILabel.self) {
+                (staticView.key as! UILabel).text = NSLocalizedString(dic[staticView.key]!, comment: "")
+            }
+            if staticView.key.isKind(of: UIButton.self) {
+                (staticView.key as! UIButton).setTitle(NSLocalizedString(dic[staticView.key]!, comment: ""), for: .normal)
+            }
+        }
+    }
+    
+    class func createDismissButton(button: UIButton) {
+        button.tintColor = Utilities.accentColor
+        button.setImage(UIImage(named: "Cross"), for: .normal)
+        Utilities.makeButtonRounded(button: button)
+        button.layer.borderColor = UIColor.clear.cgColor
+    }
+    
+    class func dismissView(viewToDismiss view: UIView) {
+        self.removeOverlayView()
+        
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            view.alpha = 0.0
+        }), completion: { (completed: Bool) in
         })
     }
 

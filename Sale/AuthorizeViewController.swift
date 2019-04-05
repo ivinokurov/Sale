@@ -8,6 +8,9 @@ import UIKit
 
 class AuthorizeViewController: UIViewController {
     
+    @IBOutlet weak var loginLabel: UILabel!
+    @IBOutlet weak var passwordLabel: UILabel!
+    
     @IBOutlet weak var authorizeView: UIView!
     @IBOutlet weak var loginTextField: UITextField!    
     @IBOutlet weak var pwdTextField: UITextField!
@@ -16,6 +19,8 @@ class AuthorizeViewController: UIViewController {
     @IBOutlet weak var loginUnderView: UIView!    
     @IBOutlet weak var passwordUnderView: UIView!
     
+    var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
+
     var keyboardHeight: CGFloat = 0.0
     
     override func viewDidLoad() {
@@ -36,6 +41,8 @@ class AuthorizeViewController: UIViewController {
             SettingsDBRules.addNewAccentColorIndex(colorIndex: 0)
             Utilities.accentColor = Utilities.colors[0]!
         }
+        
+        self.textUnderlineDecorationDic = [self.loginTextField : self.loginUnderView, self.pwdTextField : self.passwordUnderView]
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
@@ -62,7 +69,7 @@ class AuthorizeViewController: UIViewController {
     @objc func showPersonView() {
 
         self.authorizeView.alpha = 0.0
-        self.loginTextField.becomeFirstResponder()
+    //    self.loginTextField.becomeFirstResponder()
         self.setAuthorizeViewFrame()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
@@ -82,7 +89,7 @@ class AuthorizeViewController: UIViewController {
         self.authorizeView.removeFromSuperview()
 
         coordinator.animate(alongsideTransition: { _ in
-            self.loginTextField.becomeFirstResponder()
+        //    self.loginTextField.becomeFirstResponder()
             self.setAuthorizeViewFrame()
             self.view.addSubview(self.authorizeView)
         })
@@ -120,9 +127,23 @@ class AuthorizeViewController: UIViewController {
             }
             
             self.loginTextField.text = ""
-            self.loginTextField.becomeFirstResponder()
+        //    self.loginTextField.becomeFirstResponder()
             self.pwdTextField.text = ""
         }
+    }
+    
+    @IBAction func addUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.accentColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func removeUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.inactiveColor
+        }), completion: { (completed: Bool) in
+        })
     }
     
 }

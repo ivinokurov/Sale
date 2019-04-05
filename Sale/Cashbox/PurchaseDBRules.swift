@@ -93,7 +93,7 @@ class PurchaseDBRules: Any {
                 if allProductsInPurchase != nil {
                     for product in allProductsInPurchase! {
                         if let productBarcode = product.value(forKey: "code") as? String {
-                            let productNewCount = ProductsDBRules.getProductsCountByBarcode(productBarcode: productBarcode)! - (product.value(forKey: "count") as? Float)!
+                            let productNewCount = ProductsDBRules.getProductCountByBarcode(productBarcode: productBarcode)! - (product.value(forKey: "count") as? Float)!
                             ProductsDBRules.changeProductCount(productBarcode: productBarcode, productCount: productNewCount)
                         }
                     }
@@ -140,7 +140,7 @@ class PurchaseDBRules: Any {
         return nil
     }
     
-    class func getProductsCountInPurchase(productBarcode code: String) -> Float? {
+    class func getProductCountInPurchase(productBarcode code: String) -> Float? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Purchase")
@@ -158,7 +158,7 @@ class PurchaseDBRules: Any {
     }
     
     class func isProductCanBeAddedToPurchase(controller: UIViewController, productBarcode code: String) -> Bool {
-        if ProductsDBRules.getProductsCountByBarcode(productBarcode: code)! - (self.getProductsCountInPurchase(productBarcode: code) ?? 0 ) > 0 {
+        if ProductsDBRules.getProductCountByBarcode(productBarcode: code)! /* - (self.getProductsCountInPurchase(productBarcode: code) ?? 0 )*/ > 0 {
             return true
         } else {
             Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Этот товар уже отсутствует!")
@@ -175,7 +175,7 @@ class PurchaseDBRules: Any {
                 let allProductsInPurchase = try viewContext!.fetch(fetchRequest) as? [NSManagedObject]
                 if allProductsInPurchase != nil {
                     for product in allProductsInPurchase! {
-                        purchasePrice = purchasePrice + (self.getProductsCountInPurchase(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0) * (ProductsDBRules.getProductPriceByBarcode(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0)
+                        purchasePrice = purchasePrice + (self.getProductCountInPurchase(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0) * (ProductsDBRules.getProductPriceByBarcode(productBarcode: (product.value(forKey: "code") as? String)!) ?? 0)
                     }
                 }
             } catch let error as NSError {

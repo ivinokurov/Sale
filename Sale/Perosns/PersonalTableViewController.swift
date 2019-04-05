@@ -11,9 +11,9 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
     @IBOutlet var personView: UIView!
     @IBOutlet weak var fullPersonNameTextField: UITextField!
-    @IBOutlet weak var itnPersonTextField: UITextField!
-    @IBOutlet weak var loginPersonTextField: UITextField!
-    @IBOutlet weak var pwdPersonTextField: UITextField!
+    @IBOutlet weak var personItnTextField: UITextField!
+    @IBOutlet weak var personLoginTextField: UITextField!
+    @IBOutlet weak var personPasswordTextField: UITextField!
     @IBOutlet weak var adminPersonButton: UIButton!
     @IBOutlet weak var merchPersonButton: UIButton!
     @IBOutlet weak var cashPersonButton: UIButton!
@@ -21,11 +21,13 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var cancelPersonButton: UIButton!    
     @IBOutlet weak var personViewTitleLabel: UILabel!
     @IBOutlet weak var passwordVisibilityButton: UIButton!
-    
     @IBOutlet weak var personNameUnderView: UIView!
     @IBOutlet weak var personItnUnderView: UIView!
     @IBOutlet weak var personLoginUnderView: UIView!
     @IBOutlet weak var personPwdUnderView: UIView!
+    @IBOutlet weak var dismissPersonButton: UIButton!
+    
+    var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var parentView: UIView? = nil
     var isPersonEditing: Bool = false
@@ -34,12 +36,13 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     var selectedPersonRole: Int = Utilities.personRole.admin.rawValue
     var currentPersonItn: String? = nil
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.parentView = Utilities.mainController!.view
         
-        self.itnPersonTextField.delegate = self
+        self.personItnTextField.delegate = self
         
         let personRole = PersonalDBRules.getPersonRoleByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
         
@@ -48,12 +51,19 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         }
         
         self.currentPersonItn = PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
+        
+        Utilities.createDismissButton(button: self.dismissPersonButton)
+        self.dismissPersonButton.tintColor = Utilities.accentColor
+        
+        self.textUnderlineDecorationDic = [self.fullPersonNameTextField : self.personNameUnderView, self.personItnTextField : self.personItnUnderView, self.personLoginTextField : self.personLoginUnderView, self.personPasswordTextField : self.personPwdUnderView]
+        
+        self.tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.fullPersonNameTextField, self.itnPersonTextField, self.loginPersonTextField, self.pwdPersonTextField, self.addOrEditPersonButton, self.cancelPersonButton, self.passwordVisibilityButton])
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.fullPersonNameTextField, self.personItnTextField, self.personLoginTextField, self.personPasswordTextField, self.addOrEditPersonButton, self.cancelPersonButton, self.passwordVisibilityButton])
         Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.personNameUnderView, self.personItnUnderView, self.personLoginUnderView, self.personPwdUnderView])
         
         Utilities.makeButtonRounded(button: self.adminPersonButton)
@@ -76,7 +86,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == self.itnPersonTextField {
+        if textField == self.personItnTextField {
             let allowedCharacters = CharacterSet(charactersIn: Utilities.digitsOny)
             let characterSet = CharacterSet(charactersIn: string)
             return allowedCharacters.isSuperset(of: characterSet)
@@ -114,16 +124,16 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         if !self.isPersonEditing {
             self.fullPersonNameTextField.text = ""
-            self.itnPersonTextField.text = ""
-            self.loginPersonTextField.text = ""
-            self.pwdPersonTextField.text = ""
+            self.personItnTextField.text = ""
+            self.personLoginTextField.text = ""
+            self.personPasswordTextField.text = ""
             self.setPersonRole(self.adminPersonButton)
         }
         
         self.personView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         self.setPersonViewFrame()
         self.personView.alpha = 0.0
-        self.fullPersonNameTextField.becomeFirstResponder()
+        // self.fullPersonNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.personView.alpha = 1.0
@@ -139,7 +149,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
         
-        self.pwdPersonTextField.isSecureTextEntry = true
+        self.personPasswordTextField.isSecureTextEntry = true
         self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
     }
     
@@ -178,9 +188,9 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         }
 
         let newName = self.fullPersonNameTextField.text!
-        let itn = self.itnPersonTextField.text!
-        let newLogin = self.loginPersonTextField.text!
-        let newPassword = self.pwdPersonTextField.text!
+        let itn = self.personItnTextField.text!
+        let newLogin = self.personLoginTextField.text!
+        let newPassword = self.personPasswordTextField.text!
         let newRole = Int16(self.selectedPersonRole)
         
         if self.checkPersonInfo() {
@@ -221,11 +231,11 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     func setPersonViewActionTitles() {
         if !self.isPersonEditing {
             self.personViewTitleLabel.text = "НОВЫЙ СОТРУДНИК"
-            self.itnPersonTextField.isUserInteractionEnabled = true
+            self.personItnTextField.isUserInteractionEnabled = true
             self.addOrEditPersonButton.setTitle("ДОБАВИТЬ", for: .normal)
         } else {
             self.personViewTitleLabel.text = "ИЗМЕНЕНИЕ СОТРУДНИКА"
-            self.itnPersonTextField.isUserInteractionEnabled = false
+            self.personItnTextField.isUserInteractionEnabled = false
             self.addOrEditPersonButton.setTitle("ИЗМЕНИТЬ", for: .normal)
         }
     }
@@ -265,7 +275,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                 self.setPersonViewFrame()
                 
                 if (Utilities.splitController?.isAlertViewPresented)! {
-                    self.checkPersonInfo() 
+                    _ = self.checkPersonInfo()
                 }
             }
         })
@@ -276,20 +286,24 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует имя сотрудника!")
             return false
         }
-        if self.itnPersonTextField.text == "" {
+        if self.personItnTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует ИНН сотрудника!")
             return false
         }
-        if self.loginPersonTextField.text == "" {
+        if self.personLoginTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует логин сотрудника!")
             return false
         }
-        if self.pwdPersonTextField.text == "" {
+        if self.personPasswordTextField.text == "" {
             Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует пароль сотрудника!")
             return false
         }
         
         return true
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    //    self.currentPersonItn = PersonalDBRules.getAllPersons()![indexPath.row].value(forKeyPath: "itn") as? String
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -313,10 +327,11 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn {
             
             cell.accessoryView = self.createLougoutButton()
+            tableView.cellForRow(at: indexPath)
             cell.selectionStyle = .default
         } else {
             cell.accessoryView = nil
-            cell.selectionStyle = .none
+        //    cell.selectionStyle = .none
         }
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
@@ -391,9 +406,9 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             self.showPersonView()
             
             self.fullPersonNameTextField.text = name
-            self.itnPersonTextField.text = person!.value(forKeyPath: "itn") as? String
-            self.loginPersonTextField.text = person!.value(forKeyPath: "login") as? String
-            self.pwdPersonTextField.text = person!.value(forKeyPath: "password") as? String
+            self.personItnTextField.text = person!.value(forKeyPath: "itn") as? String
+            self.personLoginTextField.text = person!.value(forKeyPath: "login") as? String
+            self.personPasswordTextField.text = person!.value(forKeyPath: "password") as? String
             
             let pseudoButton = UIButton()
             pseudoButton.tag = Int(person?.value(forKey: "role") as! Int16)
@@ -411,19 +426,38 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func checkITNStringLength(_ sender: UITextField) {
-        if (self.itnPersonTextField.text!.count > 12) {
-            self.itnPersonTextField.deleteBackward()
+        if (self.personItnTextField.text!.count > 12) {
+            self.personItnTextField.deleteBackward()
         }
     }
     
     @IBAction func showOrHidePassword(_ sender: UIButton) {
-        if self.pwdPersonTextField.isSecureTextEntry {
-            self.pwdPersonTextField.isSecureTextEntry = false
+        if self.personPasswordTextField.isSecureTextEntry {
+            self.personPasswordTextField.isSecureTextEntry = false
             self.passwordVisibilityButton.setImage(UIImage(named: "OpenPwd"), for: .normal)
         } else {
-            self.pwdPersonTextField.isSecureTextEntry = true
+            self.personPasswordTextField.isSecureTextEntry = true
             self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
         }
+    }
+    
+    @IBAction func addUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.accentColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func removeUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.inactiveColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func dismissPersonView(_ sender: UIButton) {
+        Utilities.dismissView(viewToDismiss: self.personView)
+        self.isPersonViewPresented = false
     }
     
 }

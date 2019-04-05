@@ -43,7 +43,7 @@ class ProductsTableViewCell: UITableViewCell {
         let productDesc = products![indexPath.row].value(forKeyPath: "desc") as? String
         
         self.productNameLabel.text = products![indexPath.row].value(forKeyPath: "name") as? String
-        self.productDescLabel.text = productDesc == "" ? "Без описания" : productDesc
+        self.productDescLabel.text = productDesc // == "" ? "Без описания" : productDesc
         self.productPriceLabel.text = price.description + " руб."
         self.productCountLabel.text = count.description + ProductsDBRules.getProductMeasure(product: products![indexPath.row] as! NSManagedObject )
         self.productBarcodeLabel.text = products![indexPath.row].value(forKeyPath: "code") as? String

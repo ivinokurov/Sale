@@ -28,11 +28,17 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     @IBOutlet weak var productNameUnderView: UIView!    
     @IBOutlet weak var productDescUnderView: UIView!
     @IBOutlet weak var productBarcodeUnderView: UIView!
+    @IBOutlet weak var productCountUnderView: UIView!
+    @IBOutlet weak var productPriceUnderView: UIView!
+    @IBOutlet weak var dismissCategoryButton: UIButton!
+    
+    var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var parentView: UIView? = nil
     var isProductViewPresented: Bool = false
     var isProductEditing: Bool = false
     var swipedRowIndex: Int? = nil
+    var selectedProductBarcode: String? = nil
     var selectedProductMeasure: Int = Utilities.measures.items.rawValue
     
     override func viewDidLoad() {
@@ -55,13 +61,22 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         Utilities.makeLeftViewForTextField(textEdit: self.productPriceTextField, imageName: "Ruble")
         self.productPriceTextField.leftView?.tintColor = .red //Utilities.accentColor
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
+        
+        Utilities.createDismissButton(button: self.dismissCategoryButton)
+        self.dismissCategoryButton.tintColor = Utilities.accentColor
+        
+        self.textUnderlineDecorationDic = [self.productNameTextField : self.productNameUnderView, self.productDescTextField : self.productDescUnderView, self.productCountTextField : self.productCountUnderView, self.productPriceTextField : self.productPriceUnderView, self.productBarcodeTextField : self.productBarcodeUnderView]
+        
+        self.productsTableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        Utilities.customizePopoverView(customizedView: self.productView)
+        
         Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.productNameTextField, self.productDescTextField, self.productBarcodeTextField, self.itemsButton, self.kilosButton, self.litersButton, self.addOrEditProductButton, self.cancelProductButton])
-        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.productNameUnderView, self.productDescUnderView, self.productBarcodeUnderView])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.productNameUnderView, self.productDescUnderView, self.productCountUnderView, self.productPriceUnderView, self.productBarcodeUnderView])
         
         Utilities.makeButtonRounded(button: self.itemsButton)
         Utilities.makeButtonRounded(button: self.kilosButton)
@@ -141,7 +156,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showProductView))
         rightItemBarButton.tintColor = Utilities.accentColor
         self.navigationItem.rightBarButtonItem = rightItemBarButton
-        Utilities.customizePopoverView(customizedView: self.productView)
     }
 
     func setProductViewFrame() {
@@ -180,7 +194,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.productView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         self.setProductViewFrame()
         self.productView.alpha = 0.0
-        self.productNameTextField.becomeFirstResponder()
+        // self.productNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.productView.alpha = 1.0
@@ -211,7 +225,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         super.viewWillTransition(to: size , with: coordinator)
         
         self.productView.removeFromSuperview()
-    //    self.productsTableView.reloadData()
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isProductViewPresented {
@@ -301,18 +314,26 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.selectedProductBarcode = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "productCellId", for: indexPath) as! ProductsTableViewCell
-        
+
         cell.initCell(categoryName: self.getSelectedCategoryName()!, indexPath: indexPath, isFiltered: false)
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+        
+     //   if self.selectedProductBarcode != nil && self.selectedProductBarcode == cell.productBarcodeLabel.text {
+     //       tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+     //   }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 140.0
+        return 154.0
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -368,6 +389,25 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         if (self.productBarcodeTextField.text!.count > 13) {
             self.productBarcodeTextField.deleteBackward()
         }
+    }
+    
+    @IBAction func addUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.accentColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func removeUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.inactiveColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func dismissCategoryView(_ sender: UIButton) {
+        Utilities.dismissView(viewToDismiss: self.productView)
+        self.isProductViewPresented = false
     }
     
 }

@@ -6,7 +6,7 @@
 
 import UIKit
 
-class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource,  DTDeviceDelegate {
+class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, DTDeviceDelegate {
 
     let lib = DTDevices.sharedDevice() as! DTDevices
     var isScanActive = false
@@ -148,6 +148,9 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.showPersonView()
         self.isPersonViewPresented = true
         
+        self.productsTableView.tableFooterView = UIView()
+        self.purchaseTableView.tableFooterView = UIView()
+        
     //    if !Utilities.isPersonLogout {
             lib.addDelegate(self)
             lib.connect()
@@ -196,6 +199,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationItem.hidesSearchBarWhenScrolling = false
         
         self.searchController.searchResultsUpdater = self
+        self.definesPresentationContext = true
         self.searchController.dimsBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = false
         self.searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
@@ -308,12 +312,17 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
 
                     if let productCode = PurchaseDBRules.getAllProductsInPurchase()![indexPath.row].value(forKeyPath: "code") as? String {
+                        
+                        let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
+                        ProductsDBRules.changeProductCount(productBarcode: productCode, productCount: ProductsDBRules.getProductCountByBarcode(productBarcode: productCode)! + productCountInPurchase!)
                     
                         PurchaseDBRules.deleteProductInPurchaseByBarcode(productBarcode: productCode)
                         
                         self.purchaseTableView.beginUpdates()
                         self.purchaseTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                         self.purchaseTableView.endUpdates()
+                        
+                        self.productsTableView.reloadData()
                         
                         self.calulateAndPrintPurchaseSumm()
                     }
@@ -345,6 +354,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         let selectedCategoryName = self.getSelectedCategoryName()
         let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName!)
         
+        if !self.isPurchaseViewPresented {
+            self.showPurchaseView()
+        }
+        
         // Покупка товаров из отфильтрованного списка
         if !self.searchBarIsEmpty() && !self.getFromScaner {
             if let index = self.selectedProductRow {
@@ -354,8 +367,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
                     if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
                         PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
+                        self.updateTablesAfterAddProductInPurchase()
                     } else {
                         PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
+                        self.updateTablesAfterAddProductInPurchase()
                     }
                     DispatchQueue.main.async {
                         self.purchaseTableView.reloadData()
@@ -376,8 +391,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
                         if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
                             PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
+                            self.updateTablesAfterAddProductInPurchase()
                         } else {
                             PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
+                            self.updateTablesAfterAddProductInPurchase()
                         }
                         DispatchQueue.main.async {
                             self.purchaseTableView.reloadData()
@@ -397,8 +414,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if PurchaseDBRules.isProductCanBeAddedToPurchase(controller: self, productBarcode:  self.productToPurchaseBarcode!) {
                     if !PurchaseDBRules.isTheSameProductPresentsInPurchase(productBarcode: self.productToPurchaseBarcode!) {
                         PurchaseDBRules.addNewProductInPurchase(productName: ProductsDBRules.getProductNameByBarcode(code: self.productToPurchaseBarcode!)!, productBarcode: self.productToPurchaseBarcode!)
+                        self.updateTablesAfterAddProductInPurchase()
                     } else {
                         PurchaseDBRules.addProductInPurchase(productBarcode: self.productToPurchaseBarcode!)
+                        self.updateTablesAfterAddProductInPurchase()
                     }
                     DispatchQueue.main.async {
                         self.purchaseTableView.reloadData()
@@ -412,6 +431,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.getFromScaner = false
     }
     
+    func updateTablesAfterAddProductInPurchase() {
+        ProductsDBRules.decProductCount(productBarcode: self.productToPurchaseBarcode!)
+        
+        let indexPathToReload = IndexPath(row: self.selectedProductRow!, section: 0)
+        
+        self.productsTableView.reloadRows(at: [indexPathToReload], with: .none)
+        self.productsTableView.selectRow(at: indexPathToReload, animated: false, scrollPosition: .none)
+    }
+    
     func decorateCellSelectionWhileSelect(cellToDecorate cell: UITableViewCell) {
         cell.backgroundColor = Utilities.accentColor.withAlphaComponent(0.08)
         cell.layer.cornerRadius = 4
@@ -421,6 +449,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func deletePurchase(_ sender: Any) {
+        
+        for productInPurchase in PurchaseDBRules.getAllProductsInPurchase()! {
+            let productCode = productInPurchase.value(forKey: "code") as! String
+            let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
+            ProductsDBRules.changeProductCount(productBarcode: productCode, productCount: ProductsDBRules.getProductCountByBarcode(productBarcode: productCode)! + productCountInPurchase!)
+        }
+        
+        self.productsTableView.reloadData()
+        
         PurchaseDBRules.deleteAllProductsInPurchase()
         
         self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
@@ -536,8 +573,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func makePurchase(_ sender: Any) {
         
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
-            PurchaseDBRules.updatePurchasedProductsCount()
+        //    PurchaseDBRules.updatePurchasedProductsCount()
             PurchaseDBRules.deleteAllProductsInPurchase()
+            
+            let devices = lib.btConnectedDevices
             
             Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
             self.calulateAndPrintPurchaseSumm()
@@ -552,6 +591,16 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func connectionState(_ state: Int32) {
         do {
             if state == CONN_STATES.CONNECTED.rawValue {
+                do {
+                    let connected = try lib.getConnectedDevicesInfo()
+                    var info: String = ""
+                    for device in connected
+                    {
+                        info += "\(device.name!) \(device.model!) connected\nFW Rev: \(device.firmwareRevision!) HW Rev: \(device.hardwareRevision!)\nSerial: \(device.serialNumber!)\n"
+                    }
+                    Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: info)
+                } catch {}
+                
                 self.barCodeButton.isHidden = false
                 self.barCodeButton.layer.borderColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor
             } else {
@@ -584,5 +633,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
         }
     }
-
+            
 }
+
+

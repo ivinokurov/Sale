@@ -10,8 +10,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     @IBOutlet var colorsView: UIView!
     @IBOutlet var accentColorButtons: [UIButton]!
-    @IBOutlet weak var dismissButton: UIButton!
-    
+    @IBOutlet weak var dismissColorsViewButton: UIButton!
+    @IBOutlet weak var dismissOrgInfoButton: UIButton!
     @IBOutlet var orgInfoView: UIView!
     @IBOutlet weak var orgNameTextField: UITextField!
     @IBOutlet weak var orgNameUnderView: UIView!
@@ -26,6 +26,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet var taxTypeButtons: [UIButton]!
     @IBOutlet weak var saveOrgInfoButton: UIButton!
     @IBOutlet weak var cancelOrgInfoButton: UIButton!
+    
+    var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var isColorsViewPresented: Bool = false
     var isOrgInfoViewPresented: Bool = false
@@ -52,9 +54,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         
         let colorIndex = SettingsDBRules.getAccentColorIndex()!
         self.accentColorButtons[Int(colorIndex)].setImage(UIImage(named: "Check"), for: .normal)
-        self.dismissButton.tintColor = Utilities.accentColor
         
-        self.createDismissButton()
+        Utilities.createDismissButton(button: self.dismissColorsViewButton)
+        self.dismissColorsViewButton.tintColor = Utilities.accentColor
+        Utilities.createDismissButton(button: self.dismissOrgInfoButton)
+        self.dismissOrgInfoButton.tintColor = Utilities.accentColor
+        
+        self.textUnderlineDecorationDic = [self.orgNameTextField : self.orgNameUnderView, self.pointNameTextField : self.pointNameUnderView, self.pointAddressTextField : self.pointAddressUnderView, self.itnTextField : self.itnUnderView, self.kppTextField : self.kppUnderView]
     }
     
     @IBAction func checkITNStringLength(_ sender: UITextField) {
@@ -80,6 +86,14 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = UIColor.black
+        header.textLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
+        header.textLabel?.frame = header.frame
+        header.textLabel?.textAlignment = .left
     }
     
     func changeAccentColorForOrgInfoView() {
@@ -156,21 +170,15 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             self.isOrgInfoViewPresented = false
         })
     }
-    
-    func createDismissButton() {
-        self.dismissButton.setImage(UIImage(named: "Cross")?.withAlignmentRectInsets(UIEdgeInsets(top: -4, left: -4, bottom: -4, right: -4)), for: .normal)
-        Utilities.makeButtonRounded(button: self.dismissButton)
-        self.dismissButton.layer.borderColor = UIColor.clear.cgColor
+        
+    @IBAction func dismissOrgInfoView(_ sender: UIButton) {
+        Utilities.dismissView(viewToDismiss: self.orgInfoView)
+        self.isOrgInfoViewPresented = false
     }
     
     @IBAction func dismissColorsView(_ sender: UIButton) {
-        Utilities.removeOverlayView()
-        
-        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
-            self.colorsView.alpha = 0.0
-        }), completion: { (completed: Bool) in
-            self.isColorsViewPresented = false
-        })
+        Utilities.dismissView(viewToDismiss: self.colorsView)
+        self.isColorsViewPresented = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -180,18 +188,23 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
             Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.cellForRow(at: indexPath) != nil {
             
             if indexPath.row == 0 && indexPath.section == 0 {
                 self.showOrgInfoView()
+                tableView.reloadData()
                 return
             }
             
             if indexPath.row == 0 && indexPath.section == 1 {
-                self.showCategoryView()
+                self.showAccentColorsView()
+                tableView.reloadData()
                 return
             }
         }
@@ -206,8 +219,9 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func setOrgInfoViewFrame() {
-        self.orgInfoView.center.x = self.view.center.x
-        self.orgInfoView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height - 4 + (UIDevice.current.orientation.isPortrait ?  (self.navigationController?.navigationBar.frame.height)! : 0)
+        self.orgInfoView.center.x = (self.parentView?.center.x)!
+        self.orgInfoView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
     }
     
     func getColorsViewCenterPoint() -> CGPoint {
@@ -218,7 +232,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         return CGPoint(x: centerX, y: centerY)
     }
     
-    func showCategoryView() {
+    func showAccentColorsView() {
         self.colorsView.center = self.getColorsViewCenterPoint()
         self.colorsView.alpha = 0.0
         self.colorsView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
@@ -248,12 +262,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.changeAccentColorForOrgInfoView()
         
         self.isOrgInfoViewPresented = true
-        
-        self.orgNameTextField.becomeFirstResponder()
-        self.setOrgInfoViewFrame()
-        self.getOrgInfo()
+        self.orgInfoView.alpha = 0.94
+    //    self.orgNameTextField.becomeFirstResponder()
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.orgInfoView)
+        self.setOrgInfoViewFrame()
+        self.getOrgInfo()
         
         Utilities.makeViewFlexibleAppearance(view: self.orgInfoView)
     }
@@ -291,7 +305,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         SettingsDBRules.changeAccentColorIndex(colorIndex: colorIndex)
         Utilities.accentColor = Utilities.colors[Int(colorIndex)]!
         
-        self.dismissButton.tintColor = Utilities.accentColor
+        self.dismissColorsViewButton.tintColor = Utilities.accentColor
         self.tableView.reloadData()
         Utilities.mainController!.tabBar.tintColor = Utilities.accentColor
         self.dismissColorsView(sender)
@@ -314,9 +328,23 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
                 self.setOrgInfoViewFrame()
                 
                 if (Utilities.splitController?.isAlertViewPresented)! {
-                    self.checkOrgInfo()
+                    _ = self.checkOrgInfo()
                 }
             }
+        })
+    }
+    
+    @IBAction func addUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.accentColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func removeUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.inactiveColor
+        }), completion: { (completed: Bool) in
         })
     }
 

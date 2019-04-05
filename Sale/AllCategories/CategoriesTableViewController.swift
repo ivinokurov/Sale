@@ -13,8 +13,10 @@ class CategoriesTableViewController: UITableViewController {
     @IBOutlet weak var categoryNameTextField: UITextField!
     @IBOutlet weak var addOrRenameCategoryButton: UIButton!
     @IBOutlet weak var cancelCategoryButton: UIButton!
-    
     @IBOutlet weak var categoryNameUnderView: UIView!
+    @IBOutlet weak var dismissCategoryButton: UIButton!
+    
+    var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var parentView: UIView? = nil
     var isCategoryEditing: Bool = false
@@ -33,21 +35,29 @@ class CategoriesTableViewController: UITableViewController {
             self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .top)
             self.selectedCategoryName = CategoriesDBRules.getAllCategories()![0].value(forKeyPath: "name") as? String
         }
+        
+        Utilities.createDismissButton(button: self.dismissCategoryButton)
+        self.dismissCategoryButton.tintColor = Utilities.accentColor
+        
+        self.textUnderlineDecorationDic = [self.categoryNameTextField : self.categoryNameUnderView]
+        
+        self.tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        Utilities.customizePopoverView(customizedView: self.categoryView)
+        
         Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.categoryNameTextField, self.addOrRenameCategoryButton, self.cancelCategoryButton])
         Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.categoryNameUnderView])
         
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
-        
+
         self.tableView.reloadData()
     }
     
     func setCategoryViewActionTitles() {
-        
         if !self.isCategoryEditing {
             self.categoryViewTitleLabel.text = "НОВАЯ КАТЕГОРИЯ ТОВАРОВ"
             self.addOrRenameCategoryButton.setTitle("ДОБАВИТЬ", for: .normal)
@@ -61,8 +71,6 @@ class CategoriesTableViewController: UITableViewController {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCategoryView))
         rightItemBarButton.tintColor = Utilities.accentColor 
         self.navigationItem.rightBarButtonItem = rightItemBarButton
-        
-        Utilities.customizePopoverView(customizedView: self.categoryView)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -80,7 +88,6 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     func getCategoriesViewCenterPoint() -> CGPoint {
-        
         let centerX = (self.parentView?.center.x)!
         let centerY = (self.parentView?.center.y)! * 0.5
         
@@ -88,14 +95,13 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     @objc func showCategoryView() {
-        
         if !self.isCategoryEditing {
             self.categoryNameTextField.text = ""
         }
 
         self.categoryView.center = self.getCategoriesViewCenterPoint()
         self.categoryView.alpha = 0.0
-        self.categoryNameTextField.becomeFirstResponder()
+        // self.categoryNameTextField.becomeFirstResponder()
         self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
             
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
@@ -209,6 +215,10 @@ class CategoriesTableViewController: UITableViewController {
         cell.detailTextLabel!.text = "Товаров " + String(ProductsDBRules.getAllProductsForCategory(productCategory: category)!.count.description) + " на сумму " + ProductsDBRules.getCategoryProductsTotalPrice(productCategory: category).description + " руб."
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+        
+        if self.selectedCategoryName != nil && self.selectedCategoryName == categoryName {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        }
 
         return cell
     }
@@ -247,4 +257,24 @@ class CategoriesTableViewController: UITableViewController {
         
         return UISwipeActionsConfiguration(actions: [editAction, deleteAction])
     }
+    
+    @IBAction func addUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.accentColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func removeUnderView(_ sender: UITextField) {
+        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
+            self.textUnderlineDecorationDic.first(where: { $0.key == sender })?.value.backgroundColor = Utilities.inactiveColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
+    @IBAction func dismissCategoryView(_ sender: UIButton) {
+        Utilities.dismissView(viewToDismiss: self.categoryView)
+        self.isCategoryViewPresented = false
+    }
+    
 }

@@ -6,7 +6,9 @@
 
 import UIKit
 
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, DTDeviceDelegate  {
+    
+    let btDevices = BluetoothDevicesInterconnection()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,8 @@ class MainTabBarController: UITabBarController {
         
         Utilities.splitController = splitController
         Utilities.customizePopoverView(customizedView: splitController.alertView)
+        
+        self.btDevices.findBluetoothDevices()
 
         splitController.alertView.alpha = 0.0
     }

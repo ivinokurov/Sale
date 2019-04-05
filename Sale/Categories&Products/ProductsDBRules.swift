@@ -143,6 +143,25 @@ class ProductsDBRules: Any {
         return false
     }
     
+    class func decProductCount(productBarcode code: String) {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    let product = fetchResult.first
+                    let productCount = product!.value(forKey: "count") as? Float
+                    product!.setValue(productCount! - 1, forKey: "count")
+                    try viewContext!.save()
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка уменьшения количества товара: " + error.localizedDescription)
+            }
+        }
+    }
+    
     class func changeProductCount(productBarcode barcode: String, productCount newCount: Float) {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
@@ -210,7 +229,7 @@ class ProductsDBRules: Any {
         return nil
     }
     
-    class func getProductsCountByBarcode(productBarcode barcode: String) -> Float? {
+    class func getProductCountByBarcode(productBarcode barcode: String) -> Float? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
