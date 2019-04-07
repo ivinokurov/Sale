@@ -63,7 +63,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
         
         Utilities.createDismissButton(button: self.dismissCategoryButton)
-        self.dismissCategoryButton.tintColor = Utilities.accentColor
         
         self.textUnderlineDecorationDic = [self.productNameTextField : self.productNameUnderView, self.productDescTextField : self.productDescUnderView, self.productCountTextField : self.productCountUnderView, self.productPriceTextField : self.productPriceUnderView, self.productBarcodeTextField : self.productBarcodeUnderView]
         
@@ -165,13 +164,13 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     func getSelectedCategoryName() -> String? {
-        let navController = Utilities.splitController!.viewControllers[0] as! UINavigationController
+        let navController = Utilities.productsSplitController!.viewControllers[0] as! UINavigationController
         let categoriesController = navController.topViewController as! CategoriesTableViewController
         return categoriesController.selectedCategoryName
     }
     
     func updateCategoriesTable() {
-        let navController = Utilities.splitController!.viewControllers[0] as! UINavigationController
+        let navController = Utilities.productsSplitController!.viewControllers[0] as! UINavigationController
         let categoriesController = navController.topViewController as! CategoriesTableViewController
         categoriesController.tableView.reloadData()
     }
@@ -209,6 +208,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.parentView?.addSubview(self.productView)
         
         Utilities.makeViewFlexibleAppearance(view: self.productView)
+        self.dismissCategoryButton.tintColor = Utilities.accentColor
     }
     
     func removeProductView() {
@@ -406,6 +406,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     @IBAction func dismissCategoryView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.productView)
         self.isProductViewPresented = false
     }

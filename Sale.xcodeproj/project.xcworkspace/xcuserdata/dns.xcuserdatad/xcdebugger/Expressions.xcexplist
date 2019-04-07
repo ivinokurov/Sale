@@ -33,6 +33,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "static PersonSalesDBRules.getAllPersonSales(personName:personRole:):PersonSalesDBRules.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "allPersonSales.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #3 in MobileCashboxViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):MobileCashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -53,6 +61,20 @@
          <PersistentStrings>
             <PersistentString
                value = "PersonalDBRules.selectedPerson">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReportSalesViewController.tableView(_:numberOfRowsInSection:):ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+            <PersistentString
+               value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)?.count">
+            </PersistentString>
+            <PersistentString
+               value = "Utilities.reportsSplitController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -176,6 +198,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportSalesViewController.numberOfSections(in:):ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in CashboxViewController.hidePurchaseView():CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -187,13 +217,35 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportPersonsTableViewController.updateSalesTable():ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "salesController.personSalesTableView">
+            </PersistentString>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReportPersonsTableViewController.tableView(_:didSelectRowAt:):ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+            <PersistentString
+               value = "self.currentPersonItn ">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -233,10 +285,10 @@
          contextName = "PersonalTableViewController.tableView(_:cellForRowAt:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password)">
+               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn">
             </PersistentString>
             <PersistentString
-               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn">
+               value = "PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password)">
             </PersistentString>
             <PersistentString
                value = "currentPersonItn">
@@ -266,13 +318,13 @@
          contextName = "PersonalTableViewController.tableView(_:numberOfRowsInSection:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "originPassword">
+               value = "originLogin">
             </PersistentString>
             <PersistentString
                value = "PersonalDBRules.currentLogin">
             </PersistentString>
             <PersistentString
-               value = "originLogin">
+               value = "originPassword">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -289,6 +341,14 @@
          <PersistentStrings>
             <PersistentString
                value = "textfield.subviews">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in static PersonSalesDBRules.getAllPersonSales(personName:personRole:):PersonSalesDBRules.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "allPersonSales">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -329,6 +389,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportSalesViewController.tableView(_:cellForRowAt:):ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!).count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
          <PersistentStrings>
             <PersistentString
@@ -347,6 +415,14 @@
          <PersistentStrings>
             <PersistentString
                value = "error.localizedDescription">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReportSalesViewController.viewDidLoad():ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

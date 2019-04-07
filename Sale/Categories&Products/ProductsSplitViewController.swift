@@ -41,7 +41,6 @@ class ProductsSplitViewController: UISplitViewController {
         DispatchQueue.main.async {
             self.alertImageView.image = UIImage(named: imageName)
             self.alertTextLabel.text = text
-        //    self.dismissAlertButton.tintColor = Utilities.accentColor
         }
         
         self.showAlertView()

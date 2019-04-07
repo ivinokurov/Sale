@@ -36,7 +36,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     var selectedPersonRole: Int = Utilities.personRole.admin.rawValue
     var currentPersonItn: String? = nil
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,7 +52,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.currentPersonItn = PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
         
         Utilities.createDismissButton(button: self.dismissPersonButton)
-        self.dismissPersonButton.tintColor = Utilities.accentColor
         
         self.textUnderlineDecorationDic = [self.fullPersonNameTextField : self.personNameUnderView, self.personItnTextField : self.personItnUnderView, self.personLoginTextField : self.personLoginUnderView, self.personPasswordTextField : self.personPwdUnderView]
         
@@ -148,6 +146,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.parentView?.addSubview(self.personView)
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
+        self.dismissPersonButton.tintColor = Utilities.accentColor
         
         self.personPasswordTextField.isSecureTextEntry = true
         self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
@@ -194,6 +193,10 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         let newRole = Int16(self.selectedPersonRole)
         
         if self.checkPersonInfo() {
+            if !self.isPersonEditing && PersonalDBRules.isTheSameNameRoleAndItnPresent(personName: newName, personRole: newRole, personItn: itn) {
+                Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Сотрудник с таким именем и должностью уже присутствует!")
+                return
+            }
             if !self.isPersonEditing {
                 if !PersonalDBRules.isTheSamePersonPresents(personLogin: newLogin) {
                     PersonalDBRules.addNewPerson(personName: newName, personItn: itn, personLogin: newLogin, personPassword: newPassword, personRole: newRole)
@@ -274,7 +277,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                 self.parentView?.addSubview(self.personView)
                 self.setPersonViewFrame()
                 
-                if (Utilities.splitController?.isAlertViewPresented)! {
+                if (Utilities.productsSplitController?.isAlertViewPresented)! {
                     _ = self.checkPersonInfo()
                 }
             }
@@ -324,23 +327,23 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             cell.detailTextLabel?.textColor = UIColor.black
         }
         
+        Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+        
         if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn {
             
             cell.accessoryView = self.createLougoutButton()
-            tableView.cellForRow(at: indexPath)
-            cell.selectionStyle = .default
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        //    tableView.cellForRow(at: indexPath)
+        //    tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         } else {
             cell.accessoryView = nil
         //    cell.selectionStyle = .none
         }
         
-        Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        
         if Int(PersonalDBRules.getPersonRoleByInt(personItn: self.currentPersonItn!)!) == Utilities.personRole.admin.rawValue {
             return true
         } else {
@@ -382,6 +385,8 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         let person = PersonalDBRules.getAllPersons()?[indexPath.row]
         let name = person!.value(forKeyPath: "name") as? String
+        let login = person!.value(forKeyPath: "login") as! String
+        let password = person!.value(forKeyPath: "password") as! String
         let role = person!.value(forKeyPath: "role") as? Int16
         
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
@@ -417,6 +422,11 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             success(true)
         })
         editAction.backgroundColor = Utilities.editActionBackgroundColor
+        
+        if PersonalDBRules.getPersonItnByLoginAndPassword(personLogin: login, personPassword: password) == self.currentPersonItn {
+            editAction.backgroundColor = Utilities.accentColor
+            return UISwipeActionsConfiguration(actions: [editAction])
+        }
         
         return UISwipeActionsConfiguration(actions: [editAction, deleteAction])
     }
@@ -456,6 +466,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func dismissPersonView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.personView)
         self.isPersonViewPresented = false
     }

@@ -27,10 +27,15 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var saveOrgInfoButton: UIButton!
     @IBOutlet weak var cancelOrgInfoButton: UIButton!
     
+    @IBOutlet var btDevicesView: UIView!
+    @IBOutlet weak var btDevicesTableView: UITableView!
+    @IBOutlet weak var dismissBtDevicesButton: UIButton!
+        
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var isColorsViewPresented: Bool = false
     var isOrgInfoViewPresented: Bool = false
+    var isBtDevicesViewPresented: Bool = false
     var parentView: UIView? = nil
     var keyboardHeight: CGFloat = 0.0
     var taxTypeIndex: Int = 0
@@ -41,6 +46,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.parentView = Utilities.mainController!.view
         Utilities.customizePopoverView(customizedView: self.colorsView)
         Utilities.customizePopoverView(customizedView: self.orgInfoView)
+        Utilities.customizePopoverView(customizedView: self.btDevicesView)
         
         self.itnTextField.delegate = self
         self.kppTextField.delegate = self
@@ -56,9 +62,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.accentColorButtons[Int(colorIndex)].setImage(UIImage(named: "Check"), for: .normal)
         
         Utilities.createDismissButton(button: self.dismissColorsViewButton)
-        self.dismissColorsViewButton.tintColor = Utilities.accentColor
         Utilities.createDismissButton(button: self.dismissOrgInfoButton)
-        self.dismissOrgInfoButton.tintColor = Utilities.accentColor
+        Utilities.createDismissButton(button: self.dismissBtDevicesButton)
         
         self.textUnderlineDecorationDic = [self.orgNameTextField : self.orgNameUnderView, self.pointNameTextField : self.pointNameUnderView, self.pointAddressTextField : self.pointAddressUnderView, self.itnTextField : self.itnUnderView, self.kppTextField : self.kppUnderView]
     }
@@ -130,12 +135,14 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             } else {
                 OrgInfoDBRules.addNewOrgInfo(organizationName: orgName, pointName: pntName, pointAddress: pntAddress, organizationItn: orgItn, organizationKpp: orgKpp ?? "", organizationTaxType: Int16(self.taxTypeIndex))
             }
+            self.removeOrgInfoView()
         }
-        self.removeOrgInfoView()
     }
     
     func removeOrgInfoView() {
         Utilities.removeOverlayView()
+        
+        self.tableView.reloadData()
         
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.orgInfoView.alpha = 0.0
@@ -162,31 +169,37 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func cancelSaveOrgInfo(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
-        Utilities.removeOverlayView()
-        
-        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
-            self.orgInfoView.alpha = 0.0
-        }), completion: { (completed: Bool) in
-            self.isOrgInfoViewPresented = false
-        })
+
+        self.removeOrgInfoView()
+    }
+    
+    @IBAction func dismissBtDevicesView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
+        Utilities.dismissView(viewToDismiss: self.btDevicesView)
+        self.isBtDevicesViewPresented = false
+        self.tableView.reloadData()
     }
         
     @IBAction func dismissOrgInfoView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.orgInfoView)
         self.isOrgInfoViewPresented = false
+        self.tableView.reloadData()
     }
     
     @IBAction func dismissColorsView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.colorsView)
         self.isColorsViewPresented = false
+        self.tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -198,13 +211,16 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             
             if indexPath.row == 0 && indexPath.section == 0 {
                 self.showOrgInfoView()
-                tableView.reloadData()
                 return
             }
             
             if indexPath.row == 0 && indexPath.section == 1 {
                 self.showAccentColorsView()
-                tableView.reloadData()
+                return
+            }
+            
+            if indexPath.row == 0 && indexPath.section == 2 {
+                self.showBtDevicesView()
                 return
             }
         }
@@ -225,11 +241,29 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func getColorsViewCenterPoint() -> CGPoint {
-        
         let centerX = (self.parentView?.center.x)!
         let centerY = (self.parentView?.center.y)!
         
         return CGPoint(x: centerX, y: centerY)
+    }
+    
+    func showBtDevicesView() {
+        self.btDevicesView.center = self.getColorsViewCenterPoint()
+        self.btDevicesView.alpha = 0.0
+        self.btDevicesView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
+        
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.btDevicesView.alpha = 1.0
+        }), completion: { (completed: Bool) in
+        })
+        
+        self.isBtDevicesViewPresented = true
+        self.btDevicesView.alpha = 0.94
+        Utilities.addOverlayView()
+        self.parentView?.addSubview(self.btDevicesView)
+        
+        Utilities.makeViewFlexibleAppearance(view: self.btDevicesView)
+        self.dismissBtDevicesButton.tintColor = Utilities.accentColor
     }
     
     func showAccentColorsView() {
@@ -248,6 +282,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.parentView?.addSubview(self.colorsView)
         
         Utilities.makeViewFlexibleAppearance(view: self.colorsView)
+        self.dismissColorsViewButton.tintColor = Utilities.accentColor
     }
     
     func showOrgInfoView() {
@@ -270,6 +305,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.getOrgInfo()
         
         Utilities.makeViewFlexibleAppearance(view: self.orgInfoView)
+        self.dismissOrgInfoButton.tintColor = Utilities.accentColor
     }
     
     func checkOrgInfo() -> Bool {
@@ -317,17 +353,24 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         
         self.colorsView.removeFromSuperview()
         self.orgInfoView.removeFromSuperview()
+        self.btDevicesView.removeFromSuperview()
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isColorsViewPresented {
                 self.parentView?.addSubview(self.colorsView)
                 self.colorsView.center = self.getColorsViewCenterPoint()
             }
+            
+            if self.isBtDevicesViewPresented {
+                self.parentView?.addSubview(self.btDevicesView)
+                self.btDevicesView.center = self.getColorsViewCenterPoint()
+            }
+            
             if self.isOrgInfoViewPresented {
                 self.parentView?.addSubview(self.orgInfoView)
                 self.setOrgInfoViewFrame()
                 
-                if (Utilities.splitController?.isAlertViewPresented)! {
+                if (Utilities.productsSplitController?.isAlertViewPresented)! {
                     _ = self.checkOrgInfo()
                 }
             }

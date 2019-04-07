@@ -110,6 +110,23 @@ class PersonalDBRules: Any {
         return false
     }
     
+    class func isTheSameNameRoleAndItnPresent(personName name: String, personRole role: Int16, personItn itn: String) -> Bool {
+        let viewContext = CommonDBRules.getManagedView()
+        if viewContext != nil {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
+            fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, itn])
+            do {
+                let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+                if fetchResult.count > 0 {
+                    return true
+                }
+            } catch let error as NSError {
+                NSLog("Ошибка поиска сотрудника: " + error.localizedDescription)
+            }
+        }
+        return false
+    }
+    
     class func getPersonItnByLoginAndPassword(personLogin login: String, personPassword password: String) -> String? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {

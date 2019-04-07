@@ -37,7 +37,6 @@ class CategoriesTableViewController: UITableViewController {
         }
         
         Utilities.createDismissButton(button: self.dismissCategoryButton)
-        self.dismissCategoryButton.tintColor = Utilities.accentColor
         
         self.textUnderlineDecorationDic = [self.categoryNameTextField : self.categoryNameUnderView]
         
@@ -116,6 +115,7 @@ class CategoriesTableViewController: UITableViewController {
         self.parentView?.addSubview(self.categoryView)
         
         Utilities.makeViewFlexibleAppearance(view: self.categoryView)
+        self.dismissCategoryButton.tintColor = Utilities.accentColor
     }
     
     func removeCategoryView() {
@@ -152,7 +152,7 @@ class CategoriesTableViewController: UITableViewController {
                         }
                     }
                 } else {
-                    if newCategoryName != "" {
+                    if !self.isCategoryEditing {
                         Utilities.showErrorAlertView(alertTitle: "КАТЕГОРИЯ ТОВАРОВ", alertMessage: "Такая категория товаров уже присутствует!")
                     } else {
                         self.removeCategoryView()
@@ -185,7 +185,7 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     func updateProductsTable() {
-        let navController = Utilities.splitController!.viewControllers[1] as! UINavigationController
+        let navController = Utilities.productsSplitController!.viewControllers[1] as! UINavigationController
         let categoriesController = navController.topViewController as! ProductsViewController
         categoriesController.productsTableView.reloadData()
     }
@@ -273,6 +273,7 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     @IBAction func dismissCategoryView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.categoryView)
         self.isCategoryViewPresented = false
     }

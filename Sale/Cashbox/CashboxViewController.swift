@@ -82,19 +82,19 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             case Utilities.personRole.admin.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n" +
+                    return "Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персоналом.\n" + "4. Формирование отчетов и настроек приложения."
                 }
             case Utilities.personRole.merchandiser.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n" +
+                    return "Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персональной информацией."
                 }
             case Utilities.personRole.cashier.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n" +
+                    return "Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции с персональной информацией."
                 }
             default: return ""
@@ -138,6 +138,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.productsTableView.dataSource = self
         self.productsTableView.delegate = self
+        self.productsTableView.estimatedRowHeight = 140
         
         self.purchaseTableView.dataSource = self
         self.purchaseTableView.delegate = self
@@ -304,8 +305,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {        
         if tableView == self.purchaseTableView {
             let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
                 
@@ -449,7 +449,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func deletePurchase(_ sender: Any) {
-        
         for productInPurchase in PurchaseDBRules.getAllProductsInPurchase()! {
             let productCode = productInPurchase.value(forKey: "code") as! String
             let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
@@ -461,7 +460,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         PurchaseDBRules.deleteAllProductsInPurchase()
         
         self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
+        
         self.calulateAndPrintPurchaseSumm()
+        
+        self.selectedProductRow = nil
     }
     
     func calulateAndPrintPurchaseSumm() {
@@ -570,19 +572,28 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.addProductInPurchase(self.buyProductsButton)
     }
     
-    @IBAction func makePurchase(_ sender: Any) {
+    func addSaleForPerson() {
+        let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
         
+        for product in PurchaseDBRules.getAllProductsInPurchase() ?? [] {
+            PersonSalesDBRules.addProductInSale(personName: person?.value(forKey: "name") as! String, personRole: person?.value(forKey: "role") as! Int16, productName: product.value(forKey: "name") as! String, productCount: product.value(forKey: "count") as! Float, productBarcode: product.value(forKey: "code") as! String)
+        }
+    }
+    
+    @IBAction func makePurchase(_ sender: Any) {
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
         //    PurchaseDBRules.updatePurchasedProductsCount()
-            PurchaseDBRules.deleteAllProductsInPurchase()
+            self.addSaleForPerson()
             
-            let devices = lib.btConnectedDevices
+            PurchaseDBRules.deleteAllProductsInPurchase()
             
             Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
             self.calulateAndPrintPurchaseSumm()
             
             self.productsTableView.reloadData()
             self.purchaseTableView.reloadData()
+            
+            self.selectedProductRow = nil
         } else {
             Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет товаров для покупки!")
         }
@@ -596,7 +607,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     var info: String = ""
                     for device in connected
                     {
-                        info += "\(device.name!) \(device.model!) connected\nFW Rev: \(device.firmwareRevision!) HW Rev: \(device.hardwareRevision!)\nSerial: \(device.serialNumber!)\n"
+                        info += "\(device.name!) \(device.model!)\nFW Rev: \(device.firmwareRevision!) HW Rev: \(device.hardwareRevision!)\nSerial: \(device.serialNumber!)\n"
                     }
                     Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: info)
                 } catch {}

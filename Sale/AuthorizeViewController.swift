@@ -28,6 +28,8 @@ class AuthorizeViewController: UIViewController {
         
         self.pwdTextField.isSecureTextEntry = true
         self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        
+    //    Utilities.decorateButton(buttonToDecorate: self.enterButton)
         self.enterButton.tintColor = Utilities.accentColor
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
@@ -62,12 +64,12 @@ class AuthorizeViewController: UIViewController {
         Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.loginUnderView, self.passwordUnderView])
         
         self.setAuthorizeViewFrame()
+        
         self.showPersonView()
         Utilities.makeViewFlexibleAppearance(view: self.authorizeView)
     }
     
     @objc func showPersonView() {
-
         self.authorizeView.alpha = 0.0
     //    self.loginTextField.becomeFirstResponder()
         self.setAuthorizeViewFrame()
@@ -109,9 +111,15 @@ class AuthorizeViewController: UIViewController {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         let login = self.loginTextField.text!
         let password = self.pwdTextField.text!
+        
+        if login == "" {
+            Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: "Отсутствует логин!")
+        }
+        if password == "" {
+            Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: "Отсутствует пароль!")
+        }
 
         if PersonalDBRules.isPersonPresents(personLogin: login, personPassword: password) {
-            
             PersonalDBRules.currentLogin = login
             PersonalDBRules.currentPassword = password
             

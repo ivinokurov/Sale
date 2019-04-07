@@ -17,7 +17,7 @@ class Utilities: Any {
     }
     
     static let colors = [0: UIColor(red: 255/255, green: 59/255, blue: 48/255, alpha: 1.0),
-                         3: UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1.0),
+                         3: UIColor(red: 0/255, green: 107/255, blue: 109/255, alpha: 1.0),
                          1: UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1.0),
                          2: UIColor(red: 88/255, green: 86/255, blue: 214/255, alpha: 1.0),
                          4: UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)]
@@ -28,7 +28,8 @@ class Utilities: Any {
     static let floatNumbersOnly = "0123456789."
     
     static var mainController: MainTabBarController? = nil    
-    static var splitController: ProductsSplitViewController? = nil
+    static var productsSplitController: ProductsSplitViewController? = nil
+    static var reportsSplitController: ReportsSplitViewController? = nil
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)
     static let editActionBackgroundColor = UIColor.green.withAlphaComponent(0.6)
     static let animationDuration = 0.4
@@ -78,11 +79,11 @@ class Utilities: Any {
     }
     
     class func showOkAlertView(alertTitle title: String, alertMessage message: String) {
-        self.splitController!.initAndShowAlertView(imageName: "Ok", text: message)
+        self.productsSplitController!.initAndShowAlertView(imageName: "Ok", text: message)
     }
 
     class func showErrorAlertView(alertTitle title: String, alertMessage message: String) {
-        self.splitController!.initAndShowAlertView(imageName: "Error", text: message)
+        self.productsSplitController!.initAndShowAlertView(imageName: "Error", text: message)
     }
     
     class func showSimpleAlert(controllerToShowFor controller: UIViewController, messageToShow message: String) {
@@ -112,7 +113,6 @@ class Utilities: Any {
         UIView.animate(withDuration:self.animationDuration, animations: ({
             button.layer.backgroundColor = UIColor.white.cgColor
         }), completion: { (completed: Bool) in
-            
         })
     }
     
@@ -197,7 +197,7 @@ class Utilities: Any {
     class func createDismissButton(button: UIButton) {
         button.tintColor = Utilities.accentColor
         button.setImage(UIImage(named: "Cross"), for: .normal)
-        Utilities.makeButtonRounded(button: button)
+        self.makeButtonRounded(button: button)
         button.layer.borderColor = UIColor.clear.cgColor
     }
     

@@ -17,19 +17,19 @@ class MainTabBarController: UITabBarController, DTDeviceDelegate  {
         
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let cashboxController = storyboard.instantiateViewController(withIdentifier: "cashboxControllerId") as! CashboxNavigationController
-        let splitController = storyboard.instantiateViewController(withIdentifier: "splitControllerId") as! ProductsSplitViewController
+        let productsSplitController = storyboard.instantiateViewController(withIdentifier: "splitControllerId") as! ProductsSplitViewController
         let personalController = storyboard.instantiateViewController(withIdentifier: "personalControllerId") as! PersonalNavigationController
-        let reportsController = storyboard.instantiateViewController(withIdentifier: "reportsControllerId") as! ReportsNavigationController
+        let reportsSplitontroller = storyboard.instantiateViewController(withIdentifier: "reportsControllerId") as! ReportsSplitViewController
         let settingsController = storyboard.instantiateViewController(withIdentifier: "settingsControllerId") as! SettingsNavigationController
         
         switch self.getCurrentPersonRole() {
             case Utilities.personRole.admin.rawValue:
             do {
-                self.viewControllers = [cashboxController, splitController, personalController, reportsController, settingsController]
+                self.viewControllers = [cashboxController, productsSplitController, personalController, reportsSplitontroller, settingsController]
             }
         case Utilities.personRole.merchandiser.rawValue:
             do {
-                self.viewControllers = [cashboxController, splitController, personalController]
+                self.viewControllers = [cashboxController, productsSplitController, personalController]
             }
         case Utilities.personRole.cashier.rawValue:
             do {
@@ -38,12 +38,14 @@ class MainTabBarController: UITabBarController, DTDeviceDelegate  {
         default: self.viewControllers = nil
         }
         
-        Utilities.splitController = splitController
-        Utilities.customizePopoverView(customizedView: splitController.alertView)
+        Utilities.productsSplitController = productsSplitController
+        Utilities.reportsSplitController = reportsSplitontroller
+        
+        Utilities.customizePopoverView(customizedView: productsSplitController.alertView)
         
         self.btDevices.findBluetoothDevices()
 
-        splitController.alertView.alpha = 0.0
+        productsSplitController.alertView.alpha = 0.0
     }
     
     override func viewWillAppear(_ animated: Bool) {
