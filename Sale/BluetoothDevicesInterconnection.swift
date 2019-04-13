@@ -23,7 +23,6 @@ class BluetoothDevicesInterconnection: Any, DTDeviceDelegate {
     
     func bluetoothDiscoverComplete(_ success: Bool) {
         if success {
-            Utilities.showSimpleAlert(controllerToShowFor: Utilities.mainController!, messageToShow: "Найдено устройств: " + String(self.btDevices.count / 2))
         }
     }
     

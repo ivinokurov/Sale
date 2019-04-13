@@ -64,7 +64,7 @@ class PersonSalesDBRules: Any {
         let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [personItn, name, role])
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
         
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
@@ -109,6 +109,32 @@ class PersonSalesDBRules: Any {
         } catch let error as NSError {
             NSLog("Ошибка добавления продукта в продажи сотрудника: " + error.localizedDescription)
         }
+    }
+    
+    class func getPerosonSalesTotalSum(personName name: String, personRole role: Int16) -> Float {
+        let viewContext = CommonDBRules.getManagedView()
+        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
+        
+        var totalSum: Float = 0.0
+        
+        do {
+            let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
+            if fetchResult.count > 0 {
+                let person = fetchResult.first
+                let allPersonSales = person!.mutableSetValue(forKey: "sales")
+                
+                allPersonSales.forEach({
+                    totalSum += (ProductsDBRules.getProductByBarcode(code: ($0 as! NSManagedObject).value(forKey: "code") as! String))!.value(forKey: "price") as! Float * (($0 as! NSManagedObject).value(forKey: "count") as! Float)
+                })
+                return totalSum
+            }
+        } catch let error as NSError {
+            NSLog("Ошибка определения суммы продаж сотрудника: " + error.localizedDescription)
+        }
+        return totalSum
     }
 
 }

@@ -3,10 +3,96 @@
 //  Sale
 //
 
+class BtDevicesDataSource: UITableView, UITableViewDataSource, UITableViewDelegate, CBCentralManagerDelegate  {
+    var centralManager: CBCentralManager?
+    var peripherals: [CBPeripheral] = []
+    var selectedPeripheral: CBPeripheral? = nil
+    var parent: SettingsTableViewController? = nil
+    
+    var dismissView: ((UIButton)->())? = nil
+    
+    func initBtDevicesDataSource(parentController controller: SettingsTableViewController) {
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        
+        self.parent = controller
+        
+        self.parent?.btDevicesTableView!.dataSource = self
+        self.parent?.btDevicesTableView!.delegate = self
+    }
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        if (central.state == .poweredOn) {
+            self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+        }
+        else {
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        if peripheral.name != nil {
+            if !(self.peripherals.map({item in
+                item.name}).contains(peripheral.name)) {
+                self.peripherals.append(peripheral)
+                self.parent?.btDevicesTableView!.reloadData()
+            }
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        peripheral.discoverServices(nil)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.peripherals.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "btDeviceCellId")! as UITableViewCell
+        
+        let peripheral = peripherals[indexPath.row]
+        cell.textLabel?.text = peripheral.name
+        cell.detailTextLabel?.text = peripheral.identifier.description
+        cell.tintColor = Utilities.accentColor
+        Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+        
+        if let peripheral = self.selectedPeripheral {
+            if cell.textLabel?.text == peripheral.name {
+                cell.accessoryType = .checkmark
+                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
+        cell?.tintColor = Utilities.accentColor
+        
+        self.selectedPeripheral = self.peripherals[indexPath.row]
+        self.parent?.tableView?.cellForRow(at: IndexPath(row: 0, section: 2))?.textLabel!.text = "Выбрать устройство [" + (self.selectedPeripheral?.name)! + "]"
+        self.parent?.tableView.reloadData()
+        Utilities.dismissView(viewToDismiss: (self.parent?.btDevicesView)!)
+        self.parent?.isBtDevicesViewPresented = false
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .none
+    }
+    
+}
+
 
 import UIKit
+import CoreBluetooth
 
-class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
+class SettingsTableViewController: UITableViewController, UITextFieldDelegate, StreamDelegate {
     
     @IBOutlet var colorsView: UIView!
     @IBOutlet var accentColorButtons: [UIButton]!
@@ -32,6 +118,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var dismissBtDevicesButton: UIButton!
         
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
+    
+    var btDevices: BtDevicesDataSource?
     
     var isColorsViewPresented: Bool = false
     var isOrgInfoViewPresented: Bool = false
@@ -66,6 +154,15 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         Utilities.createDismissButton(button: self.dismissBtDevicesButton)
         
         self.textUnderlineDecorationDic = [self.orgNameTextField : self.orgNameUnderView, self.pointNameTextField : self.pointNameUnderView, self.pointAddressTextField : self.pointAddressUnderView, self.itnTextField : self.itnUnderView, self.kppTextField : self.kppUnderView]
+        
+    //    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+    //        self.centralManager?.stopScan()
+    //    }
+        
+        self.btDevices = BtDevicesDataSource()
+        self.btDevices?.initBtDevicesDataSource(parentController: self)
+        
+        self.btDevicesTableView.tableFooterView = UIView()
     }
     
     @IBAction func checkITNStringLength(_ sender: UITextField) {
@@ -183,6 +280,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func dismissOrgInfoView(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.orgInfoView)
+        Utilities.dismissKeyboard(conroller: self)
         self.isOrgInfoViewPresented = false
         self.tableView.reloadData()
     }
@@ -190,6 +288,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func dismissColorsView(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.colorsView)
+        Utilities.dismissKeyboard(conroller: self)
         self.isColorsViewPresented = false
         self.tableView.reloadData()
     }
@@ -343,8 +442,17 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         
         self.dismissColorsViewButton.tintColor = Utilities.accentColor
         self.tableView.reloadData()
+        self.btDevicesTableView.reloadData()
+        
         Utilities.mainController!.tabBar.tintColor = Utilities.accentColor
-        self.dismissColorsView(sender)
+        Utilities.dismissView(viewToDismiss: self.colorsView)
+        self.isColorsViewPresented = false
+        
+        Utilities.productsSplitController!.alertView.layer.borderColor = Utilities.accentColor.cgColor
+        
+        self.colorsView.layer.borderColor = Utilities.accentColor.cgColor
+        self.orgInfoView.layer.borderColor = Utilities.accentColor.cgColor
+        self.btDevicesView.layer.borderColor = Utilities.accentColor.cgColor
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

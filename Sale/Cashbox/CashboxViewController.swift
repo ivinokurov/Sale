@@ -5,6 +5,7 @@
 
 
 import UIKit
+import ExternalAccessory
 
 class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, DTDeviceDelegate {
 
@@ -82,19 +83,19 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             case Utilities.personRole.admin.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n\n" +
+                    return "Вы - администратор. Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персоналом.\n" + "4. Формирование отчетов и настроек приложения."
                 }
             case Utilities.personRole.merchandiser.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n\n" +
+                    return "Вы - товаровед. Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персональной информацией."
                 }
             case Utilities.personRole.cashier.rawValue:
                 do {
                     self.currentPersonRoleLabel.textAlignment = .left
-                    return "Для вас доступны:\n\n" +
+                    return "Вы - кассир. Для вас доступны:\n\n" +
                         "1. Кассовые операции.\n" + "2. Операции с персональной информацией."
                 }
             default: return ""
@@ -130,9 +131,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.customizeButton(button: self.deleteProductsButton, buttonColor: Utilities.deleteProductsButtonColor)
         self.customizeSearchBar()
         
-        Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
-        Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
-        
         self.productTypesCollectionView.dataSource = self
         self.productTypesCollectionView.delegate = self
         
@@ -152,15 +150,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.productsTableView.tableFooterView = UIView()
         self.purchaseTableView.tableFooterView = UIView()
         
-    //    if !Utilities.isPersonLogout {
-            lib.addDelegate(self)
-            lib.connect()
-    //    }
+        lib.addDelegate(self)
+        lib.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         super.viewWillAppear(animated)
+        
+        Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
+        Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
         
         if self.isPurchaseViewPresented {
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
@@ -218,7 +216,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func customizeButton(button: UIButton, buttonColor: UIColor) {
         button.tintColor = buttonColor
-        button.backgroundColor = buttonColor.withAlphaComponent(0.12)
+    //    button.layer.backgroundColor = buttonColor.withAlphaComponent(0.2).cgColor
         button.layer.borderColor = buttonColor.cgColor
         button.layer.borderWidth = 2.0
         button.layer.cornerRadius = 40
@@ -254,7 +252,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.productsTableView {
             if !self.searchBarIsEmpty() {
-                return ProductsDBRules.filteredProducts!.count
+                return ProductsDBRules.filteredProducts?.count ?? 0
             } else {
                 if let selectedCategoryName = self.getSelectedCategoryName() {
                     let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName)
@@ -352,6 +350,9 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func addProductInPurchase(_ sender: Any) {
         
         let selectedCategoryName = self.getSelectedCategoryName()
+        if selectedCategoryName == nil {
+            return
+        }
         let selectedCategory = CategoriesDBRules.getCategiryByName(categoryName: selectedCategoryName!)
         
         if !self.isPurchaseViewPresented {
@@ -480,17 +481,25 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func showPurchaseView() {
+        if !UIDevice.current.orientation.isLandscape && !UIDevice.current.orientation.isFlat {
+            self.purchaseContainerView.frame.size.height = 728
+            self.purchaseTableView.frame.size.height = 646
+            self.buyProductsButton.center.y = 441
+            self.deleteProductsButton.center.y = 573
+            self.purchaseSummLabel.center.y = 712
+        } else {
+            self.purchaseContainerView.frame.size.height = 472
+            self.purchaseTableView.frame.size.height = 390
+            self.buyProductsButton.center.y = 185
+            self.deleteProductsButton.center.y = 307
+            self.purchaseSummLabel.center.y = 458
+        }
+        
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseInOut, animations: { () -> Void in
 
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
-            /*
-            if !UIDevice.current.orientation.isLandscape {
-                self.purchaseContainerView.frame.size.height = 700
-            } else {
-                self.purchaseContainerView.frame.size.height = 472
-            }
-            */
+
             self.isPurchaseViewPresented = true
         }, completion: { (completed: Bool) -> Void in
             self.selectBuildingButton?.image = self.hidePurchaseViewImage
@@ -510,7 +519,15 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return CategoriesDBRules.getAllCategories()?.count ?? 0
+        let categoriesCount = CategoriesDBRules.getAllCategories()?.count ?? 0
+        if categoriesCount == 0 {
+            self.productTypesCollectionView.isHidden = true
+            return 0
+        } else {
+            self.productTypesCollectionView.isHidden = false
+            return categoriesCount
+        }
+    //    return CategoriesDBRules.getAllCategories()?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -572,6 +589,21 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.addProductInPurchase(self.buyProductsButton)
     }
     
+    func magneticCardData(_ track1: String!, track2: String!, track3: String!) {
+        let card = lib.msExtractFinancialCard(track1, track2: track2)
+        var status = ""
+        if card != nil {
+            if card!.cardholderName != nil && !(card!.cardholderName.isEmpty) {
+                status += "Владелец: \(card!.cardholderName!)\n"
+            }
+            if card!.accountNumber != nil && !(card!.accountNumber.isEmpty) {
+                status += "Номер: \(card!.accountNumber!)"
+            }
+        }
+        Utilities.showOkAlertView(alertTitle: "КАРТА", alertMessage: status)
+    }
+    
+    
     func addSaleForPerson() {
         let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
         
@@ -585,15 +617,71 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         //    PurchaseDBRules.updatePurchasedProductsCount()
             self.addSaleForPerson()
             
-            PurchaseDBRules.deleteAllProductsInPurchase()
             
             Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
+            
+            let dtCommand = DTFiscalPrinterCommand()
+            dtCommand.getOutputStream (hostName: "7700000055", hostPort: 3999)
+            
+            dtCommand.commandCode = 0x2A
+            dtCommand.commandParams.removeAll()
+            dtCommand.commandParams.append("DEMO VERSION, 2019")
+            if dtCommand.outputStream != nil {
+                dtCommand.writeCommand()
+            }
+            
+            dtCommand.commandCode = 0x2C
+            dtCommand.commandParams.removeAll()
+            dtCommand.commandParams.append("1")
+            if dtCommand.outputStream != nil {
+                dtCommand.writeCommand()
+            }
+            
+            for product in PurchaseDBRules.getAllProductsInPurchase()! {
+                let name = product.value(forKey: "name") as! String
+                let count = product.value(forKey: "count") as! Float
+                let code = product.value(forKey: "code") as! String
+                let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
+                
+                dtCommand.commandCode = 0x2A
+                dtCommand.commandParams.removeAll()
+                dtCommand.commandParams.append(name + "   " + count.description + " * " + price.description + " " + "rub")
+                if dtCommand.outputStream != nil {
+                    dtCommand.writeCommand()
+                }
+            }
+            
+            dtCommand.commandCode = 0x2C
+            dtCommand.commandParams.removeAll()
+            dtCommand.commandParams.append("1")
+            if dtCommand.outputStream != nil {
+                dtCommand.writeCommand()
+            }
+            
+            dtCommand.commandCode = 0x2A
+            dtCommand.commandParams.removeAll()
+            dtCommand.commandParams.append(String(format: "TOTAL: %0.2f rub", PurchaseDBRules.getPurchaseTotalPrice()))
+            if dtCommand.outputStream != nil {
+                dtCommand.writeCommand()
+            }
+            
+            dtCommand.commandCode = 0x2C
+            dtCommand.commandParams.removeAll()
+            dtCommand.commandParams.append("10")
+            if dtCommand.outputStream != nil {
+                dtCommand.writeCommand()
+            }
+            
+            
+            PurchaseDBRules.deleteAllProductsInPurchase()
+            
             self.calulateAndPrintPurchaseSumm()
             
             self.productsTableView.reloadData()
             self.purchaseTableView.reloadData()
             
             self.selectedProductRow = nil
+            
         } else {
             Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет товаров для покупки!")
         }

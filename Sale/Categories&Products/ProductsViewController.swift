@@ -89,12 +89,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     func setProductViewActionTitles() {
         let titlePrefix = (self.getSelectedCategoryName()?.uppercased())!
         if !self.isProductEditing {
+            Utilities.makeViewsActive(viewsToMakeActive: [self.productBarcodeTextField])
             self.productViewTitleLabel.text = titlePrefix +  ". НОВЫЙ ТОВАР"
-            self.productBarcodeTextField.isUserInteractionEnabled = true
             self.addOrEditProductButton.setTitle("ДОБАВИТЬ", for: .normal)
         } else {
+            Utilities.makeViewsInactive(viewsToMakeInactive: [self.productBarcodeTextField])
             self.productViewTitleLabel.text = titlePrefix +  ". ИЗМЕНЕНИЕ ТОВАРА"
-            self.productBarcodeTextField.isUserInteractionEnabled = false
             self.addOrEditProductButton.setTitle("ИЗМЕНИТЬ", for: .normal)
         }
     }
@@ -405,9 +405,10 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         })
     }
     
-    @IBAction func dismissCategoryView(_ sender: UIButton) {
+    @IBAction func dismissProductView(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.productView)
+        Utilities.dismissKeyboard(conroller: self)
         self.isProductViewPresented = false
     }
     

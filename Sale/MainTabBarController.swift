@@ -5,10 +5,14 @@
 
 
 import UIKit
+import ExternalAccessory
 
-class MainTabBarController: UITabBarController, DTDeviceDelegate  {
+class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDelegate  {
     
     let btDevices = BluetoothDevicesInterconnection()
+    var btSession: EASession? = nil
+    var btAccessory: EAAccessory? = nil
+    var accessories: [EAAccessory]? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,10 +46,18 @@ class MainTabBarController: UITabBarController, DTDeviceDelegate  {
         Utilities.reportsSplitController = reportsSplitontroller
         
         Utilities.customizePopoverView(customizedView: productsSplitController.alertView)
-        
+
         self.btDevices.findBluetoothDevices()
 
         productsSplitController.alertView.alpha = 0.0
+    }
+    
+    func accessoryDidDisconnect(_ accessory: EAAccessory) {
+        Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: accessory.name)
+    }
+    
+    @objc func accessoryConnected(_ notification: NSNotification) {
+        Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: notification.description)
     }
     
     override func viewWillAppear(_ animated: Bool) {

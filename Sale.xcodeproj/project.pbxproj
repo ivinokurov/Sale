@@ -28,6 +28,7 @@
 		EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */; };
 		EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA536B2E223F56D900919926 /* ProductsDBRules.swift */; };
 		EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */; };
+		EA6ABE0A2260A837008D7475 /* DTFiscalPrinterCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */; };
 		EA743056224F3AFB00333B9D /* CashboxNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */; };
 		EA74305A224F50A700333B9D /* ReportsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743059224F50A700333B9D /* ReportsNavigationController.swift */; };
 		EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305B224F534500333B9D /* SettingsNavigationController.swift */; };
@@ -35,6 +36,7 @@
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
 		EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA01FB2225082E600C46257 /* SettingsDBRules.swift */; };
 		EAA7761A2259DA7400C0D596 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA776192259DA7400C0D596 /* Launch Screen.storyboard */; };
+		EAA7761D2259F65200C0D596 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAA7761C2259F65200C0D596 /* CoreBluetooth.framework */; };
 		EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */; };
 		EAAA59E3223D11BF0096D990 /* CategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */; };
 		EAAA59E7223E02E10096D990 /* CategoriesDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA59E6223E02E10096D990 /* CategoriesDBRules.swift */; };
@@ -78,6 +80,7 @@
 		EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		EA536B2E223F56D900919926 /* ProductsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsDBRules.swift; sourceTree = "<group>"; };
 		EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDBRules.swift; sourceTree = "<group>"; };
+		EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTFiscalPrinterCommand.swift; sourceTree = "<group>"; };
 		EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashboxNavigationController.swift; sourceTree = "<group>"; };
 		EA743059224F50A700333B9D /* ReportsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsNavigationController.swift; sourceTree = "<group>"; };
 		EA74305B224F534500333B9D /* SettingsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationController.swift; sourceTree = "<group>"; };
@@ -85,6 +88,7 @@
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
 		EAA01FB2225082E600C46257 /* SettingsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDBRules.swift; sourceTree = "<group>"; };
 		EAA776192259DA7400C0D596 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		EAA7761C2259F65200C0D596 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		EAAA59DB223D07160096D990 /* ProductsSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSplitViewController.swift; sourceTree = "<group>"; };
 		EAAA59E2223D11BF0096D990 /* CategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewController.swift; sourceTree = "<group>"; };
 		EAAA59E6223E02E10096D990 /* CategoriesDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesDBRules.swift; sourceTree = "<group>"; };
@@ -105,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAA7761D2259F65200C0D596 /* CoreBluetooth.framework in Frameworks */,
 				EA13A2A2225501D00071810B /* ExternalAccessory.framework in Frameworks */,
 				EA4C7E1A2227B7C600425BE8 /* libdtdev.a in Frameworks */,
 			);
@@ -181,6 +186,7 @@
 		EA4C7E1D2227B80200425BE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EAA7761C2259F65200C0D596 /* CoreBluetooth.framework */,
 				EA13A2A1225501D00071810B /* ExternalAccessory.framework */,
 			);
 			name = Frameworks;
@@ -194,6 +200,7 @@
 				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
 				EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */,
+				EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */,
 			);
 			path = Cashbox;
 			sourceTree = "<group>";
@@ -289,7 +296,7 @@
 						CreatedOnToolsVersion = 10.1;
 						SystemCapabilities = {
 							com.apple.WAC = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -367,6 +374,7 @@
 				EA0FFA40222510AB00703EB0 /* ViewController.swift in Sources */,
 				EAF22AAF2258AD0C006FDA14 /* ReportSalesViewController.swift in Sources */,
 				EA0FFA3E222510AB00703EB0 /* AppDelegate.swift in Sources */,
+				EA6ABE0A2260A837008D7475 /* DTFiscalPrinterCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +516,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sale/Sale.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S985RTT2A7;
@@ -535,6 +544,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sale/Sale.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S985RTT2A7;

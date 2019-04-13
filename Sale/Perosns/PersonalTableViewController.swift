@@ -72,15 +72,15 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
+        Utilities.customizePopoverView(customizedView: self.personView)
+        
         self.tableView.reloadData()
     }
     
     func addNewPersonaBarItem() {
         let rightItemBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showPersonView))
-        rightItemBarButton.tintColor = Utilities.barButtonItemColor
+        rightItemBarButton.tintColor = Utilities.accentColor
         self.navigationItem.rightBarButtonItem = rightItemBarButton
-        
-        Utilities.customizePopoverView(customizedView: self.personView)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -117,7 +117,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @objc func showPersonView() {
-        
         self.setPersonViewActionTitles()
         
         if !self.isPersonEditing {
@@ -138,7 +137,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         }), completion: { (completed: Bool) in
         })
         
-        self.setPersonaViewActionTitles()
+     //   self.setPersonaViewActionTitles()
         self.isPersonViewPresented = true
         self.personView.alpha = CGFloat(Utilities.alpha)
         
@@ -232,13 +231,41 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func setPersonViewActionTitles() {
+        var viewsToCangeAvtivities = [UIView]()
+        viewsToCangeAvtivities.append(self.personItnTextField)
+        
+        if self.swipedRowIndex != nil {        
+            let personToEdit = PersonalDBRules.getAllPersons()![self.swipedRowIndex!]
+            
+            if Int(PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!.value(forKey: "role") as! Int16) != Utilities.personRole.admin.rawValue {
+                switch Int(personToEdit.value(forKey: "role") as! Int16) {
+                    case Utilities.personRole.admin.rawValue:
+                        do {
+                            viewsToCangeAvtivities.append(self.merchPersonButton)
+                            viewsToCangeAvtivities.append(self.cashPersonButton)
+                        }
+                    case Utilities.personRole.merchandiser.rawValue:
+                        do {
+                            viewsToCangeAvtivities.append(self.adminPersonButton)
+                            viewsToCangeAvtivities.append(self.cashPersonButton)
+                        }
+                    case Utilities.personRole.cashier.rawValue:
+                        do {
+                            viewsToCangeAvtivities.append(self.adminPersonButton)
+                            viewsToCangeAvtivities.append(self.merchPersonButton)
+                        }
+                    default: break
+                }
+            }
+        }
+        
         if !self.isPersonEditing {
+            Utilities.makeViewsActive(viewsToMakeActive: viewsToCangeAvtivities)
             self.personViewTitleLabel.text = "НОВЫЙ СОТРУДНИК"
-            self.personItnTextField.isUserInteractionEnabled = true
             self.addOrEditPersonButton.setTitle("ДОБАВИТЬ", for: .normal)
         } else {
+            Utilities.makeViewsInactive(viewsToMakeInactive: viewsToCangeAvtivities)
             self.personViewTitleLabel.text = "ИЗМЕНЕНИЕ СОТРУДНИКА"
-            self.personItnTextField.isUserInteractionEnabled = false
             self.addOrEditPersonButton.setTitle("ИЗМЕНИТЬ", for: .normal)
         }
     }
@@ -378,7 +405,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             Utilities.isPersonLogout = true
         }
         
-        Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "ВЫХОД", alertMessage: "Выйти из приложения?", okButtonHandler: logoutHandler,  cancelButtonHandler: nil)
+        Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "ВЫХОД", alertMessage: "Сменить пользователя?", okButtonHandler: logoutHandler,  cancelButtonHandler: nil)
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -468,6 +495,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func dismissPersonView(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.personView)
+        Utilities.dismissKeyboard(conroller: self)
         self.isPersonViewPresented = false
     }
     

@@ -275,6 +275,7 @@ class CategoriesTableViewController: UITableViewController {
     @IBAction func dismissCategoryView(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.categoryView)
+        Utilities.dismissKeyboard(conroller: self)
         self.isCategoryViewPresented = false
     }
     

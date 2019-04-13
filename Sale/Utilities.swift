@@ -36,7 +36,7 @@ class Utilities: Any {
     static let alpha = 0.94
     static let overlayView: UIView = UIView()
     static let alertOverlayView: UIView = UIView()
-    static let barButtonItemColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
+    static let lightGrayColor: UIColor = UIColor(red: 235/255, green: 235/255, blue: 241/255, alpha: 1.0)
     static let barCodeButtonColor = UIColor.blue
     static let buyProductButtonColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
@@ -52,6 +52,14 @@ class Utilities: Any {
         self.overlayView.alpha = 0.4
         self.overlayView.backgroundColor = UIColor.darkGray
         self.mainController!.view.addSubview(self.overlayView)
+    }
+    
+    class func addOverlayViewToParent(parent: UIView) {
+        self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
+        self.overlayView.isOpaque = false
+        self.overlayView.alpha = 0.4
+        self.overlayView.backgroundColor = UIColor.darkGray
+        parent.addSubview(self.overlayView)
     }
     
     class func addAlertOverlayView() {
@@ -103,7 +111,7 @@ class Utilities: Any {
     
     class func decorateButton(buttonToDecorate button: UIButton) {
         button.layer.borderWidth = 0.4
-        button.layer.cornerRadius = 4
+        button.layer.cornerRadius = 8
         button.backgroundColor = self.accentColor
         button.layer.borderColor = self.accentColor.withAlphaComponent(0.2).cgColor
     }
@@ -150,7 +158,7 @@ class Utilities: Any {
     class func customizePopoverView(customizedView view: UIView) {
         view.layer.borderColor = Utilities.accentColor.cgColor
         view.layer.borderWidth = 0.4
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = 12
     }
     
     class func setAccentColorForSomeViews(viewsToSetAccentColor views: [UIView]) {
@@ -207,6 +215,26 @@ class Utilities: Any {
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             view.alpha = 0.0
         }), completion: { (completed: Bool) in
+        })
+    }
+    
+    class func makeViewsActive(viewsToMakeActive views: [UIView]) {
+        views.forEach({ view in
+            view.isUserInteractionEnabled = true
+            
+            if view .isKind(of: UITextField.self) {
+                (view as! UITextField).textColor = UIColor.black
+            }
+        })
+    }
+    
+    class func makeViewsInactive(viewsToMakeInactive views: [UIView]) {
+        views.forEach({ view in
+            view.isUserInteractionEnabled = false
+            
+            if view .isKind(of: UITextField.self) {
+                (view as! UITextField).textColor = UIColor.lightGray
+            }
         })
     }
 
