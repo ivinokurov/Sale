@@ -626,14 +626,14 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.dtCommand.commandCode = 0x2A
         self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append("DEMO VERSION, 2019")
+        self.dtCommand.commandParams.append("ДЕМОНСТРАЦИЯ РАБОТЫ, 2019")
         if self.dtCommand.outputStream != nil {
             self.dtCommand.writeCommand()
             if self.dtCommand.error {
                 return false
             }
         }
-        
+
         self.dtCommand.commandCode = 0x2C
         self.dtCommand.commandParams.removeAll()
         self.dtCommand.commandParams.append("1")
@@ -646,10 +646,11 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             let count = product.value(forKey: "count") as! Float
             let code = product.value(forKey: "code") as! String
             let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
+            let measure = ProductsDBRules.getProductMeasure(product: ProductsDBRules.getProductByBarcode(code: code)!)
             
             self.dtCommand.commandCode = 0x2A
             self.dtCommand.commandParams.removeAll()
-            self.dtCommand.commandParams.append(name + "   " + count.description + " * " + price.description + " " + "rub")
+            self.dtCommand.commandParams.append(name.uppercased() + " " + count.description + measure.uppercased() + " * " + price.description.uppercased() + " " + "руб.".uppercased())
             if self.dtCommand.outputStream != nil {
                 self.dtCommand.writeCommand()
             }
@@ -664,7 +665,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.dtCommand.commandCode = 0x2A
         self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append(String(format: "TOTAL: %0.2f rub", PurchaseDBRules.getPurchaseTotalPrice()))
+        self.dtCommand.commandParams.append(String(format: "ПОКУПКА НА СУММУ: %0.2f руб.".uppercased(), PurchaseDBRules.getPurchaseTotalPrice()))
         if self.dtCommand.outputStream != nil {
             self.dtCommand.writeCommand()
         }

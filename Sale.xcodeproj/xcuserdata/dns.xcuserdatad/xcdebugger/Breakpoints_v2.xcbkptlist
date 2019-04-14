@@ -2,4 +2,54 @@
 <Bucket
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sale/Categories&amp;Products/ProductsDBRules.swift"
+            timestampString = "576935175.5732729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
+            landmarkName = "getProductMeasure(product:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Sale.ProductsDBRules.getProductMeasure(product: __C.NSManagedObject) -&gt; Swift.String"
+                  moduleName = "Sale"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dns/Desktop/Sale/Sale/Categories&amp;Products/ProductsDBRules.swift"
+                  timestampString = "576932209.564558"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "271"
+                  endingLineNumber = "271"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Sale.ProductsDBRules.getProductMeasure(product: __C.NSManagedObject) -&gt; Swift.String"
+                  moduleName = "Sale"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dns/Desktop/Sale/Sale/Categories&amp;Products/ProductsDBRules.swift"
+                  timestampString = "576932209.568965"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "271"
+                  endingLineNumber = "271"
+                  offsetFromSymbolStart = "960">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

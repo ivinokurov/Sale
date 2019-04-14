@@ -45,7 +45,7 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
         }
 
         offset += 4
-        let parameters = self.getParametersString()
+        let parameters = self.getCP866Bytes(utf8Bytes: self.getParametersUtf8String())
         for i in offset..<offset + parametersLen {
             let index = parameters.index(parameters.startIndex, offsetBy: i)
             let bytes: [UInt8] = [UInt8](parameters)
@@ -66,9 +66,10 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
         return buf
     }
     
-    func getParametersString() -> [UInt8] {
+    func getParametersUtf8String() -> [UInt8] {
         var ret: String = ""
         for parameter in self.commandParams {
+            
             ret += parameter
             ret += SEPARATOR
         }
@@ -78,14 +79,24 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
         return ret.utf8.filter({ $0 == $0 })
     }
     
-    func getCP866Bytes(str: String) -> [UInt8] {
-        var ret = [UInt8].init(repeating: 0, count: str.count)
-        var origin = Array(str.utf8)
+    func getCP866Bytes(utf8Bytes: [UInt8]) -> [UInt8] {
+        var ret = [UInt8]()
+        
+        var index = 0
 
-        for i in stride(from: 0, to: 2 * ret.count - 2, by: 2) {
-            ret.append(origin[i + 1] - 16)
+        for _ in 0..<utf8Bytes.count {
+            if index >= utf8Bytes.count {
+                break
+            }
+            if utf8Bytes[index] < 208 {
+                ret.append(utf8Bytes[index])
+                index += 1
+                continue
+            }
+            ret.append(utf8Bytes[index + 1] - 16)
+            index += 2
         }
-        return origin
+        return ret
     }
     
     func toKKTByteSequence(value: UInt32) -> [UInt8] {
