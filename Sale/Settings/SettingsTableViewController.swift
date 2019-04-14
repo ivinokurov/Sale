@@ -75,7 +75,8 @@ class BtDevicesDataSource: UITableView, UITableViewDataSource, UITableViewDelega
         cell?.tintColor = Utilities.accentColor
         
         self.selectedPeripheral = self.peripherals[indexPath.row]
-        self.parent?.tableView?.cellForRow(at: IndexPath(row: 0, section: 2))?.textLabel!.text = "Выбрать устройство [" + (self.selectedPeripheral?.name)! + "]"
+        self.parent?.tableView?.cellForRow(at: IndexPath(row: 0, section: 2))?.textLabel!.text = "Выбрать устройство из списка [" + (self.selectedPeripheral?.name)! + "]"
+        
         self.parent?.tableView.reloadData()
         Utilities.dismissView(viewToDismiss: (self.parent?.btDevicesView)!)
         self.parent?.isBtDevicesViewPresented = false
@@ -117,6 +118,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     @IBOutlet weak var btDevicesTableView: UITableView!
     @IBOutlet weak var dismissBtDevicesButton: UIButton!
         
+    @IBOutlet var hostNameView: UIView!
+    @IBOutlet weak var dismissHostNameButton: UIButton!
+    @IBOutlet weak var hostNameTextEdit: UITextField!
+    @IBOutlet weak var hostNameUnderView: UIView!
+    @IBOutlet weak var hostNameOKButton: UIButton!
+    
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var btDevices: BtDevicesDataSource?
@@ -124,9 +131,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     var isColorsViewPresented: Bool = false
     var isOrgInfoViewPresented: Bool = false
     var isBtDevicesViewPresented: Bool = false
+    var isHostNameViewPresented: Bool = false
     var parentView: UIView? = nil
     var keyboardHeight: CGFloat = 0.0
     var taxTypeIndex: Int = 0
+    
+    var hostName: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,6 +145,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         Utilities.customizePopoverView(customizedView: self.colorsView)
         Utilities.customizePopoverView(customizedView: self.orgInfoView)
         Utilities.customizePopoverView(customizedView: self.btDevicesView)
+        Utilities.customizePopoverView(customizedView: self.hostNameView)
         
         self.itnTextField.delegate = self
         self.kppTextField.delegate = self
@@ -152,12 +163,14 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         Utilities.createDismissButton(button: self.dismissColorsViewButton)
         Utilities.createDismissButton(button: self.dismissOrgInfoButton)
         Utilities.createDismissButton(button: self.dismissBtDevicesButton)
+        Utilities.createDismissButton(button: self.dismissHostNameButton)
         
-        self.textUnderlineDecorationDic = [self.orgNameTextField : self.orgNameUnderView, self.pointNameTextField : self.pointNameUnderView, self.pointAddressTextField : self.pointAddressUnderView, self.itnTextField : self.itnUnderView, self.kppTextField : self.kppUnderView]
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil
+        )
         
-    //    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-    //        self.centralManager?.stopScan()
-    //    }
+        self.textUnderlineDecorationDic = [self.orgNameTextField : self.orgNameUnderView, self.pointNameTextField : self.pointNameUnderView, self.pointAddressTextField : self.pointAddressUnderView, self.itnTextField : self.itnUnderView, self.kppTextField : self.kppUnderView, self.hostNameTextEdit : self.hostNameUnderView]
         
         self.btDevices = BtDevicesDataSource()
         self.btDevices?.initBtDevicesDataSource(parentController: self)
@@ -188,6 +201,9 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.orgNameTextField, self.pointNameTextField, self.pointAddressTextField, self.itnTextField, self.kppTextField, self.saveOrgInfoButton, self.cancelOrgInfoButton, self.hostNameTextEdit, self.hostNameOKButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.orgNameUnderView, self.pointNameUnderView, self.pointAddressUnderView, self.itnUnderView, self.kppUnderView, self.hostNameUnderView])
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -205,6 +221,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         for taxTypeButton in self.taxTypeButtons {
             Utilities.makeButtonRounded(button: taxTypeButton)
         }
+    }
+    
+    func changeAccentColorForHostNameView() {
+        Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.hostNameTextEdit, self.hostNameOKButton])
+        Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.hostNameUnderView])
     }
     
     @IBAction func setTaxType(_ sender: UIButton) {
@@ -266,7 +287,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     @IBAction func cancelSaveOrgInfo(_ sender: UIButton) {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissKeyboard(conroller: self)
-
         self.removeOrgInfoView()
     }
     
@@ -292,9 +312,17 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.isColorsViewPresented = false
         self.tableView.reloadData()
     }
+    
+    @IBAction func dismissHostNameView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
+        Utilities.dismissView(viewToDismiss: self.hostNameView)
+        Utilities.dismissKeyboard(conroller: self)
+        self.isHostNameViewPresented = false
+        self.tableView.reloadData()
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -322,6 +350,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
                 self.showBtDevicesView()
                 return
             }
+            
+            if indexPath.row == 0 && indexPath.section == 3 {
+                self.showHostNameView()
+                return
+            }
         }
     }
     
@@ -329,7 +362,15 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = keyboardRectangle.height
-            self.setOrgInfoViewFrame()
+            self.setHostNameViewFrame()
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = 0
+            self.setHostNameViewFrame()
         }
     }
     
@@ -344,6 +385,33 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         let centerY = (self.parentView?.center.y)!
         
         return CGPoint(x: centerX, y: centerY)
+    }
+    
+    func setHostNameViewFrame() {
+        self.hostNameView.center.x = self.view.center.x
+        self.hostNameView.frame.origin.y = (UIScreen.main.bounds.height -  self.keyboardHeight - self.hostNameView.frame.height) / 2
+    }
+    
+    func showHostNameView() {
+        self.hostNameView.alpha = 0.0
+        self.hostNameView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
+        
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.hostNameView.alpha = 1.0
+        }), completion: { (completed: Bool) in
+        })
+        
+        self.changeAccentColorForHostNameView()
+        
+        self.isHostNameViewPresented = true
+        self.hostNameView.alpha = 0.94
+        Utilities.addOverlayView()
+        self.parentView?.addSubview(self.hostNameView)
+        self.setHostNameViewFrame()
+        
+        Utilities.makeViewFlexibleAppearance(view: self.hostNameView)
+        self.dismissHostNameButton.tintColor = Utilities.accentColor
+        self.hostNameTextEdit.text = self.hostName
     }
     
     func showBtDevicesView() {
@@ -453,6 +521,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.colorsView.layer.borderColor = Utilities.accentColor.cgColor
         self.orgInfoView.layer.borderColor = Utilities.accentColor.cgColor
         self.btDevicesView.layer.borderColor = Utilities.accentColor.cgColor
+        self.hostNameView.layer.borderColor = Utilities.accentColor.cgColor
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -462,6 +531,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.colorsView.removeFromSuperview()
         self.orgInfoView.removeFromSuperview()
         self.btDevicesView.removeFromSuperview()
+        self.hostNameView.removeFromSuperview()
         
         coordinator.animate(alongsideTransition: { _ in
             if self.isColorsViewPresented {
@@ -472,6 +542,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
             if self.isBtDevicesViewPresented {
                 self.parentView?.addSubview(self.btDevicesView)
                 self.btDevicesView.center = self.getColorsViewCenterPoint()
+            }
+            
+            if self.isHostNameViewPresented {
+                self.parentView?.addSubview(self.hostNameView)
+                self.setHostNameViewFrame()
             }
             
             if self.isOrgInfoViewPresented {
@@ -498,5 +573,17 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         }), completion: { (completed: Bool) in
         })
     }
+    
+    @IBAction func getHostName(_ sender: UIButton) {
+        if (self.hostNameTextEdit.text?.isEmpty)! {
+            self.hostName = nil
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства"
+        } else {
+            self.hostName = self.hostNameTextEdit.text
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства [" + self.hostName! + "]"
+        }
 
+        self.dismissHostNameView(sender)
+    }
+    
 }

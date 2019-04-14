@@ -23,6 +23,7 @@ class CategoriesTableViewController: UITableViewController {
     var isCategoryViewPresented: Bool = false
     var swipedRowIndex: Int? = nil
     var selectedCategoryName: String? = nil
+    var keyboardHeight: CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,11 @@ class CategoriesTableViewController: UITableViewController {
         }
         
         Utilities.createDismissButton(button: self.dismissCategoryButton)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil
+        )
         
         self.textUnderlineDecorationDic = [self.categoryNameTextField : self.categoryNameUnderView]
         
@@ -54,6 +60,27 @@ class CategoriesTableViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
 
         self.tableView.reloadData()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = keyboardRectangle.height
+            self.setCategoryViewFrame()
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = 0
+            self.setCategoryViewFrame()
+        }
+    }
+    
+    func setCategoryViewFrame() {
+        self.categoryView.center.x = self.parentView!.center.x
+        self.categoryView.frame.origin.y = (UIScreen.main.bounds.height - self.keyboardHeight - self.categoryView.frame.height) / 2
     }
     
     func setCategoryViewActionTitles() {
@@ -81,16 +108,9 @@ class CategoriesTableViewController: UITableViewController {
         coordinator.animate(alongsideTransition: { _ in
             if self.isCategoryViewPresented {
                 self.parentView?.addSubview(self.categoryView)
-                self.categoryView.center = self.getCategoriesViewCenterPoint()
+                self.setCategoryViewFrame()
             }
         })
-    }
-    
-    func getCategoriesViewCenterPoint() -> CGPoint {
-        let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)! * 0.5
-        
-        return CGPoint(x: centerX, y: centerY)
     }
     
     @objc func showCategoryView() {
@@ -98,7 +118,6 @@ class CategoriesTableViewController: UITableViewController {
             self.categoryNameTextField.text = ""
         }
 
-        self.categoryView.center = self.getCategoriesViewCenterPoint()
         self.categoryView.alpha = 0.0
         // self.categoryNameTextField.becomeFirstResponder()
         self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
@@ -113,6 +132,7 @@ class CategoriesTableViewController: UITableViewController {
         self.categoryView.alpha = 0.94
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.categoryView)
+        self.setCategoryViewFrame()
         
         Utilities.makeViewFlexibleAppearance(view: self.categoryView)
         self.dismissCategoryButton.tintColor = Utilities.accentColor

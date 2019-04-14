@@ -38,6 +38,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     var productToPurchaseBarcode: String?
     var purchaseViewUpperRightCornerOffest: Dictionary<String, CGFloat> = ["x" : 21.0, "y" : 6]
     
+    let dtCommand = DTFiscalPrinterCommand()
+    
     let showPurchaseViewImage = UIImage(named: "ArrowsLeft")
     let hidePurchaseViewImage = UIImage(named: "ArrowsRight")
     
@@ -48,7 +50,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func getPersonViewCenterPoint() -> CGPoint {
         
         let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)! * 0.5
+        let centerY = (self.parentView?.center.y)!
         
         return CGPoint(x: centerX, y: centerY)
     }
@@ -612,81 +614,92 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func demoPrintCheck() -> Bool {
+        let hostName = (Utilities.settingsNavController?.topViewController as! SettingsTableViewController).hostName
+        if hostName == nil || (hostName?.isEmpty)! {
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Отсутствует сетевое имя!")
+            return false
+        }
+        
+        self.dtCommand.error = false
+        self.dtCommand.getOutputStream (hostName: hostName!, hostPort: 3999)
+        
+        self.dtCommand.commandCode = 0x2A
+        self.dtCommand.commandParams.removeAll()
+        self.dtCommand.commandParams.append("DEMO VERSION, 2019")
+        if self.dtCommand.outputStream != nil {
+            self.dtCommand.writeCommand()
+            if self.dtCommand.error {
+                return false
+            }
+        }
+        
+        self.dtCommand.commandCode = 0x2C
+        self.dtCommand.commandParams.removeAll()
+        self.dtCommand.commandParams.append("1")
+        if self.dtCommand.outputStream != nil {
+            self.dtCommand.writeCommand()
+        }
+        
+        for product in PurchaseDBRules.getAllProductsInPurchase()! {
+            let name = product.value(forKey: "name") as! String
+            let count = product.value(forKey: "count") as! Float
+            let code = product.value(forKey: "code") as! String
+            let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
+            
+            self.dtCommand.commandCode = 0x2A
+            self.dtCommand.commandParams.removeAll()
+            self.dtCommand.commandParams.append(name + "   " + count.description + " * " + price.description + " " + "rub")
+            if self.dtCommand.outputStream != nil {
+                self.dtCommand.writeCommand()
+            }
+        }
+        
+        self.dtCommand.commandCode = 0x2C
+        self.dtCommand.commandParams.removeAll()
+        self.dtCommand.commandParams.append("1")
+        if self.dtCommand.outputStream != nil {
+            self.dtCommand.writeCommand()
+        }
+        
+        self.dtCommand.commandCode = 0x2A
+        self.dtCommand.commandParams.removeAll()
+        self.dtCommand.commandParams.append(String(format: "TOTAL: %0.2f rub", PurchaseDBRules.getPurchaseTotalPrice()))
+        if self.dtCommand.outputStream != nil {
+            self.dtCommand.writeCommand()
+        }
+        
+        self.dtCommand.commandCode = 0x2C
+        self.dtCommand.commandParams.removeAll()
+        self.dtCommand.commandParams.append("10")
+        if self.dtCommand.outputStream != nil {
+            self.dtCommand.writeCommand()
+        }
+        
+        return true
+    }
+    
     @IBAction func makePurchase(_ sender: Any) {
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
-        //    PurchaseDBRules.updatePurchasedProductsCount()
             self.addSaleForPerson()
             
-            
-            Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
-            
-            let dtCommand = DTFiscalPrinterCommand()
-            dtCommand.getOutputStream (hostName: "7700000055", hostPort: 3999)
-            
-            dtCommand.commandCode = 0x2A
-            dtCommand.commandParams.removeAll()
-            dtCommand.commandParams.append("DEMO VERSION, 2019")
-            if dtCommand.outputStream != nil {
-                dtCommand.writeCommand()
-            }
-            
-            dtCommand.commandCode = 0x2C
-            dtCommand.commandParams.removeAll()
-            dtCommand.commandParams.append("1")
-            if dtCommand.outputStream != nil {
-                dtCommand.writeCommand()
-            }
-            
-            for product in PurchaseDBRules.getAllProductsInPurchase()! {
-                let name = product.value(forKey: "name") as! String
-                let count = product.value(forKey: "count") as! Float
-                let code = product.value(forKey: "code") as! String
-                let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
+            if self.demoPrintCheck() {
+                Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
+                PurchaseDBRules.deleteAllProductsInPurchase()
                 
-                dtCommand.commandCode = 0x2A
-                dtCommand.commandParams.removeAll()
-                dtCommand.commandParams.append(name + "   " + count.description + " * " + price.description + " " + "rub")
-                if dtCommand.outputStream != nil {
-                    dtCommand.writeCommand()
-                }
+                self.calulateAndPrintPurchaseSumm()
+                
+                self.productsTableView.reloadData()
+                self.purchaseTableView.reloadData()
+                
+                self.selectedProductRow = nil
             }
-            
-            dtCommand.commandCode = 0x2C
-            dtCommand.commandParams.removeAll()
-            dtCommand.commandParams.append("1")
-            if dtCommand.outputStream != nil {
-                dtCommand.writeCommand()
-            }
-            
-            dtCommand.commandCode = 0x2A
-            dtCommand.commandParams.removeAll()
-            dtCommand.commandParams.append(String(format: "TOTAL: %0.2f rub", PurchaseDBRules.getPurchaseTotalPrice()))
-            if dtCommand.outputStream != nil {
-                dtCommand.writeCommand()
-            }
-            
-            dtCommand.commandCode = 0x2C
-            dtCommand.commandParams.removeAll()
-            dtCommand.commandParams.append("10")
-            if dtCommand.outputStream != nil {
-                dtCommand.writeCommand()
-            }
-            
-            
-            PurchaseDBRules.deleteAllProductsInPurchase()
-            
-            self.calulateAndPrintPurchaseSumm()
-            
-            self.productsTableView.reloadData()
-            self.purchaseTableView.reloadData()
-            
-            self.selectedProductRow = nil
             
         } else {
             Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет товаров для покупки!")
         }
     }
-    
+        
     func connectionState(_ state: Int32) {
         do {
             if state == CONN_STATES.CONNECTED.rawValue {

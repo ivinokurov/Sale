@@ -232,7 +232,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         if PersonalDBRules.isPersonPresents(personLogin: login, personPassword: password) {
             PersonalDBRules.currentLogin = login
             PersonalDBRules.currentPassword = password
-            
+            Utilities.dismissView(viewToDismiss: self.authorizeView)
             self.performSegue(withIdentifier: "enterForSomePerson", sender: self)
         } else {
             self.loginTextField.text = ""

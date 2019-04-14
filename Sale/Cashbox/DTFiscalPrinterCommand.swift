@@ -20,6 +20,8 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
     var inputStream: InputStream? = nil
     var outputStream: OutputStream? = nil
     
+    var error: Bool = false
+    
     func buildCommand() -> [UInt8] {
         let parametersLen = self.getParametersLenInBytes()
         var buf = [UInt8].init(repeating: 0, count: parametersLen + 16)
@@ -142,7 +144,8 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
     func stream(_ aStream: Stream, handle c: Stream.Event) {
         switch c {
         case Stream.Event.errorOccurred:
-            print(c)
+            self.error = true
+            Utilities.showErrorAlertView(alertTitle: "ПЕЧАТЬ", alertMessage: "Ошибка печати чека!")
         default:
             break
         }

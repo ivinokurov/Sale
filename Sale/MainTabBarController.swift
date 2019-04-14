@@ -25,6 +25,7 @@ class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDel
         let personalController = storyboard.instantiateViewController(withIdentifier: "personalControllerId") as! PersonalNavigationController
         let reportsSplitontroller = storyboard.instantiateViewController(withIdentifier: "reportsControllerId") as! ReportsSplitViewController
         let settingsController = storyboard.instantiateViewController(withIdentifier: "settingsControllerId") as! SettingsNavigationController
+        Utilities.settingsNavController = settingsController
         
         switch self.getCurrentPersonRole() {
             case Utilities.personRole.admin.rawValue:

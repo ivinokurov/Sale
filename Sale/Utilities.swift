@@ -30,6 +30,7 @@ class Utilities: Any {
     static var mainController: MainTabBarController? = nil    
     static var productsSplitController: ProductsSplitViewController? = nil
     static var reportsSplitController: ReportsSplitViewController? = nil
+    static var settingsNavController: SettingsNavigationController? = nil
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)
     static let editActionBackgroundColor = UIColor.green.withAlphaComponent(0.6)
     static let animationDuration = 0.4
