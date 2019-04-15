@@ -19,6 +19,7 @@
 		EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */; };
 		EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */; };
 		EA13A2A2225501D00071810B /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA13A2A1225501D00071810B /* ExternalAccessory.framework */; };
+		EA181A5C226446DD00DA719A /* AnimatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A5B226446DD00DA719A /* AnimatedView.swift */; };
 		EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */; };
 		EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA26536D224C80AA00586769 /* AuthorizeViewController.swift */; };
 		EA2E6C962251EBB100EB8F22 /* OrgInfoDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */; };
@@ -69,6 +70,7 @@
 		EA0FFA6422267FAF00703EB0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarCodeButton.swift; path = Sale/Buttons/BarCodeButton.swift; sourceTree = SOURCE_ROOT; };
 		EA13A2A1225501D00071810B /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		EA181A5B226446DD00DA719A /* AnimatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedView.swift; sourceTree = "<group>"; };
 		EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EA26536D224C80AA00586769 /* AuthorizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeViewController.swift; sourceTree = "<group>"; };
 		EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgInfoDBRules.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */,
 				EA0FFA62222676BF00703EB0 /* PurchaseButton.swift */,
 				EA00626C224CCFF70083F56D /* LogoutButton.swift */,
+				EA181A5B226446DD00DA719A /* AnimatedView.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 				EA0FFA5F2225880500703EB0 /* BuyButton.swift in Sources */,
 				EA0FFA63222676BF00703EB0 /* PurchaseButton.swift in Sources */,
 				EAF22AAB225872CF006FDA14 /* ReportPersonsTableViewController.swift in Sources */,
+				EA181A5C226446DD00DA719A /* AnimatedView.swift in Sources */,
 				EA2E6C962251EBB100EB8F22 /* OrgInfoDBRules.swift in Sources */,
 				EAACF6D92255BDA9000C178D /* BluetoothDevicesInterconnection.swift in Sources */,
 				EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */,
@@ -531,7 +535,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Sale;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";
@@ -559,7 +563,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Sale;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";

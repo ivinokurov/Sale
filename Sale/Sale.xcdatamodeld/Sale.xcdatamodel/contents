@@ -39,7 +39,9 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
+        <attribute name="btDevice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="colorIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tcpDevice" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Categories" positionX="-97.296875" positionY="-241.3828125" width="128" height="73"/>
@@ -47,7 +49,7 @@
         <element name="Persons" positionX="145.34765625" positionY="-366.44921875" width="128" height="133"/>
         <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
         <element name="Purchase" positionX="-96.01953125" positionY="-114.4609375" width="128" height="90"/>
-        <element name="Settings" positionX="312.8359375" positionY="-317.5859375" width="128" height="60"/>
         <element name="Sales" positionX="-96.80859375" positionY="-390.5" width="128" height="88"/>
+        <element name="Settings" positionX="312.8359375" positionY="-317.5859375" width="128" height="90"/>
     </elements>
 </model>

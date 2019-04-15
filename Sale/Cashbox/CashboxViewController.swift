@@ -488,7 +488,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.purchaseTableView.frame.size.height = 646
             self.buyProductsButton.center.y = 441
             self.deleteProductsButton.center.y = 573
-            self.purchaseSummLabel.center.y = 712
+            self.purchaseSummLabel.center.y = 714
         } else {
             self.purchaseContainerView.frame.size.height = 472
             self.purchaseTableView.frame.size.height = 390
@@ -617,7 +617,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func demoPrintCheck() -> Bool {
         let hostName = (Utilities.settingsNavController?.topViewController as! SettingsTableViewController).hostName
         if hostName == nil || (hostName?.isEmpty)! {
-            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Отсутствует сетевое имя!")
+            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Не выбрано устройство контрольно-кассовой техники!")
             return false
         }
         
@@ -682,9 +682,10 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func makePurchase(_ sender: Any) {
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
-            self.addSaleForPerson()
             
             if self.demoPrintCheck() {
+                self.addSaleForPerson()
+                
                 Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
                 PurchaseDBRules.deleteAllProductsInPurchase()
                 

@@ -156,13 +156,13 @@
          contextName = "PersonalTableViewController.tableView(_:numberOfRowsInSection:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "originLogin">
+               value = "PersonalDBRules.currentLogin">
             </PersistentString>
             <PersistentString
                value = "originPassword">
             </PersistentString>
             <PersistentString
-               value = "PersonalDBRules.currentLogin">
+               value = "originLogin">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -273,15 +273,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "CashboxViewController.makePurchase(_:):CashboxViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "ReportSalesViewController.tableView(_:cellForRowAt:):ReportSalesViewController.swift">
          <PersistentStrings>
             <PersistentString
                value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!).count">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CashboxViewController.makePurchase(_:):CashboxViewController.swift">
       </ContextState>
       <ContextState
          contextName = "MainTabBarController.getCurrentPersonRole():MainTabBarController.swift">
@@ -327,6 +327,9 @@
          contextName = "SettingsTableViewController.viewDidLoad():SettingsTableViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "self.hostName">
+            </PersistentString>
+            <PersistentString
                value = "&quot;0&quot;.data(using: .windowsCP1251)">
             </PersistentString>
             <PersistentString
@@ -370,6 +373,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "SettingsTableViewController.getHostName(_:):SettingsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.hostNameTextEdit.text.isEmpty">
+            </PersistentString>
+            <PersistentString
+               value = "self.hostNameTextEdit.text?.isEmpty">
+            </PersistentString>
+            <PersistentString
+               value = "self.hostName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "DTFiscalPrinterCommand.getParametersString():DTFiscalPrinterCommand.swift">
          <PersistentStrings>
             <PersistentString
@@ -381,30 +398,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "SettingsTableViewController.getHostName(_:):SettingsTableViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.hostNameTextEdit.text?.isEmpty">
-            </PersistentString>
-            <PersistentString
-               value = "self.hostName">
-            </PersistentString>
-            <PersistentString
-               value = "self.hostNameTextEdit.text.isEmpty">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "PersonalTableViewController.setPersonViewActionTitles():PersonalTableViewController.swift">
       </ContextState>
       <ContextState
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -434,13 +437,13 @@
          contextName = "ReportSalesViewController.tableView(_:numberOfRowsInSection:):ReportSalesViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "Utilities.reportsSplitController">
+            </PersistentString>
+            <PersistentString
                value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)?.count">
             </PersistentString>
             <PersistentString
                value = "Utilities.reportsSplitController!.selectedReportPersonName">
-            </PersistentString>
-            <PersistentString
-               value = "Utilities.reportsSplitController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -577,13 +580,13 @@
          contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "self.tabBarController">
+            </PersistentString>
+            <PersistentString
                value = "PersonalDBRules.currentLogin">
             </PersistentString>
             <PersistentString
                value = "self.viewControllers![1]">
-            </PersistentString>
-            <PersistentString
-               value = "self.tabBarController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -176,6 +176,15 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.btDevices?.initBtDevicesDataSource(parentController: self)
         
         self.btDevicesTableView.tableFooterView = UIView()
+        
+        self.hostName = SettingsDBRules.getTCPDeviceName()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if self.hostName != nil && !(self.hostName?.isEmpty)! {
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства [" + self.hostName! + "]"
+        }
     }
     
     @IBAction func checkITNStringLength(_ sender: UITextField) {
@@ -581,6 +590,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         } else {
             self.hostName = self.hostNameTextEdit.text
             self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства [" + self.hostName! + "]"
+        }
+        
+        if !SettingsDBRules.isTCPDeviceNamePresents() {
+            SettingsDBRules.addNewTCPDeviceName(tcpDeviceName: self.hostName ?? nil)
+        } else {
+            SettingsDBRules.changeTCPDeviceName(tcpDeviceName: self.hostName ?? nil)
         }
 
         self.dismissHostNameView(sender)
