@@ -183,7 +183,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if self.hostName != nil && !(self.hostName?.isEmpty)! {
-            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства [" + self.hostName! + "]"
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя или IP-адрес устройства [" + self.hostName! + "]"
         }
     }
     
@@ -586,10 +586,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     @IBAction func getHostName(_ sender: UIButton) {
         if (self.hostNameTextEdit.text?.isEmpty)! {
             self.hostName = nil
-            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства"
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя или IP-адрес устройства"
         } else {
             self.hostName = self.hostNameTextEdit.text
-            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя устройства [" + self.hostName! + "]"
+            self.tableView.cellForRow(at: IndexPath(row: 0, section: 3))?.textLabel!.text = "Ввести сетевое имя или IP-адрес устройства [" + self.hostName! + "]"
         }
         
         if !SettingsDBRules.isTCPDeviceNamePresents() {

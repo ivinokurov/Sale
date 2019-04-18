@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class SettingsDBRules: Any {
+class SettingsDBRules: NSObject {
     
     class func addNewAccentColorIndex(colorIndex index: Int16) {
         let viewContext = CommonDBRules.getManagedView()

@@ -20,6 +20,11 @@
 		EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */; };
 		EA13A2A2225501D00071810B /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA13A2A1225501D00071810B /* ExternalAccessory.framework */; };
 		EA181A5C226446DD00DA719A /* AnimatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A5B226446DD00DA719A /* AnimatedView.swift */; };
+		EA181A5E2265AF2700DA719A /* OpenFiscalReceiptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A5D2265AF2700DA719A /* OpenFiscalReceiptCommand.swift */; };
+		EA181A602265B9D100DA719A /* CloseFiscalReceiptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A5F2265B9D100DA719A /* CloseFiscalReceiptCommand.swift */; };
+		EA181A622265BACC00DA719A /* RegistrationOfSaleCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A612265BACC00DA719A /* RegistrationOfSaleCommand.swift */; };
+		EA181A642265C21100DA719A /* PrintTextCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A632265C21100DA719A /* PrintTextCommand.swift */; };
+		EA181A66226627B000DA719A /* PaymentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A65226627B000DA719A /* PaymentCommand.swift */; };
 		EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */; };
 		EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA26536D224C80AA00586769 /* AuthorizeViewController.swift */; };
 		EA2E6C962251EBB100EB8F22 /* OrgInfoDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */; };
@@ -29,11 +34,12 @@
 		EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */; };
 		EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA536B2E223F56D900919926 /* ProductsDBRules.swift */; };
 		EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */; };
-		EA6ABE0A2260A837008D7475 /* DTFiscalPrinterCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */; };
+		EA6ABE0A2260A837008D7475 /* FPAbstractCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6ABE092260A837008D7475 /* FPAbstractCommand.swift */; };
 		EA743056224F3AFB00333B9D /* CashboxNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */; };
 		EA74305A224F50A700333B9D /* ReportsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA743059224F50A700333B9D /* ReportsNavigationController.swift */; };
 		EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305B224F534500333B9D /* SettingsNavigationController.swift */; };
 		EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305D224F608600333B9D /* SettingsTableViewController.swift */; };
+		EA89795D2268579100B93A70 /* SessionDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA89795C2268579100B93A70 /* SessionDBRules.swift */; };
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
 		EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA01FB2225082E600C46257 /* SettingsDBRules.swift */; };
 		EAA7761A2259DA7400C0D596 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA776192259DA7400C0D596 /* Launch Screen.storyboard */; };
@@ -71,6 +77,11 @@
 		EA0FFA662226BB9100703EB0 /* BarCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarCodeButton.swift; path = Sale/Buttons/BarCodeButton.swift; sourceTree = SOURCE_ROOT; };
 		EA13A2A1225501D00071810B /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		EA181A5B226446DD00DA719A /* AnimatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedView.swift; sourceTree = "<group>"; };
+		EA181A5D2265AF2700DA719A /* OpenFiscalReceiptCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFiscalReceiptCommand.swift; sourceTree = "<group>"; };
+		EA181A5F2265B9D100DA719A /* CloseFiscalReceiptCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseFiscalReceiptCommand.swift; sourceTree = "<group>"; };
+		EA181A612265BACC00DA719A /* RegistrationOfSaleCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationOfSaleCommand.swift; sourceTree = "<group>"; };
+		EA181A632265C21100DA719A /* PrintTextCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintTextCommand.swift; sourceTree = "<group>"; };
+		EA181A65226627B000DA719A /* PaymentCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCommand.swift; sourceTree = "<group>"; };
 		EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EA26536D224C80AA00586769 /* AuthorizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeViewController.swift; sourceTree = "<group>"; };
 		EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgInfoDBRules.swift; sourceTree = "<group>"; };
@@ -82,11 +93,12 @@
 		EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		EA536B2E223F56D900919926 /* ProductsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsDBRules.swift; sourceTree = "<group>"; };
 		EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDBRules.swift; sourceTree = "<group>"; };
-		EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTFiscalPrinterCommand.swift; sourceTree = "<group>"; };
+		EA6ABE092260A837008D7475 /* FPAbstractCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPAbstractCommand.swift; sourceTree = "<group>"; };
 		EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashboxNavigationController.swift; sourceTree = "<group>"; };
 		EA743059224F50A700333B9D /* ReportsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsNavigationController.swift; sourceTree = "<group>"; };
 		EA74305B224F534500333B9D /* SettingsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationController.swift; sourceTree = "<group>"; };
 		EA74305D224F608600333B9D /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		EA89795C2268579100B93A70 /* SessionDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDBRules.swift; sourceTree = "<group>"; };
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
 		EAA01FB2225082E600C46257 /* SettingsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDBRules.swift; sourceTree = "<group>"; };
 		EAA776192259DA7400C0D596 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -202,7 +214,13 @@
 				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
 				EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */,
-				EA6ABE092260A837008D7475 /* DTFiscalPrinterCommand.swift */,
+				EA6ABE092260A837008D7475 /* FPAbstractCommand.swift */,
+				EA181A5D2265AF2700DA719A /* OpenFiscalReceiptCommand.swift */,
+				EA181A5F2265B9D100DA719A /* CloseFiscalReceiptCommand.swift */,
+				EA181A612265BACC00DA719A /* RegistrationOfSaleCommand.swift */,
+				EA181A632265C21100DA719A /* PrintTextCommand.swift */,
+				EA181A65226627B000DA719A /* PaymentCommand.swift */,
+				EA89795C2268579100B93A70 /* SessionDBRules.swift */,
 			);
 			path = Cashbox;
 			sourceTree = "<group>";
@@ -341,10 +359,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA89795D2268579100B93A70 /* SessionDBRules.swift in Sources */,
 				EA0FFA46222510AB00703EB0 /* Sale.xcdatamodeld in Sources */,
 				EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */,
 				EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */,
 				EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */,
+				EA181A642265C21100DA719A /* PrintTextCommand.swift in Sources */,
+				EA181A622265BACC00DA719A /* RegistrationOfSaleCommand.swift in Sources */,
+				EA181A66226627B000DA719A /* PaymentCommand.swift in Sources */,
 				EAACF6D52255BC95000C178D /* PersonalDBRules.swift in Sources */,
 				EA536B2F223F56D900919926 /* ProductsDBRules.swift in Sources */,
 				EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */,
@@ -362,6 +384,7 @@
 				EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */,
 				EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */,
 				EAAA59EB223E2C6F0096D990 /* ProductsViewController.swift in Sources */,
+				EA181A602265B9D100DA719A /* CloseFiscalReceiptCommand.swift in Sources */,
 				EAACF6D62255BC95000C178D /* PersonalNavigationController.swift in Sources */,
 				EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */,
 				EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */,
@@ -374,11 +397,12 @@
 				EA00626D224CCFF70083F56D /* LogoutButton.swift in Sources */,
 				EAAA59DC223D07170096D990 /* ProductsSplitViewController.swift in Sources */,
 				EA74305A224F50A700333B9D /* ReportsNavigationController.swift in Sources */,
+				EA181A5E2265AF2700DA719A /* OpenFiscalReceiptCommand.swift in Sources */,
 				EA0FFA5D22256FF700703EB0 /* Utilities.swift in Sources */,
 				EA0FFA40222510AB00703EB0 /* ViewController.swift in Sources */,
 				EAF22AAF2258AD0C006FDA14 /* ReportSalesViewController.swift in Sources */,
 				EA0FFA3E222510AB00703EB0 /* AppDelegate.swift in Sources */,
-				EA6ABE0A2260A837008D7475 /* DTFiscalPrinterCommand.swift in Sources */,
+				EA6ABE0A2260A837008D7475 /* FPAbstractCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +559,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";
@@ -563,7 +587,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";

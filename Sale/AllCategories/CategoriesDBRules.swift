@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class CategoriesDBRules: Any {
+class CategoriesDBRules: NSObject {
     
     class func addNewCategory(categoryName name: String) {
         let viewContext = CommonDBRules.getManagedView()

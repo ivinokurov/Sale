@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class CommonDBRules: Any {
+class CommonDBRules: NSObject {
     
     class func getManagedView() -> NSManagedObjectContext? {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {

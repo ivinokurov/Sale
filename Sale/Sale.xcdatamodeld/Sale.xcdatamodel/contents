@@ -38,6 +38,10 @@
         <attribute name="count" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
+        <attribute name="isOpened" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Persons" syncable="YES"/>
+    </entity>
     <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
         <attribute name="btDevice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="colorIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -50,6 +54,7 @@
         <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
         <element name="Purchase" positionX="-96.01953125" positionY="-114.4609375" width="128" height="90"/>
         <element name="Sales" positionX="-96.80859375" positionY="-390.5" width="128" height="88"/>
-        <element name="Settings" positionX="312.8359375" positionY="-317.5859375" width="128" height="90"/>
+        <element name="Settings" positionX="317.390625" positionY="-330.421875" width="128" height="90"/>
+        <element name="Sessions" positionX="354.390625" positionY="-487.13671875" width="128" height="73"/>
     </elements>
 </model>

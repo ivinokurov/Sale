@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class PersonSalesDBRules: Any {
+class PersonSalesDBRules: NSObject {
     
     class func getAllPersonSales(personName name: String, personRole role: Int16) -> [NSManagedObject]? {
         let viewContext = CommonDBRules.getManagedView()

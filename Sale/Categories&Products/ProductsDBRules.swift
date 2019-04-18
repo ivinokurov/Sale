@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class ProductsDBRules: Any {
+class ProductsDBRules: NSObject {
     
     static var filteredProducts: [NSManagedObject]?
     

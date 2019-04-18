@@ -27,10 +27,23 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var currentPersonRoleLabel: UILabel!
     @IBOutlet weak var dismissPersonViewButton: UIButton!
     
+    @IBOutlet var sessionView: UIView!    
+    @IBOutlet weak var sessionStateLabel: UILabel!
+    @IBOutlet weak var openSessionView: UIView!
+    @IBOutlet weak var closeSessionView: UIView!
+    @IBOutlet weak var dismissSessionViewButton: UIButton!
+    @IBOutlet weak var openSessionImageView: UIImageView!
+    @IBOutlet weak var closeSessionImageView: UIImageView!
+    
+    @IBOutlet var openSessionGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet var closeSessionGestureRecognizer: UITapGestureRecognizer!
+    
     var parentView: UIView? = nil
     let searchController = UISearchController(searchResultsController: nil)
-    var selectBuildingButton: UIBarButtonItem?
+    var purchaseViewBarButtonItem: UIBarButtonItem?
+    var sessionViewBarButtonItem: UIBarButtonItem?
     var isPurchaseViewPresented: Bool = false
+    var isSessionViewPresented: Bool = false
     var isPersonViewPresented: Bool = false
     var selectedCategoryIndexPath: IndexPath = IndexPath(row: 0, section: 0)
     var getFromScaner: Bool = false
@@ -38,7 +51,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     var productToPurchaseBarcode: String?
     var purchaseViewUpperRightCornerOffest: Dictionary<String, CGFloat> = ["x" : 21.0, "y" : 6]
     
-    let dtCommand = DTFiscalPrinterCommand()
+    let dtCommand = FPAbstractCommand()
     
     let showPurchaseViewImage = UIImage(named: "ArrowsLeft")
     let hidePurchaseViewImage = UIImage(named: "ArrowsRight")
@@ -47,7 +60,19 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         return UIInterfaceOrientationMask.landscape
     }
     
-    func getPersonViewCenterPoint() -> CGPoint {
+    @IBAction func openSessionGestureAction(_ sender: UITapGestureRecognizer) {
+        Utilities.decorateViewTap(viewToDecorate: self.openSessionView)
+        SessionDBRules.changeSessionState(sessionState: true)
+        self.dismissSessionView(UIButton())
+    }
+    
+    @IBAction func closeSessionGestureAction(_ sender: UITapGestureRecognizer) {
+        Utilities.decorateViewTap(viewToDecorate: self.closeSessionView)
+        SessionDBRules.changeSessionState(sessionState: false)
+        self.dismissSessionView(UIButton())
+    }
+    
+    func getParentViewCenterPoint() -> CGPoint {
         
         let centerX = (self.parentView?.center.x)!
         let centerY = (self.parentView?.center.y)!
@@ -56,8 +81,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func showPersonView() {
-
-        self.personView.center = self.getPersonViewCenterPoint()
+        self.personView.center = self.getParentViewCenterPoint()
         self.personView.alpha = 0.0
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
@@ -117,12 +141,17 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
-        selectBuildingButton = UIBarButtonItem(image: showPurchaseViewImage, style: .plain, target: self, action: #selector(showOrHidePurchaseView(_:)))
-        self.navigationItem.rightBarButtonItem = selectBuildingButton
-        self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
+        self.parentView = Utilities.mainController!.view
+        
+        self.sessionViewBarButtonItem = UIBarButtonItem(title: "СМЕНА",  style: .done, target: self, action: #selector(self.showSessionView(_:)))
+        self.navigationItem.leftBarButtonItem = self.sessionViewBarButtonItem
+    //    self.navigationItem.leftBarButtonItem?.tintColor = Utilities.accentColor
+        
+        self.purchaseViewBarButtonItem = UIBarButtonItem(image: showPurchaseViewImage, style: .plain, target: self, action: #selector(self.showOrHidePurchaseView(_:)))
+        self.navigationItem.rightBarButtonItem = self.purchaseViewBarButtonItem
+    //    self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
         self.purchaseContainerView.frame.origin.x = self.view.frame.width
         self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
@@ -144,7 +173,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.purchaseTableView.delegate = self
         self.purchaseTableView.estimatedRowHeight = 138
         
-        self.parentView = Utilities.mainController!.view
         Utilities.customizePopoverView(customizedView: self.personView!)
         self.showPersonView()
         self.isPersonViewPresented = true
@@ -152,20 +180,27 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.productsTableView.tableFooterView = UIView()
         self.purchaseTableView.tableFooterView = UIView()
         
+        if SessionDBRules.getSessionState() == nil {
+            SessionDBRules.addNewSessionState(sessionState: false)
+        }
+        
         lib.addDelegate(self)
         lib.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
+        Utilities.customizePopoverView(customizedView: self.sessionView)
+        Utilities.customizePopoverView(customizedView: self.openSessionView)
+        Utilities.customizePopoverView(customizedView: self.closeSessionView)
         Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
         Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
         
         if self.isPurchaseViewPresented {
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
-            self.selectBuildingButton?.image = self.hidePurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = self.hidePurchaseViewImage
             
             self.purchaseTableView.reloadData()
         }
@@ -191,6 +226,9 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.productTypesCollectionView.layer.borderColor = Utilities.accentColor.cgColor
         
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
+        self.navigationItem.leftBarButtonItem?.tintColor = Utilities.accentColor
+        self.openSessionImageView.tintColor = Utilities.accentColor
+        self.closeSessionImageView.tintColor = UIColor.red
         
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Utilities.accentColor], for: .normal)
     }
@@ -473,6 +511,13 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.purchaseSummLabel.text = String(format: "ТОВАРОВ НА СУММУ: %0.2f руб.", PurchaseDBRules.getPurchaseTotalPrice())
     }
     
+    @objc func showSessionView(_ sender: UIBarButtonItem) -> Void {
+        if self.isSessionViewPresented == false {
+            self.sessionView.isHidden = false
+            self.showSessionView()
+        }
+    }
+    
     @objc func showOrHidePurchaseView(_ sender: UIBarButtonItem) -> Void {
         if self.isPurchaseViewPresented == false {
             self.purchaseContainerView.isHidden = false
@@ -480,6 +525,34 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             self.hidePurchaseView()
         }
+    }
+    
+    func showSessionView() {
+        self.sessionView.center = self.getParentViewCenterPoint()
+        self.sessionView.alpha = 0.0
+        
+        self.dismissSessionViewButton.tintColor = Utilities.accentColor
+        
+        if let sessionState = SessionDBRules.getSessionState() {
+            if sessionState {
+                self.sessionStateLabel.text = "СЕССИЯ ОТКРЫТА"
+            } else {
+                self.sessionStateLabel.text = "СЕССИЯ ЗАКРЫТА"
+            }
+        } else {
+            self.sessionStateLabel.text = "СЕССИЯ ЗАКРЫТА"
+        }
+        
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.sessionView.alpha = 0.94
+        }), completion: { (completed: Bool) in
+            self.isSessionViewPresented = true
+        })
+        
+        Utilities.addOverlayView()
+        self.parentView?.addSubview(self.sessionView)
+        
+        Utilities.makeViewFlexibleAppearance(view: self.sessionView)
     }
     
     func showPurchaseView() {
@@ -504,7 +577,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
 
             self.isPurchaseViewPresented = true
         }, completion: { (completed: Bool) -> Void in
-            self.selectBuildingButton?.image = self.hidePurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = self.hidePurchaseViewImage
             self.purchaseContainerView.isHidden = false
         })
     }
@@ -516,7 +589,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             self.isPurchaseViewPresented = false
         }, completion: { (completed: Bool) -> Void in
-            self.selectBuildingButton?.image = self.showPurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = self.showPurchaseViewImage
         })
     }
     
@@ -615,31 +688,20 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func demoPrintCheck() -> Bool {
-        let hostName = (Utilities.settingsNavController?.topViewController as! SettingsTableViewController).hostName
+        let hostName = SettingsDBRules.getTCPDeviceName()
         if hostName == nil || (hostName?.isEmpty)! {
             Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Не выбрано устройство контрольно-кассовой техники!")
             return false
         }
         
-        self.dtCommand.error = false
-        self.dtCommand.getOutputStream (hostName: hostName!, hostPort: 3999)
+        let openShift = OpenFiscalReceiptCommand(operatorNumber: "1", operatorPassword: "1", pointOfSaleNumber: "1", operationType: "4")
+        openShift.writeCommand()
         
-        self.dtCommand.commandCode = 0x2A
-        self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append("ДЕМОНСТРАЦИЯ РАБОТЫ, 2019")
-        if self.dtCommand.outputStream != nil {
-            self.dtCommand.writeCommand()
-            if self.dtCommand.error {
-                return false
-            }
-        }
-
-        self.dtCommand.commandCode = 0x2C
-        self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append("1")
-        if self.dtCommand.outputStream != nil {
-            self.dtCommand.writeCommand()
-        }
+        let closeShift = CloseFiscalReceiptCommand()
+        closeShift.writeCommand()
+        
+        let ofr = OpenFiscalReceiptCommand(operatorNumber: "1", operatorPassword: "1", pointOfSaleNumber: "1", operationType: "0")
+        ofr.writeCommand()
         
         for product in PurchaseDBRules.getAllProductsInPurchase()! {
             let name = product.value(forKey: "name") as! String
@@ -648,35 +710,16 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
             let measure = ProductsDBRules.getProductMeasure(product: ProductsDBRules.getProductByBarcode(code: code)!)
             
-            self.dtCommand.commandCode = 0x2A
-            self.dtCommand.commandParams.removeAll()
-            self.dtCommand.commandParams.append(name.uppercased() + " " + count.description + measure.uppercased() + " * " + price.description.uppercased() + " " + "руб.".uppercased())
-            if self.dtCommand.outputStream != nil {
-                self.dtCommand.writeCommand()
-            }
+            let ros = RegistrationOfSaleCommand(productName: name, taxType: "1", productPrice: price.description, productQuantity: count.description, department: "0")
+            ros.writeCommand()
         }
         
-        self.dtCommand.commandCode = 0x2C
-        self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append("1")
-        if self.dtCommand.outputStream != nil {
-            self.dtCommand.writeCommand()
-        }
+        let paid = PaymentCommand(paidMode: "0", paidAmount: String(format: "%0.2f", PurchaseDBRules.getPurchaseTotalPrice()))
+        paid.writeCommand()
         
-        self.dtCommand.commandCode = 0x2A
-        self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append(String(format: "ПОКУПКА НА СУММУ: %0.2f руб.".uppercased(), PurchaseDBRules.getPurchaseTotalPrice()))
-        if self.dtCommand.outputStream != nil {
-            self.dtCommand.writeCommand()
-        }
-        
-        self.dtCommand.commandCode = 0x2C
-        self.dtCommand.commandParams.removeAll()
-        self.dtCommand.commandParams.append("10")
-        if self.dtCommand.outputStream != nil {
-            self.dtCommand.writeCommand()
-        }
-        
+        let cfr = CloseFiscalReceiptCommand()
+        cfr.writeCommand()
+
         return true
     }
     
@@ -723,7 +766,13 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-
+    
+    @IBAction func dismissSessionView(_ sender: UIButton) {
+        Utilities.decorateButtonTap(buttonToDecorate: sender)
+        Utilities.dismissView(viewToDismiss: self.sessionView)
+        self.isSessionViewPresented = false
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size , with: coordinator)
 
@@ -737,13 +786,22 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             self.purchaseContainerView.isHidden = true
         }
+        
+        if self.isSessionViewPresented {
+            self.sessionView.removeFromSuperview()
+            
+            coordinator.animate(alongsideTransition: { _ in
+                self.parentView?.addSubview(self.sessionView)
+                self.sessionView.center = self.getParentViewCenterPoint()
+            })
+        }
     
         if self.isPersonViewPresented {
             self.personView.removeFromSuperview()
         
             coordinator.animate(alongsideTransition: { _ in
                 self.parentView?.addSubview(self.personView)
-                self.personView.center = self.getPersonViewCenterPoint()
+                self.personView.center = self.getParentViewCenterPoint()
             })
         }
     }

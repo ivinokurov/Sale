@@ -7,7 +7,7 @@
 import UIKit
 import CoreData
 
-class PersonalDBRules: Any {
+class PersonalDBRules: NSObject {
     
     static var selectedPerson: NSManagedObject?
     static var currentLogin: String? = nil

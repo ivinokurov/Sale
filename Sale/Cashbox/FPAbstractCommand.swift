@@ -6,7 +6,7 @@
 
 import UIKit
 
-class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
+class FPAbstractCommand: UIViewController, StreamDelegate {
     
     var commandCode: UInt32 = 0
     var SEQ: UInt8 = 0x20
@@ -15,7 +15,7 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
     let STATUSSEP: UInt8 = 0x04
     let TERMINATOR: UInt8 = 0x03
     let SEPARATOR: String = "\t"
-    var commandParams = Array<String>()
+    var commandParams = Array<String?>()
    
     var inputStream: InputStream? = nil
     var outputStream: OutputStream? = nil
@@ -49,6 +49,7 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
         for i in offset..<offset + parametersLen {
             let index = parameters.index(parameters.startIndex, offsetBy: i)
             let bytes: [UInt8] = [UInt8](parameters)
+            
             buf[i] = bytes[index - offset]
         }
         
@@ -69,8 +70,9 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
     func getParametersUtf8String() -> [UInt8] {
         var ret: String = ""
         for parameter in self.commandParams {
-            
-            ret += parameter
+            if parameter != nil {
+                ret += parameter!
+            }
             ret += SEPARATOR
         }
         if ret.count == 0 {
@@ -92,27 +94,37 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
                 ret.append(utf8Bytes[index])
                 index += 1
                 continue
+            } else {
+                if utf8Bytes[index] == 208 {
+                    ret.append(utf8Bytes[index + 1] - 16)
+                }
+                if utf8Bytes[index] == 209 {
+                    ret.append(utf8Bytes[index + 1] + 96)
+                }
+                index += 2
             }
-            ret.append(utf8Bytes[index + 1] - 16)
-            index += 2
         }
         return ret
     }
     
     func toKKTByteSequence(value: UInt32) -> [UInt8] {
         var ret = [UInt8].init(repeating: 0x30, count: 4)
+        
         ret[0] += UInt8((value & 0x0f000) >> 12)
         ret[1] += UInt8((value & 0x00f00) >> 8)
         ret[2] += UInt8((value & 0x000f0) >> 4)
         ret[3] += UInt8(value & 0x0000f)
+        
         return ret
     }
     
     func calcChecksum(data: [UInt8]) -> [UInt8]{
         var checksum: UInt32 = 0
+        
         for i in 1..<data.count - 4 {
             checksum += UInt32(data[i])
         }
+        
         return toKKTByteSequence(value: checksum)
     }
     
@@ -127,8 +139,13 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
     
     func getParametersLenInBytes() -> Int {
         var len = 0
+        
         for parameter in self.commandParams {
-            len += parameter.count + 1
+            if parameter != nil {
+                len += parameter!.count + 1
+            } else {
+                len += 1
+            }
         }
         return len
     }
@@ -142,8 +159,12 @@ class DTFiscalPrinterCommand: UIViewController, StreamDelegate {
         }
     }
     
-    func writeCommand() {
+    func writeCommand(hostName name: String, hostPort port: Int) {
+        self.getOutputStream(hostName: name, hostPort: port)
         self.writeToStream(data: Data(bytes: self.buildCommand()), outStream: self.outputStream!)
+        if self.outputStream != nil {
+            self.outputStream!.close()
+        }
     }
     
     func writeToStream(data: Data, outStream: OutputStream) {

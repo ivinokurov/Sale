@@ -125,6 +125,14 @@ class Utilities: Any {
         })
     }
     
+    class func decorateViewTap(viewToDecorate view: UIView) {
+        view.layer.backgroundColor = self.accentColor.withAlphaComponent(0.04).cgColor
+        UIView.animate(withDuration:self.animationDuration, animations: ({
+            view.layer.backgroundColor = UIColor.white.cgColor
+        }), completion: { (completed: Bool) in
+        })
+    }
+    
     class func setCellSelectedColor(cellToSetSelectedColor cell: UITableViewCell) {
         let bgkColorView = UIView()
         bgkColorView.backgroundColor = self.accentColor.withAlphaComponent(0.08)
