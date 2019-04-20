@@ -23,8 +23,6 @@ class OpenFiscalReceiptCommand: NSObject {
     }
     
     func writeCommand() {
-        let name = SettingsDBRules.getTCPDeviceName()
-        let port = 3999
-        self.abstarctCommand.writeCommand(hostName: name!, hostPort: port)
+        self.abstarctCommand.writeCommand()
     }
 }

@@ -11,10 +11,9 @@ class PersonSalesDBRules: NSObject {
     
     class func getAllPersonSales(personName name: String, personRole role: Int16) -> [NSManagedObject]? {
         let viewContext = CommonDBRules.getManagedView()
-        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d", argumentArray: [name, role])
         
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
@@ -25,7 +24,7 @@ class PersonSalesDBRules: NSObject {
                     return nil
                 }
                 
-                return allPersonSales.sorted(by: {(($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String)}) as? [NSManagedObject]
+                return allPersonSales.sorted(by: {(($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) < (($1 as! NSManagedObject).value(forKeyPath: "date") as! Date)}) as? [NSManagedObject]
             }
         } catch let error as NSError {
             NSLog("Ошибка извлечения продаж сотрудника: " + error.localizedDescription)
@@ -35,10 +34,9 @@ class PersonSalesDBRules: NSObject {
     
     class func clearPersonSales(personName name: String, personRole role: Int16) {
         let viewContext = CommonDBRules.getManagedView()
-        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d", argumentArray: [name, role])
         
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
@@ -50,8 +48,7 @@ class PersonSalesDBRules: NSObject {
                     viewContext!.delete(sale as! NSManagedObject)
                 }
                 person!.setValue(nil, forKey: "sales")
-                
-            //    allPersonSales.forEach({ viewContext!.delete($0 as! NSManagedObject) })
+
                 try viewContext!.save()
             }
         } catch let error as NSError {
@@ -61,10 +58,9 @@ class PersonSalesDBRules: NSObject {
     
     class func isProductPresentsInSales(personName name: String, personRole role: Int16, productBarcode code: String) -> Bool {
         let viewContext = CommonDBRules.getManagedView()
-        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d", argumentArray: [name, role])
         
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
@@ -88,10 +84,9 @@ class PersonSalesDBRules: NSObject {
     
     class func addProductInSale(personName: String, personRole role: Int16, productName name: String, productCount count: Float, productBarcode code: String) {
         let viewContext = CommonDBRules.getManagedView()
-        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: personName, personRole: role) as! String
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [personName, role, personItn])
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d", argumentArray: [personName, role])
         
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
@@ -101,6 +96,7 @@ class PersonSalesDBRules: NSObject {
                 newSale.setValue(name, forKey: "name")
                 newSale.setValue(count, forKey: "count")
                 newSale.setValue(code, forKey: "code")
+                newSale.setValue(Date(), forKey: "date")
                 
                 let person = fetchResult.first
                 person!.mutableSetValue(forKey: "sales").add(newSale)
@@ -113,10 +109,9 @@ class PersonSalesDBRules: NSObject {
     
     class func getPerosonSalesTotalSum(personName name: String, personRole role: Int16) -> Float {
         let viewContext = CommonDBRules.getManagedView()
-        let personItn = PersonalDBRules.getPersonItnByNameAndRole(personName: name, personRole: role) as! String
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Persons")
-        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d AND itn == %@", argumentArray: [name, role, personItn])
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
+        fetchRequest.predicate = NSPredicate(format: "name == %@ AND role == %d", argumentArray: [name, role])
         
         var totalSum: Float = 0.0
         

@@ -39,6 +39,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     var isProductEditing: Bool = false
     var swipedRowIndex: Int? = nil
     var selectedProductBarcode: String? = nil
+    var keyboardHeight: CGFloat = 0.0
     var selectedProductMeasure: Int = Utilities.measures.items.rawValue
     
     override func viewDidLoad() {
@@ -59,14 +60,34 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.productsTableView.reloadData()
 
         Utilities.makeLeftViewForTextField(textEdit: self.productPriceTextField, imageName: "Ruble")
-        self.productPriceTextField.leftView?.tintColor = .red //Utilities.accentColor
         Utilities.makeLeftViewForTextField(textEdit: self.productBarcodeTextField, imageName: "Code")
+        self.productPriceTextField.leftView?.tintColor = .red
         
         Utilities.createDismissButton(button: self.dismissCategoryButton)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil
+        )
         
         self.textUnderlineDecorationDic = [self.productNameTextField : self.productNameUnderView, self.productDescTextField : self.productDescUnderView, self.productCountTextField : self.productCountUnderView, self.productPriceTextField : self.productPriceUnderView, self.productBarcodeTextField : self.productBarcodeUnderView]
         
         self.productsTableView.tableFooterView = UIView()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = keyboardRectangle.height
+            self.setProductViewFrame()
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let _: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            keyboardHeight = 0
+            self.setProductViewFrame()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,6 +131,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             let characterSet = CharacterSet(charactersIn: string)
             return allowedCharacters.isSuperset(of: characterSet)
         }
+        
         return true
     }
     
@@ -159,8 +181,10 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
 
     func setProductViewFrame() {
         self.productView.center.x = (self.parentView?.center.x)!
-        self.productView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height +
-            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        let productViewY = (UIScreen.main.bounds.height - self.keyboardHeight - self.productView.frame.height) / 2
+        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+        
+        self.productView.frame.origin.y =  productViewY < statusBarHeight ? statusBarHeight : productViewY
     }
     
     func getSelectedCategoryName() -> String? {
@@ -196,13 +220,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         // self.productNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.productView.alpha = 1.0
+            self.productView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.setProductViewActionTitles()
         self.isProductViewPresented = true
-        self.productView.alpha = CGFloat(Utilities.alpha)
         
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.productView)
@@ -324,10 +347,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         cell.initCell(categoryName: self.getSelectedCategoryName()!, indexPath: indexPath, isFiltered: false)
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
-        
-     //   if self.selectedProductBarcode != nil && self.selectedProductBarcode == cell.productBarcodeLabel.text {
-     //       tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-     //   }
         
         return cell
     }

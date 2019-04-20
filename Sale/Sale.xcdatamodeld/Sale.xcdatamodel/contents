@@ -18,7 +18,6 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="sales" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sales" syncable="YES"/>
     </entity>
     <entity name="Products" representedClassName="Products" syncable="YES" codeGenerationType="class">
         <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
@@ -36,11 +35,20 @@
     <entity name="Sales" representedClassName="Sales" syncable="YES" codeGenerationType="class">
         <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="count" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="SessionPersons" representedClassName="SessionPersons" syncable="YES" codeGenerationType="class">
+        <attribute name="itn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="role" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="sales" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sales" syncable="YES"/>
+    </entity>
     <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
+        <attribute name="closeDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isOpened" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Persons" syncable="YES"/>
+        <attribute name="openDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SessionPersons" syncable="YES"/>
     </entity>
     <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
         <attribute name="btDevice" optional="YES" attributeType="String" syncable="YES"/>
@@ -49,12 +57,13 @@
     </entity>
     <elements>
         <element name="Categories" positionX="-97.296875" positionY="-241.3828125" width="128" height="73"/>
-        <element name="OrgInfo" positionX="315.83984375" positionY="-222.87890625" width="128" height="133"/>
-        <element name="Persons" positionX="145.34765625" positionY="-366.44921875" width="128" height="133"/>
-        <element name="Products" positionX="143.4609375" positionY="-159.0625" width="128" height="133"/>
+        <element name="OrgInfo" positionX="358.3984375" positionY="-200.92578125" width="128" height="133"/>
+        <element name="Persons" positionX="142.2109375" positionY="-331.390625" width="128" height="118"/>
+        <element name="Products" positionX="143.1484375" positionY="-143.828125" width="128" height="133"/>
         <element name="Purchase" positionX="-96.01953125" positionY="-114.4609375" width="128" height="90"/>
-        <element name="Sales" positionX="-96.80859375" positionY="-390.5" width="128" height="88"/>
-        <element name="Settings" positionX="317.390625" positionY="-330.421875" width="128" height="90"/>
-        <element name="Sessions" positionX="354.390625" positionY="-487.13671875" width="128" height="73"/>
+        <element name="Sales" positionX="-95.65625" positionY="-413.9765625" width="128" height="103"/>
+        <element name="Sessions" positionX="354.390625" positionY="-487.13671875" width="128" height="103"/>
+        <element name="Settings" positionX="358.09765625" positionY="-338.265625" width="128" height="90"/>
+        <element name="SessionPersons" positionX="139.3984375" positionY="-512.88671875" width="128" height="103"/>
     </elements>
 </model>

@@ -26,7 +26,7 @@ class PurchaseTableViewCell: UITableViewCell {
             self.purchaseNameLabel.text = product.value(forKey: "name") as? String
             
             let productDesc = product.value(forKeyPath: "desc") as? String
-            self.purchaseDescLabel.text = productDesc // == "" ? "Без описания" : productDesc
+            self.purchaseDescLabel.text = productDesc
             
             self.purchasePriceLabel.text = (product.value(forKeyPath: "price") as? Float)?.description
             

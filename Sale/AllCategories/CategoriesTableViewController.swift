@@ -71,8 +71,7 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
+        if let _: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             keyboardHeight = 0
             self.setCategoryViewFrame()
         }
@@ -123,15 +122,15 @@ class CategoriesTableViewController: UITableViewController {
         self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
             
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.categoryView.alpha = 1.0
+            self.categoryView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.setCategoryViewActionTitles()
         self.isCategoryViewPresented = true
-        self.categoryView.alpha = 0.94
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.categoryView)
+        
         self.setCategoryViewFrame()
         
         Utilities.makeViewFlexibleAppearance(view: self.categoryView)
@@ -167,8 +166,6 @@ class CategoriesTableViewController: UITableViewController {
                         if self.isCategoryEditing {
                             self.tableView.selectRow(at: IndexPath(row: self.swipedRowIndex!, section: 0), animated: true, scrollPosition: .none)
                             self.isCategoryEditing = false
-                        } else {
-                        //    self.tableView.selectRow(at: IndexPath(row: CategoriesDBRules.getCategoryIndexByName(categoryName: self.selectedCategoryName!) ?? 0, section: 0), animated: true, scrollPosition: .none)
                         }
                     }
                 } else {

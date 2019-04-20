@@ -42,6 +42,8 @@ class Utilities: Any {
     static let buyProductButtonColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
     static let buyProductsButtonColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0)
     static let titlesColor = UIColor(red: 7/255, green: 50/255, blue: 89/255, alpha: 1.0)
+    static let openSessionColor = UIColor(red: 0/255, green: 143/255, blue: 0/255, alpha: 1.0)
+    static let closeSessionColor = UIColor.red
     static let deleteProductsButtonColor = UIColor.red
     static var accentColor: UIColor = colors[0]!
     static let inactiveColor: UIColor = UIColor.lightGray.withAlphaComponent(0.3)
@@ -50,7 +52,7 @@ class Utilities: Any {
     class func addOverlayView() {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.4
+        self.overlayView.alpha = 0.6
         self.overlayView.backgroundColor = UIColor.darkGray
         self.mainController!.view.addSubview(self.overlayView)
     }
@@ -58,7 +60,7 @@ class Utilities: Any {
     class func addOverlayViewToParent(parent: UIView) {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.4
+        self.overlayView.alpha = 0.6
         self.overlayView.backgroundColor = UIColor.darkGray
         parent.addSubview(self.overlayView)
     }
@@ -66,7 +68,7 @@ class Utilities: Any {
     class func addAlertOverlayView() {
         self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.alertOverlayView.isOpaque = false
-        self.alertOverlayView.alpha = 0.4
+        self.alertOverlayView.alpha = 0.6
         self.alertOverlayView.backgroundColor = UIColor.darkGray
         self.mainController!.view.addSubview(self.alertOverlayView)
     }

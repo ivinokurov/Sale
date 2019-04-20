@@ -9,7 +9,7 @@ import ExternalAccessory
 
 class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDelegate  {
     
-    let btDevices = BluetoothDevicesInterconnection()
+//    let btDevices = BluetoothDevicesInterconnection()
     var btSession: EASession? = nil
     var btAccessory: EAAccessory? = nil
     var accessories: [EAAccessory]? = nil
@@ -48,7 +48,7 @@ class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDel
         
         Utilities.customizePopoverView(customizedView: productsSplitController.alertView)
 
-        self.btDevices.findBluetoothDevices()
+    //    self.btDevices.findBluetoothDevices()
 
         productsSplitController.alertView.alpha = 0.0
     }

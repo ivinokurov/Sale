@@ -372,21 +372,24 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = keyboardRectangle.height
             self.setHostNameViewFrame()
+            self.setOrgInfoViewFrame()
         }
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
+        if let _: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             keyboardHeight = 0
             self.setHostNameViewFrame()
+            self.setOrgInfoViewFrame()
         }
     }
     
     func setOrgInfoViewFrame() {
         self.orgInfoView.center.x = (self.parentView?.center.x)!
-        self.orgInfoView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height +
-            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        let productViewY = (UIScreen.main.bounds.height - self.keyboardHeight - self.orgInfoView.frame.height) / 2
+        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+        
+        self.orgInfoView.frame.origin.y =  productViewY < statusBarHeight ? statusBarHeight : productViewY
     }
     
     func getColorsViewCenterPoint() -> CGPoint {
@@ -406,16 +409,16 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.hostNameView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.hostNameView.alpha = 1.0
+            self.hostNameView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.changeAccentColorForHostNameView()
         
         self.isHostNameViewPresented = true
-        self.hostNameView.alpha = 0.94
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.hostNameView)
+        
         self.setHostNameViewFrame()
         
         Utilities.makeViewFlexibleAppearance(view: self.hostNameView)
@@ -429,12 +432,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.btDevicesView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.btDevicesView.alpha = 1.0
+            self.btDevicesView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.isBtDevicesViewPresented = true
-        self.btDevicesView.alpha = 0.94
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.btDevicesView)
         
@@ -448,13 +450,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.colorsView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.colorsView.alpha = 1.0
+            self.colorsView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.isColorsViewPresented = true
-        self.colorsView.alpha = 0.94
         Utilities.addOverlayView()
+        
         self.parentView?.addSubview(self.colorsView)
         
         Utilities.makeViewFlexibleAppearance(view: self.colorsView)
@@ -466,17 +468,17 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.orgInfoView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.orgInfoView.alpha = 1.0
+            self.orgInfoView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.changeAccentColorForOrgInfoView()
         
         self.isOrgInfoViewPresented = true
-        self.orgInfoView.alpha = 0.94
     //    self.orgNameTextField.becomeFirstResponder()
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.orgInfoView)
+        
         self.setOrgInfoViewFrame()
         self.getOrgInfo()
         

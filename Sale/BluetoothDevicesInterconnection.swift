@@ -6,7 +6,7 @@
 
 import UIKit
 
-class BluetoothDevicesInterconnection: Any, DTDeviceDelegate {
+class BluetoothDevicesInterconnection: DTDeviceDelegate {
     
     let lib = DTDevices.sharedDevice() as! DTDevices
     var btDevices = [String]()
@@ -31,7 +31,7 @@ class BluetoothDevicesInterconnection: Any, DTDeviceDelegate {
             do {
                 try self.lib.btDiscoverSupportedDevices(inBackground: 8, maxTime: 10.0, filter: BLUETOOTH_FILTER.ALL)
             } catch let error as NSError {
-                Utilities.showSimpleAlert(controllerToShowFor: Utilities.mainController!, messageToShow: error.localizedDescription)
+     //           Utilities.showSimpleAlert(controllerToShowFor: Utilities.mainController!, messageToShow: error.localizedDescription)
             }
         }
     }
@@ -56,7 +56,7 @@ class BluetoothDevicesInterconnection: Any, DTDeviceDelegate {
                 do {
                     try self.lib.btConnectSupportedDevice(address, pin: "0000")
                 } catch let error as NSError {
-                    Utilities.showSimpleAlert(controllerToShowFor: Utilities.mainController!, messageToShow: error.localizedDescription)
+     //               Utilities.showSimpleAlert(controllerToShowFor: Utilities.mainController!, messageToShow: error.localizedDescription)
                 }
             }
         }

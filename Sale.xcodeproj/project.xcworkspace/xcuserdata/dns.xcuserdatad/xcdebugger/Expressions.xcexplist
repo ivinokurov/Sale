@@ -27,6 +27,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportPersonsTableViewController.tableView(_:numberOfRowsInSection:):ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(SessionDBRules.selectedSession?.mutableSetValue(forKey: &quot;persons&quot;))?.count">
+            </PersistentString>
+            <PersistentString
+               value = "(SessionDBRules.selectedSession?.value(forKey: &quot;persons&quot;) as? [NSManagedObject])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ProductsViewController.addNewProduct(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -156,13 +167,13 @@
          contextName = "PersonalTableViewController.tableView(_:numberOfRowsInSection:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "originLogin">
+               value = "originPassword">
             </PersistentString>
             <PersistentString
                value = "PersonalDBRules.currentLogin">
             </PersistentString>
             <PersistentString
-               value = "originPassword">
+               value = "originLogin">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -238,10 +249,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ReportSalesViewController.numberOfSections(in:):ReportSalesViewController.swift">
+         contextName = "closure #1 in CashboxViewController.showSessionView():CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+               value = "self.sessionView.center">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -254,6 +265,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportSalesViewController.numberOfSections(in:):ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CategoriesTableViewController.tableView(_:cellForRowAt:):CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -262,29 +281,30 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "error.localizedDescription">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "ReportPersonsTableViewController.tableView(_:didSelectRowAt:):ReportPersonsTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+               value = "SessionDBRules.selectedSession.value(forKeyPath: &quot;persons&quot;)">
             </PersistentString>
             <PersistentString
                value = "self.currentPersonItn ">
             </PersistentString>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+            <PersistentString
+               value = "SessionDBRules.selectedSession.mutableSetValue(forKey: &quot;persons&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "persons">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in CashboxViewController.showSessionView():CashboxViewController.swift">
+         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.sessionView.center">
+               value = "error.localizedDescription">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -340,16 +360,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportSalesViewController.tableView(_:viewForFooterInSection:):ReportSalesViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashboxViewController.showPersonView():CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "SettingsTableViewController.viewDidLoad():SettingsTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "fp.buildCommandAbstract()">
+               value = "&quot;0&quot;.data(using: .windowsCP1251)">
             </PersistentString>
             <PersistentString
                value = "self.hostName">
             </PersistentString>
             <PersistentString
-               value = "&quot;0&quot;.data(using: .windowsCP1251)">
+               value = "fp.buildCommandAbstract()">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -392,13 +428,13 @@
          contextName = "SettingsTableViewController.getHostName(_:):SettingsTableViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "self.hostNameTextEdit.text?.isEmpty">
+            </PersistentString>
+            <PersistentString
                value = "self.hostName">
             </PersistentString>
             <PersistentString
                value = "self.hostNameTextEdit.text.isEmpty">
-            </PersistentString>
-            <PersistentString
-               value = "self.hostNameTextEdit.text?.isEmpty">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -420,10 +456,10 @@
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -450,6 +486,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportPersonsTableViewController.tableView(_:cellForRowAt:):ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "SessionDBRules.selectedSession">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ReportSalesViewController.viewDidLoad():ReportSalesViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -461,13 +505,13 @@
          contextName = "ReportSalesViewController.tableView(_:numberOfRowsInSection:):ReportSalesViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "Utilities.reportsSplitController">
+            </PersistentString>
+            <PersistentString
                value = "Utilities.reportsSplitController!.selectedReportPersonName">
             </PersistentString>
             <PersistentString
                value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)?.count">
-            </PersistentString>
-            <PersistentString
-               value = "Utilities.reportsSplitController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -554,6 +598,31 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "CashboxViewController.openSessionGestureAction(_:):CashboxViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "PersonalDBRules.selectedPerson">
+            </PersistentString>
+            <PersistentString
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+            <PersistentString
+               value = "PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)">
+            </PersistentString>
+            <PersistentString
+               value = "PersonalDBRules.currentPassword">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utilities.addOverlayView():Utilities.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.mainController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CategoriesTableViewController.tableView(_:didSelectRowAt:):CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -604,13 +673,13 @@
          contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "PersonalDBRules.currentLogin">
+            </PersistentString>
+            <PersistentString
                value = "self.viewControllers![1]">
             </PersistentString>
             <PersistentString
                value = "self.tabBarController">
-            </PersistentString>
-            <PersistentString
-               value = "PersonalDBRules.currentLogin">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

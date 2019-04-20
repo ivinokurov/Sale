@@ -165,7 +165,6 @@
 				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
 				EA26536D224C80AA00586769 /* AuthorizeViewController.swift */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
-				EA743059224F50A700333B9D /* ReportsNavigationController.swift */,
 				EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */,
 				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
 				EAA776192259DA7400C0D596 /* Launch Screen.storyboard */,
@@ -209,17 +208,12 @@
 		EA4C7E292227C17900425BE8 /* Cashbox */ = {
 			isa = PBXGroup;
 			children = (
+				EA953031226A2CAB00EDCE9D /* Commands */,
 				EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */,
 				EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */,
 				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
 				EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */,
-				EA6ABE092260A837008D7475 /* FPAbstractCommand.swift */,
-				EA181A5D2265AF2700DA719A /* OpenFiscalReceiptCommand.swift */,
-				EA181A5F2265B9D100DA719A /* CloseFiscalReceiptCommand.swift */,
-				EA181A612265BACC00DA719A /* RegistrationOfSaleCommand.swift */,
-				EA181A632265C21100DA719A /* PrintTextCommand.swift */,
-				EA181A65226627B000DA719A /* PaymentCommand.swift */,
 				EA89795C2268579100B93A70 /* SessionDBRules.swift */,
 			);
 			path = Cashbox;
@@ -247,6 +241,19 @@
 				EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		EA953031226A2CAB00EDCE9D /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				EA6ABE092260A837008D7475 /* FPAbstractCommand.swift */,
+				EA181A5D2265AF2700DA719A /* OpenFiscalReceiptCommand.swift */,
+				EA181A5F2265B9D100DA719A /* CloseFiscalReceiptCommand.swift */,
+				EA181A612265BACC00DA719A /* RegistrationOfSaleCommand.swift */,
+				EA181A632265C21100DA719A /* PrintTextCommand.swift */,
+				EA181A65226627B000DA719A /* PaymentCommand.swift */,
+			);
+			path = Commands;
 			sourceTree = "<group>";
 		};
 		EAAA59E5223D140A0096D990 /* AllProducts */ = {
@@ -277,6 +284,7 @@
 				EAF22AAE2258AD0C006FDA14 /* ReportSalesViewController.swift */,
 				EAF22AAA225872CF006FDA14 /* ReportPersonsTableViewController.swift */,
 				EAF22AA7225868CE006FDA14 /* ReportsSplitViewController.swift */,
+				EA743059224F50A700333B9D /* ReportsNavigationController.swift */,
 				EAF22AAC22588095006FDA14 /* PersonSalesDBRules.swift */,
 			);
 			name = Reports;
@@ -559,7 +567,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox2;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";
@@ -587,7 +595,7 @@
 					"$(PROJECT_DIR)/Sale/Library",
 					"$(PROJECT_DIR)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox2;
+				PRODUCT_BUNDLE_IDENTIFIER = vinokurov.igor.victorovitch.Cashbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sale/Library/DTDevices-Bridging-Header.h";

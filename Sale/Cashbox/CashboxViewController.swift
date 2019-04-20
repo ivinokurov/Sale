@@ -62,14 +62,39 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func openSessionGestureAction(_ sender: UITapGestureRecognizer) {
         Utilities.decorateViewTap(viewToDecorate: self.openSessionView)
-        SessionDBRules.changeSessionState(sessionState: true)
-        self.dismissSessionView(UIButton())
+        self.openSessionView.alpha = 0.8
+        self.closeSessionView.alpha = 1.0
+        
+        if !SessionDBRules.isCurrentSessionOpened()! {
+            self.dismissSessionView(UIButton())
+            self.actionsInSession(sessionState: true)
+            SessionDBRules.openNewSession()
+            
+            let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+            
+            SessionDBRules.addPersonInCurrentSession(personName: person.value(forKey: "name") as! String, personRole: person.value(forKey: "role") as! Int16, personItn: person.value(forKey: "itn") as! String)
+        }
+        
+        self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
+        self.openSessionImageView.isUserInteractionEnabled = false
+        self.closeSessionImageView.isUserInteractionEnabled = true
     }
     
     @IBAction func closeSessionGestureAction(_ sender: UITapGestureRecognizer) {
         Utilities.decorateViewTap(viewToDecorate: self.closeSessionView)
-        SessionDBRules.changeSessionState(sessionState: false)
-        self.dismissSessionView(UIButton())
+        self.closeSessionView.alpha = 0.8
+        self.openSessionView.alpha = 1.0
+        
+        if SessionDBRules.isCurrentSessionOpened()! {
+            self.dismissSessionView(UIButton())
+            self.hidePurchaseView()
+            self.actionsInSession(sessionState: false)
+            SessionDBRules.closeCurrentSession()
+        }
+        
+        self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
+        self.openSessionImageView.isUserInteractionEnabled = true
+        self.closeSessionImageView.isUserInteractionEnabled = false
     }
     
     func getParentViewCenterPoint() -> CGPoint {
@@ -85,16 +110,21 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.personView.alpha = 0.0
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.personView.alpha = 1.0
+            self.personView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
-        self.personView.alpha = 0.94
-        Utilities.addOverlayView()
+        Utilities.addAlertOverlayView()
         self.parentView?.addSubview(self.personView)
         
         self.currentPersonNameLabel.text = PersonalDBRules.getPersonNameByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
         self.currentPersonRoleLabel.text = self.getRolePersmissions()
+        
+        if SessionDBRules.isCurrentSessionOpened() ?? false {
+            let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
+            
+            SessionDBRules.addPersonInCurrentSession(personName: person.value(forKey: "name") as! String, personRole: person.value(forKey: "role") as! Int16, personItn: person.value(forKey: "itn") as! String)
+        }
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
         
@@ -128,10 +158,20 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func actionsInSession(sessionState state: Bool) {
+        if state {
+            self.buyProductButton.isHidden = false
+            self.navigationItem.rightBarButtonItem = self.purchaseViewBarButtonItem
+            self.navigationItem.rightBarButtonItem!.tintColor = Utilities.accentColor
+        } else {
+            self.buyProductButton.isHidden = true
+            self.navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
     @IBAction func dismissPersonView(_ sender: Any) {
-        
         Utilities.decorateButtonTap(buttonToDecorate: self.dismissPersonViewButton)
-        Utilities.removeOverlayView()
+        Utilities.removeAlertOverlayView()
         
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.personView.alpha = 0.0
@@ -145,13 +185,11 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.parentView = Utilities.mainController!.view
         
-        self.sessionViewBarButtonItem = UIBarButtonItem(title: "СМЕНА",  style: .done, target: self, action: #selector(self.showSessionView(_:)))
+        self.sessionViewBarButtonItem = UIBarButtonItem(title: self.getSessionStateStr(),  style: .done, target: self, action: #selector(self.showSessionView(_:)))
         self.navigationItem.leftBarButtonItem = self.sessionViewBarButtonItem
-    //    self.navigationItem.leftBarButtonItem?.tintColor = Utilities.accentColor
         
         self.purchaseViewBarButtonItem = UIBarButtonItem(image: showPurchaseViewImage, style: .plain, target: self, action: #selector(self.showOrHidePurchaseView(_:)))
         self.navigationItem.rightBarButtonItem = self.purchaseViewBarButtonItem
-    //    self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
         self.purchaseContainerView.frame.origin.x = self.view.frame.width
         self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
@@ -180,8 +218,18 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.productsTableView.tableFooterView = UIView()
         self.purchaseTableView.tableFooterView = UIView()
         
-        if SessionDBRules.getSessionState() == nil {
-            SessionDBRules.addNewSessionState(sessionState: false)
+        if SessionDBRules.currentSession != nil {
+            if let state = SessionDBRules.isCurrentSessionOpened() {
+                if state {
+                    self.openSessionView.alpha = 0.8
+                } else {
+                    self.closeSessionView.alpha = 0.8
+                }
+                self.actionsInSession(sessionState: state)
+            }
+        } else {
+            self.closeSessionView.alpha = 0.8
+            self.actionsInSession(sessionState: false)
         }
         
         lib.addDelegate(self)
@@ -227,8 +275,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         self.navigationItem.leftBarButtonItem?.tintColor = Utilities.accentColor
-        self.openSessionImageView.tintColor = Utilities.accentColor
-        self.closeSessionImageView.tintColor = UIColor.red
+        self.openSessionImageView.tintColor = Utilities.openSessionColor
+        self.closeSessionImageView.tintColor = Utilities.closeSessionColor
         
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Utilities.accentColor], for: .normal)
     }
@@ -256,7 +304,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func customizeButton(button: UIButton, buttonColor: UIColor) {
         button.tintColor = buttonColor
-    //    button.layer.backgroundColor = buttonColor.withAlphaComponent(0.2).cgColor
         button.layer.borderColor = buttonColor.cgColor
         button.layer.borderWidth = 2.0
         button.layer.cornerRadius = 40
@@ -527,24 +574,27 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func getSessionStateStr() -> String {
+        var sessionState = "СМЕНА ЗАКРЫТА"
+        
+        if let state = SessionDBRules.isCurrentSessionOpened() {
+            if state {
+                sessionState = "СМЕНА ОТКРЫТА"
+            }
+        }
+        return sessionState
+    }
+    
     func showSessionView() {
         self.sessionView.center = self.getParentViewCenterPoint()
         self.sessionView.alpha = 0.0
         
         self.dismissSessionViewButton.tintColor = Utilities.accentColor
-        
-        if let sessionState = SessionDBRules.getSessionState() {
-            if sessionState {
-                self.sessionStateLabel.text = "СЕССИЯ ОТКРЫТА"
-            } else {
-                self.sessionStateLabel.text = "СЕССИЯ ЗАКРЫТА"
-            }
-        } else {
-            self.sessionStateLabel.text = "СЕССИЯ ЗАКРЫТА"
-        }
+        self.sessionStateLabel.text = self.getSessionStateStr()
+        self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.sessionView.alpha = 0.94
+            self.sessionView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
             self.isSessionViewPresented = true
         })
@@ -602,7 +652,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.productTypesCollectionView.isHidden = false
             return categoriesCount
         }
-    //    return CategoriesDBRules.getAllCategories()?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -685,6 +734,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         for product in PurchaseDBRules.getAllProductsInPurchase() ?? [] {
             PersonSalesDBRules.addProductInSale(personName: person?.value(forKey: "name") as! String, personRole: person?.value(forKey: "role") as! Int16, productName: product.value(forKey: "name") as! String, productCount: product.value(forKey: "count") as! Float, productBarcode: product.value(forKey: "code") as! String)
         }
+        
+    //    SessionDBRules.addPersonInCurrentSession(personToAdd: person!)
     }
     
     func demoPrintCheck() -> Bool {
@@ -707,10 +758,9 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             let name = product.value(forKey: "name") as! String
             let count = product.value(forKey: "count") as! Float
             let code = product.value(forKey: "code") as! String
-            let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code) as! Float
-            let measure = ProductsDBRules.getProductMeasure(product: ProductsDBRules.getProductByBarcode(code: code)!)
+            let price = ProductsDBRules.getProductPriceByBarcode(productBarcode: code)
             
-            let ros = RegistrationOfSaleCommand(productName: name, taxType: "1", productPrice: price.description, productQuantity: count.description, department: "0")
+            let ros = RegistrationOfSaleCommand(productName: name, taxType: "1", productPrice: price!.description, productQuantity: count.description, department: "0")
             ros.writeCommand()
         }
         
@@ -726,7 +776,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func makePurchase(_ sender: Any) {
         if PurchaseDBRules.getAllProductsInPurchase()?.count ?? 0 > 0 {
             
-            if self.demoPrintCheck() {
+            if true /*self.demoPrintCheck()*/ {
                 self.addSaleForPerson()
                 
                 Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
@@ -755,11 +805,14 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     {
                         info += "\(device.name!) \(device.model!)\nFW Rev: \(device.firmwareRevision!) HW Rev: \(device.hardwareRevision!)\nSerial: \(device.serialNumber!)\n"
                     }
-                    Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: info)
+                //    Utilities.showOkAlertView(alertTitle: "", alertMessage: info)
+                //    Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: info)
                 } catch {}
                 
-                self.barCodeButton.isHidden = false
-                self.barCodeButton.layer.borderColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor
+                if SessionDBRules.isCurrentSessionOpened() ?? false {
+                    self.barCodeButton.isHidden = false
+                    self.barCodeButton.layer.borderColor = UIColor(red: 0/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor
+                }
             } else {
                 self.barCodeButton.isHidden = true
                 self.barCodeButton.layer.borderColor = Utilities.accentColor.cgColor

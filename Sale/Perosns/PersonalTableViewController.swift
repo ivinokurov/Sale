@@ -33,6 +33,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     var isPersonEditing: Bool = false
     var isPersonViewPresented: Bool = false
     var swipedRowIndex: Int? = nil
+    var keyboardHeight: CGFloat = 0.0
     var selectedPersonRole: Int = Utilities.personRole.admin.rawValue
     var currentPersonItn: String? = nil
     
@@ -53,9 +54,29 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         Utilities.createDismissButton(button: self.dismissPersonButton)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil
+        )
+        
         self.textUnderlineDecorationDic = [self.fullPersonNameTextField : self.personNameUnderView, self.personItnTextField : self.personItnUnderView, self.personLoginTextField : self.personLoginUnderView, self.personPasswordTextField : self.personPwdUnderView]
         
         self.tableView.tableFooterView = UIView()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            self.keyboardHeight = keyboardRectangle.height
+            self.setPersonViewFrame()
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let _: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            self.keyboardHeight = 0
+            self.setPersonViewFrame()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -133,13 +154,11 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         // self.fullPersonNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.personView.alpha = 1.0
+            self.personView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
-     //   self.setPersonaViewActionTitles()
         self.isPersonViewPresented = true
-        self.personView.alpha = CGFloat(Utilities.alpha)
         
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.personView)
@@ -156,8 +175,10 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
     func setPersonViewFrame() {
         self.personView.center.x = (self.parentView?.center.x)!
-        self.personView.frame.origin.y = UIApplication.shared.statusBarFrame.size.height +
-            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        let productViewY = (UIScreen.main.bounds.height - self.keyboardHeight - self.personView.frame.height) / 2
+        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+        
+        self.personView.frame.origin.y =  productViewY < statusBarHeight ? statusBarHeight : productViewY
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -332,10 +353,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //    self.currentPersonItn = PersonalDBRules.getAllPersons()![indexPath.row].value(forKeyPath: "itn") as? String
-    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCellId", for: indexPath)
         
@@ -360,11 +377,8 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             
             cell.accessoryView = self.createLougoutButton()
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        //    tableView.cellForRow(at: indexPath)
-        //    tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         } else {
             cell.accessoryView = nil
-        //    cell.selectionStyle = .none
         }
         
         return cell

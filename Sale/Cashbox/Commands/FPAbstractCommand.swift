@@ -20,6 +20,9 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
     var inputStream: InputStream? = nil
     var outputStream: OutputStream? = nil
     
+    let name = SettingsDBRules.getTCPDeviceName()
+    let port = 3999
+    
     var error: Bool = false
     
     func buildCommand() -> [UInt8] {
@@ -30,7 +33,7 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         buf[offset] = self.PREAMBLE
     
         offset += 1
-        let len = self.toKKTByteSequence(value: UInt32(9 + parametersLen + 1 + 0x20))
+        let len = self.getByteSequenceToFP(value: UInt32(9 + parametersLen + 1 + 0x20))
         for i in offset..<5 {
             buf[i] = len[i - offset]
         }
@@ -39,7 +42,7 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         buf[offset] = self.getSequence()
         
         offset += 1
-        let code = self.toKKTByteSequence(value: self.commandCode)
+        let code = self.getByteSequenceToFP(value: self.commandCode)
         for i in offset..<10 {
             buf[i] = code[i - offset]
         }
@@ -64,11 +67,13 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         
         offset += 4
         buf[offset] = self.TERMINATOR
+        
         return buf
     }
     
     func getParametersUtf8String() -> [UInt8] {
         var ret: String = ""
+        
         for parameter in self.commandParams {
             if parameter != nil {
                 ret += parameter!
@@ -78,6 +83,7 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         if ret.count == 0 {
             ret += SEPARATOR
         }
+        
         return ret.utf8.filter({ $0 == $0 })
     }
     
@@ -104,10 +110,11 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
                 index += 2
             }
         }
+        
         return ret
     }
     
-    func toKKTByteSequence(value: UInt32) -> [UInt8] {
+    func getByteSequenceToFP(value: UInt32) -> [UInt8] {
         var ret = [UInt8].init(repeating: 0x30, count: 4)
         
         ret[0] += UInt8((value & 0x0f000) >> 12)
@@ -125,7 +132,7 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
             checksum += UInt32(data[i])
         }
         
-        return toKKTByteSequence(value: checksum)
+        return getByteSequenceToFP(value: checksum)
     }
     
     func getSequence() -> UInt8 {
@@ -142,10 +149,9 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         
         for parameter in self.commandParams {
             if parameter != nil {
-                len += parameter!.count + 1
-            } else {
-                len += 1
+                len += parameter!.count
             }
+            len += 1
         }
         return len
     }
@@ -159,8 +165,8 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         }
     }
     
-    func writeCommand(hostName name: String, hostPort port: Int) {
-        self.getOutputStream(hostName: name, hostPort: port)
+    func writeCommand() {
+        self.getOutputStream(hostName: self.name!, hostPort: self.port)
         self.writeToStream(data: Data(bytes: self.buildCommand()), outStream: self.outputStream!)
         if self.outputStream != nil {
             self.outputStream!.close()
