@@ -52,7 +52,7 @@ class Utilities: Any {
     class func addOverlayView() {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.6
+        self.overlayView.alpha = 0.1 // 0.6
         self.overlayView.backgroundColor = UIColor.darkGray
         self.mainController!.view.addSubview(self.overlayView)
     }
@@ -60,7 +60,7 @@ class Utilities: Any {
     class func addOverlayViewToParent(parent: UIView) {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.6
+        self.overlayView.alpha = 0.1 // 0.6
         self.overlayView.backgroundColor = UIColor.darkGray
         parent.addSubview(self.overlayView)
     }
@@ -68,7 +68,7 @@ class Utilities: Any {
     class func addAlertOverlayView() {
         self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.alertOverlayView.isOpaque = false
-        self.alertOverlayView.alpha = 0.6
+        self.alertOverlayView.alpha = 0.1 // 0.6
         self.alertOverlayView.backgroundColor = UIColor.darkGray
         self.mainController!.view.addSubview(self.alertOverlayView)
     }
@@ -167,9 +167,13 @@ class Utilities: Any {
     }
     
     class func customizePopoverView(customizedView view: UIView) {
-        view.layer.borderColor = Utilities.accentColor.cgColor
-        view.layer.borderWidth = 0.4
+        view.layer.borderColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
+        view.layer.borderWidth = 0.3
         view.layer.cornerRadius = 12
+        view.layer.shadowColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
+        view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        view.layer.shadowOpacity = 0.4
+        view.layer.shadowRadius = 2
     }
     
     class func setAccentColorForSomeViews(viewsToSetAccentColor views: [UIView]) {

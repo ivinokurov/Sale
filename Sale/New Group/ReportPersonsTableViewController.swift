@@ -96,7 +96,16 @@ class ReportPersonsTableViewController: UITableViewController {
         if tableView != self.sessionsTableView {
             return (SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons"))?.count ?? 0
         } else {
-            return SessionDBRules.getAllSessions()?.count ?? 0
+            let sessionsCount = SessionDBRules.getAllSessions()?.count ?? 0
+            if SessionDBRules.isCurrentSessionOpened() ?? false {
+                if sessionsCount > 0 {
+                    return sessionsCount - 1
+                } else {
+                    return 0
+                }
+            } else {
+                return SessionDBRules.getAllSessions()?.count ?? 0
+            }
         }
     }
     
@@ -115,7 +124,7 @@ class ReportPersonsTableViewController: UITableViewController {
             Utilities.reportsSplitController!.selectedReportPersonName = person.value(forKeyPath: "name") as? String
             Utilities.reportsSplitController!.selectedReportPersonRole = person.value(forKeyPath: "role") as? Int16
             
-        //    self.updateSalesTable()
+            self.updateSalesTable()
         } else {
             SessionDBRules.selectedSession = SessionDBRules.getAllSessions()![indexPath.row]
             
@@ -123,7 +132,7 @@ class ReportPersonsTableViewController: UITableViewController {
             cell?.accessoryType = .checkmark
             cell?.tintColor = Utilities.accentColor
             
-        //    self.tableView.reloadData()
+            self.tableView.reloadData()
             
             self.dismissSessionsView(UIButton())
         }
@@ -151,11 +160,16 @@ class ReportPersonsTableViewController: UITableViewController {
                 let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
                     
                     let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
+                        
                         SessionDBRules.deleteSession(sessionToRemovePerson: session!)
                         
                         self.sessionsTableView.beginUpdates()
                         self.sessionsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                         self.sessionsTableView.endUpdates()
+                        
+                        SessionDBRules.selectedSession = session
+                        self.tableView.reloadData()
+                        self.updateSalesTable()
                     }
                     
                     Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ СМЕНЫ", alertMessage: "Удалить эту смену?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
@@ -196,13 +210,13 @@ class ReportPersonsTableViewController: UITableViewController {
                 
                 Utilities.reportsSplitController!.selectedReportPersonName = name
                 Utilities.reportsSplitController!.selectedReportPersonRole = role
-            //    self.updateSalesTable()
+                self.updateSalesTable()
             }
 
             return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sessionCellId", for: indexPath)
-                
+                let allSessions = SessionDBRules.getAllSessions()
                 let session = SessionDBRules.getAllSessions()![indexPath.row]
                 let openDate = session.value(forKeyPath: "openDate") as? Date
                 let closeDate = session.value(forKeyPath: "closeDate") as? Date
@@ -210,7 +224,17 @@ class ReportPersonsTableViewController: UITableViewController {
                 cell.textLabel?.text = "СМЕНА"
                 cell.detailTextLabel?.text = "Начало: " + self.getDateStr(dateToString: openDate!)! + ". Завершение: " + (closeDate == nil ? "..." : self.getDateStr(dateToString: closeDate!)! + ".")
                 
-                cell.accessoryType = .none
+                if let session = SessionDBRules.selectedSession {
+                    if session.value(forKeyPath: "openDate") as? Date == openDate && session.value(forKeyPath: "closeDate") as? Date == closeDate {
+                        cell.accessoryType = .checkmark
+                        cell.tintColor = Utilities.accentColor
+                        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                    } else {
+                        cell.accessoryType = .none
+                    }
+                } else {
+                    cell.accessoryType = .none
+                }
                 
                 Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
                 
@@ -220,7 +244,7 @@ class ReportPersonsTableViewController: UITableViewController {
     
     func getDateStr(dateToString date: Date) -> String? {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
         return dateFormatter.string(from: date)
     }
     

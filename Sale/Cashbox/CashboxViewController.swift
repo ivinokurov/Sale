@@ -72,7 +72,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
             
-            SessionDBRules.addPersonInCurrentSession(personName: person.value(forKey: "name") as! String, personRole: person.value(forKey: "role") as! Int16, personItn: person.value(forKey: "itn") as! String)
+            let name = person.value(forKey: "name") as! String
+            let role = person.value(forKey: "role") as! Int16
+            
+            if !SessionDBRules.isPersonPresentsInCurrentSession(personName: name, personRole: role) {
+                SessionDBRules.addPersonInCurrentSession(personName: name, personRole: role, personItn: person.value(forKey: "itn") as! String)
+            }
         }
         
         self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
@@ -123,7 +128,12 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         if SessionDBRules.isCurrentSessionOpened() ?? false {
             let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
             
-            SessionDBRules.addPersonInCurrentSession(personName: person.value(forKey: "name") as! String, personRole: person.value(forKey: "role") as! Int16, personItn: person.value(forKey: "itn") as! String)
+            let name = person.value(forKey: "name") as! String
+            let role = person.value(forKey: "role") as! Int16
+            
+            if !SessionDBRules.isPersonPresentsInCurrentSession(personName: name, personRole: role) {
+                SessionDBRules.addPersonInCurrentSession(personName: name, personRole: role, personItn: person.value(forKey: "itn") as! String)
+            }
         }
         
         Utilities.makeViewFlexibleAppearance(view: self.personView)
@@ -240,8 +250,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewWillAppear(animated)
 
         Utilities.customizePopoverView(customizedView: self.sessionView)
-        Utilities.customizePopoverView(customizedView: self.openSessionView)
-        Utilities.customizePopoverView(customizedView: self.closeSessionView)
+    //    Utilities.customizePopoverView(customizedView: self.openSessionView)
+    //    Utilities.customizePopoverView(customizedView: self.closeSessionView)
         Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
         Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
         
@@ -732,10 +742,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)
         
         for product in PurchaseDBRules.getAllProductsInPurchase() ?? [] {
-            PersonSalesDBRules.addProductInSale(personName: person?.value(forKey: "name") as! String, personRole: person?.value(forKey: "role") as! Int16, productName: product.value(forKey: "name") as! String, productCount: product.value(forKey: "count") as! Float, productBarcode: product.value(forKey: "code") as! String)
+            PersonSalesDBRules.addProductInPersonSale(personName: person?.value(forKey: "name") as! String, personRole: person?.value(forKey: "role") as! Int16, productName: product.value(forKey: "name") as! String, productCount: product.value(forKey: "count") as! Float, productBarcode: product.value(forKey: "code") as! String)
         }
-        
-    //    SessionDBRules.addPersonInCurrentSession(personToAdd: person!)
     }
     
     func demoPrintCheck() -> Bool {

@@ -9,7 +9,7 @@ import CoreData
 
 class PersonSalesDBRules: NSObject {
     
-    class func getAllPersonSales(personName name: String, personRole role: Int16) -> [NSManagedObject]? {
+    class func getSelectedSessionPersonAllSales(personName name: String, personRole role: Int16) -> [NSManagedObject]? {
         let viewContext = CommonDBRules.getManagedView()
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
@@ -18,13 +18,45 @@ class PersonSalesDBRules: NSObject {
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
             if fetchResult.count > 0 {
-                let person = fetchResult.first
-                let allPersonSales = person!.mutableSetValue(forKey: "sales")
-                if allPersonSales.count == 0 {
+                if SessionDBRules.selectedSession == nil {
                     return nil
+                } else {
+                    let person = fetchResult.first
+                    if person?.mutableSetValue(forKey: "sales").allObjects.count == 0 {
+                        return nil
+                    }
+               //     let allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as! Date})
+                    
+                    var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
+                    allPersonSales = allPersonSales.filter({sale in
+                        let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date
+                        if date == nil {
+                            return false
+                        }
+                        
+                        let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
+                        if sessionOpenDate == nil {
+                            return false
+                        }
+                        
+                        let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
+                        if sessionCloseDate == nil {
+                            return false
+                        }
+                        
+                        if date! >= sessionOpenDate! && date! <= sessionCloseDate! {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                    
+                    if allPersonSales.count == 0 {
+                        return nil
+                    }
+                    
+                    return allPersonSales.sorted(by: {(($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) < (($1 as! NSManagedObject).value(forKeyPath: "date") as! Date)}) as? [NSManagedObject]
                 }
-                
-                return allPersonSales.sorted(by: {(($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) < (($1 as! NSManagedObject).value(forKeyPath: "date") as! Date)}) as? [NSManagedObject]
             }
         } catch let error as NSError {
             NSLog("Ошибка извлечения продаж сотрудника: " + error.localizedDescription)
@@ -32,7 +64,7 @@ class PersonSalesDBRules: NSObject {
         return nil
     }
     
-    class func clearPersonSales(personName name: String, personRole role: Int16) {
+    class func deleteSessionPersonSales(personName name: String, personRole role: Int16) {
         let viewContext = CommonDBRules.getManagedView()
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
@@ -42,14 +74,21 @@ class PersonSalesDBRules: NSObject {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
             if fetchResult.count > 0 {
                 let person = fetchResult.first
-                let allPersonSales = person!.mutableSetValue(forKey: "sales")
                 
-                for sale in allPersonSales {
-                    viewContext!.delete(sale as! NSManagedObject)
-                }
-                person!.setValue(nil, forKey: "sales")
+                if SessionDBRules.selectedSession == nil {
+                    return
+                } else {
+                    let allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as! Date})
 
-                try viewContext!.save()
+                
+                    for sale in allPersonSales {
+                        viewContext!.delete(sale as! NSManagedObject)
+                        try viewContext!.save()
+                    }
+                    
+                    person!.setValue(nil, forKey: "sales")
+                    try viewContext!.save()
+                }
             }
         } catch let error as NSError {
             NSLog("Ошибка удаления продаж сотрудника: " + error.localizedDescription)
@@ -66,15 +105,23 @@ class PersonSalesDBRules: NSObject {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
             if fetchResult.count > 0 {
                 let person = fetchResult.first
-                let allPersonSales = person!.mutableSetValue(forKey: "sales")
                 var found: Bool = false
                 
-                allPersonSales.forEach({
-                    if ($0 as! NSManagedObject).value(forKey: "code") as! String == code {
-                        found = true
+                if SessionDBRules.selectedSession == nil {
+                    return found
+                } else {
+                    let allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as! Date})
+                    if allPersonSales.count == 0 {
+                        return found
                     }
-                })
-                return found
+                    
+                    allPersonSales.forEach({
+                        if ($0 as! NSManagedObject).value(forKey: "code") as! String == code {
+                            found = true
+                        }
+                    })
+                    return found
+                }
             }
         } catch let error as NSError {
             NSLog("Ошибка определения наличия продукта в продажах сотрудника: " + error.localizedDescription)
@@ -82,7 +129,7 @@ class PersonSalesDBRules: NSObject {
         return false
     }
     
-    class func addProductInSale(personName: String, personRole role: Int16, productName name: String, productCount count: Float, productBarcode code: String) {
+    class func addProductInPersonSale(personName: String, personRole role: Int16, productName name: String, productCount count: Float, productBarcode code: String) {
         let viewContext = CommonDBRules.getManagedView()
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SessionPersons")
@@ -119,11 +166,43 @@ class PersonSalesDBRules: NSObject {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
             if fetchResult.count > 0 {
                 let person = fetchResult.first
-                let allPersonSales = person!.mutableSetValue(forKey: "sales")
+                if SessionDBRules.selectedSession == nil {
+                    return totalSum
+                } else {
+               //     let allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as! Date})
+                    
+                    var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
+                    allPersonSales = allPersonSales.filter({sale in
+                        let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date
+                        if date == nil {
+                            return false
+                        }
+                        
+                        let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
+                        if sessionOpenDate == nil {
+                            return false
+                        }
+                        
+                        let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
+                        if sessionCloseDate == nil {
+                            return false
+                        }
+                        
+                        if date! >= sessionOpenDate! && date! <= sessionCloseDate! {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                    
+                    if allPersonSales.count == 0 {
+                        return totalSum
+                    }
                 
-                allPersonSales.forEach({
-                    totalSum += (ProductsDBRules.getProductByBarcode(code: ($0 as! NSManagedObject).value(forKey: "code") as! String))!.value(forKey: "price") as! Float * (($0 as! NSManagedObject).value(forKey: "count") as! Float)
-                })
+                    allPersonSales.forEach({
+                        totalSum += (ProductsDBRules.getProductByBarcode(code: ($0 as! NSManagedObject).value(forKey: "code") as! String))!.value(forKey: "price") as! Float * (($0 as! NSManagedObject).value(forKey: "count") as! Float)
+                    })
+                }
                 return totalSum
             }
         } catch let error as NSError {

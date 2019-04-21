@@ -97,18 +97,43 @@ class SessionDBRules: NSObject {
         }
     }
     
+    class func isPersonPresentsInCurrentSession(personName name: String, personRole role: Int16) -> Bool {
+        if let session = self.currentSession {
+            let allSessionPersons = session.mutableSetValue(forKey: "persons")
+            if allSessionPersons.allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) == name && (($0 as! NSManagedObject).value(forKeyPath: "role") as! Int16 == role) }).count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
     class func deleteSession(sessionToRemovePerson session: NSManagedObject) {
         let viewContext = CommonDBRules.getManagedView()
- 
-        do {
-            let allSessionPersons = session.mutableSetValue(forKey: "persons")
+        
+        do {/*
+            let allSessionPersons = session.mutableSetValue(forKey: "persons").allObjects as? [NSManagedObject]
+            if allSessionPersons != nil {
+            for person in allSessionPersons! {
+                let allPersonSales = person.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= session.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= session.value(forKeyPath: "closeDate") as! Date})
                 
-            for person in allSessionPersons {
-                viewContext!.delete(person as! NSManagedObject)
-            }
+                for sale in allPersonSales {
+                    viewContext!.delete(sale as! NSManagedObject)
+                    try viewContext!.save()
+                }
+                person.setValue(nil, forKey: "sales")
+             */
             
+            let allSessionPersons = session.mutableSetValue(forKey: "persons").allObjects as? [NSManagedObject]
+            if allSessionPersons != nil {
+                for person in allSessionPersons! {
+                    let name = person.value(forKey: "name") as! String
+                    let role = person.value(forKey: "role") as! Int16
+                    
+                    PersonSalesDBRules.deleteSessionPersonSales(personName: name, personRole: role)
+                }
             viewContext!.delete(session)
             try viewContext!.save()
+            }
         } catch let error as NSError {
             NSLog("Ошибка удаления смены: " + error.localizedDescription)
         }
