@@ -154,7 +154,7 @@ class ReportPersonsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-            if tableView == self.sessionsTableView {
+        if tableView == self.sessionsTableView && indexPath == tableView.indexPathForSelectedRow {
                 let session = SessionDBRules.getAllSessions()?[indexPath.row]
                 
                 let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
