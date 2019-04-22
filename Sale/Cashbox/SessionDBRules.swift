@@ -107,12 +107,12 @@ class SessionDBRules: NSObject {
         return false
     }
     
-    class func deleteSession(sessionToRemovePerson session: NSManagedObject) {
+    class func deleteSession(sessionToDelete session: NSManagedObject) {
         let viewContext = CommonDBRules.getManagedView()
         
-        do {/*
+        do {
             let allSessionPersons = session.mutableSetValue(forKey: "persons").allObjects as? [NSManagedObject]
-            if allSessionPersons != nil {
+
             for person in allSessionPersons! {
                 let allPersonSales = person.mutableSetValue(forKey: "sales").allObjects.filter({ (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) >= session.value(forKeyPath: "openDate") as! Date && (($0 as! NSManagedObject).value(forKeyPath: "date") as! Date ) <= session.value(forKeyPath: "closeDate") as! Date})
                 
@@ -121,19 +121,9 @@ class SessionDBRules: NSObject {
                     try viewContext!.save()
                 }
                 person.setValue(nil, forKey: "sales")
-             */
-            
-            let allSessionPersons = session.mutableSetValue(forKey: "persons").allObjects as? [NSManagedObject]
-            if allSessionPersons != nil {
-                for person in allSessionPersons! {
-                    let name = person.value(forKey: "name") as! String
-                    let role = person.value(forKey: "role") as! Int16
-                    
-                    PersonSalesDBRules.deleteSessionPersonSales(personName: name, personRole: role)
-                }
+            }
             viewContext!.delete(session)
             try viewContext!.save()
-            }
         } catch let error as NSError {
             NSLog("Ошибка удаления смены: " + error.localizedDescription)
         }

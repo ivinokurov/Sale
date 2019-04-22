@@ -16,8 +16,6 @@ class ReportPersonsTableViewController: UITableViewController {
     var parentView: UIView? = nil
     var currentPersonItn: String? = nil
     var isSessionsViewPresented: Bool = false
-    
-    let sessionsImage = UIImage(named: "Team")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +26,9 @@ class ReportPersonsTableViewController: UITableViewController {
         
         self.sessionsTableView.dataSource = self
         self.sessionsTableView.delegate = self
+        
+        self.sessionsTableView.tableFooterView = UIView()
+        self.sessionsTableView.layer.cornerRadius = 8
         
         self.tableView.tableFooterView = UIView()
         self.tableView.isEditing = false
@@ -45,15 +46,8 @@ class ReportPersonsTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func getSessionsViewCenterPoint() -> CGPoint {
-        let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)!
-        
-        return CGPoint(x: centerX, y: centerY)
-    }
-    
     func showSessionsView() {
-        self.sessionsView.center = self.getSessionsViewCenterPoint()
+        self.sessionsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.sessionsView.alpha = 0.0
         self.sessionsView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
@@ -71,7 +65,7 @@ class ReportPersonsTableViewController: UITableViewController {
     }
     
     func addSessionBarItem() {
-        let rightItemBarButton = UIBarButtonItem(image: self.sessionsImage, style: .done, target: self, action: #selector(self.showSessionList))
+        let rightItemBarButton = UIBarButtonItem(image: Images.team, style: .done, target: self, action: #selector(self.showSessionList))
         self.navigationItem.rightBarButtonItem = rightItemBarButton
     }
     
@@ -85,7 +79,7 @@ class ReportPersonsTableViewController: UITableViewController {
         Utilities.decorateButtonTap(buttonToDecorate: sender)
         Utilities.dismissView(viewToDismiss: self.sessionsView)
         self.isSessionsViewPresented = false
-        self.tableView.reloadData()
+    //    self.tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -104,7 +98,7 @@ class ReportPersonsTableViewController: UITableViewController {
                     return 0
                 }
             } else {
-                return SessionDBRules.getAllSessions()?.count ?? 0
+                return sessionsCount
             }
         }
     }
@@ -119,7 +113,19 @@ class ReportPersonsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView != self.sessionsTableView {
-            let person = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: { (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String) })[indexPath.row] as! NSManagedObject
+            let person = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: {person1, person2 in
+                    let person1Name = (person1 as! NSManagedObject).value(forKeyPath: "name") as? String
+                    if person1Name == nil { return false }
+                
+                    let person2Name = (person2 as! NSManagedObject).value(forKeyPath: "name") as? String
+                    if person2Name == nil { return false }
+                
+                    if person1Name! < person2Name! {
+                        return true
+                    } else {
+                        return false
+                    }
+                })[indexPath.row] as! NSManagedObject
             
             Utilities.reportsSplitController!.selectedReportPersonName = person.value(forKeyPath: "name") as? String
             Utilities.reportsSplitController!.selectedReportPersonRole = person.value(forKeyPath: "role") as? Int16
@@ -146,30 +152,27 @@ class ReportPersonsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if tableView == self.sessionsTableView {
-            return true
-        } else {
-            return false
-        }
+        return tableView == self.sessionsTableView ? true : false
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if tableView == self.sessionsTableView && indexPath == tableView.indexPathForSelectedRow {
-                let session = SessionDBRules.getAllSessions()?[indexPath.row]
-                
+        if tableView == self.sessionsTableView /*&& indexPath == tableView.indexPathForSelectedRow*/ {
                 let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
                     
                     let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
                         
-                        SessionDBRules.deleteSession(sessionToRemovePerson: session!)
+                        let session = SessionDBRules.getAllSessions()?[indexPath.row]
+                        SessionDBRules.deleteSession(sessionToDelete: session!)
                         
                         self.sessionsTableView.beginUpdates()
                         self.sessionsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                         self.sessionsTableView.endUpdates()
                         
-                        SessionDBRules.selectedSession = session
-                        self.tableView.reloadData()
-                        self.updateSalesTable()
+                        if SessionDBRules.getAllSessions()?.count == 0 || indexPath == tableView.indexPathForSelectedRow {
+                            SessionDBRules.selectedSession = session
+                            self.tableView.reloadData()
+                            self.updateSalesTable()
+                        }
                     }
                     
                     Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ СМЕНЫ", alertMessage: "Удалить эту смену?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
@@ -188,7 +191,7 @@ class ReportPersonsTableViewController: UITableViewController {
             if tableView != self.sessionsTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reportsRersonsCellId", for: indexPath)
                 
-            let person = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: { (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String) })[indexPath.row] as! NSManagedObject
+            let person = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: { (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String)})[indexPath.row] as! NSManagedObject
             
             let name = person.value(forKeyPath: "name") as? String
             let role = person.value(forKeyPath: "role") as! Int16
@@ -210,19 +213,21 @@ class ReportPersonsTableViewController: UITableViewController {
                 
                 Utilities.reportsSplitController!.selectedReportPersonName = name
                 Utilities.reportsSplitController!.selectedReportPersonRole = role
+                
                 self.updateSalesTable()
             }
 
             return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sessionCellId", for: indexPath)
-                let allSessions = SessionDBRules.getAllSessions()
+
                 let session = SessionDBRules.getAllSessions()![indexPath.row]
                 let openDate = session.value(forKeyPath: "openDate") as? Date
                 let closeDate = session.value(forKeyPath: "closeDate") as? Date
                                 
                 cell.textLabel?.text = "СМЕНА"
-                cell.detailTextLabel?.text = "Начало: " + self.getDateStr(dateToString: openDate!)! + ". Завершение: " + (closeDate == nil ? "..." : self.getDateStr(dateToString: closeDate!)! + ".")
+                cell.detailTextLabel?.text = "Начало: " + Utilities.getDateStr(dateToString: openDate!)! + ". Завершение: " + (closeDate == nil ? "..." : Utilities.getDateStr(dateToString: closeDate!)! + ".")
+                cell.imageView?.tintColor = Utilities.accentColor
                 
                 if let session = SessionDBRules.selectedSession {
                     if session.value(forKeyPath: "openDate") as? Date == openDate && session.value(forKeyPath: "closeDate") as? Date == closeDate {
@@ -242,24 +247,17 @@ class ReportPersonsTableViewController: UITableViewController {
         }
     }
     
-    func getDateStr(dateToString date: Date) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
-        return dateFormatter.string(from: date)
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        
         super.viewWillTransition(to: size , with: coordinator)
         
-        self.sessionsView.removeFromSuperview()
+        if self.isSessionsViewPresented {
+            self.sessionsView.removeFromSuperview()
         
-        coordinator.animate(alongsideTransition: { _ in
-            if self.isSessionsViewPresented {
+            coordinator.animate(alongsideTransition: { _ in
                 self.parentView?.addSubview(self.sessionsView)
-                self.sessionsView.center = self.getSessionsViewCenterPoint()
-            }
-        })
+                self.sessionsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
+            })
+        }
     }
 
 }

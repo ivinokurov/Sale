@@ -47,8 +47,8 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         self.pwdTextField.isSecureTextEntry = true
-        self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
-        self.adminPwdVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
+        self.adminPwdVisibilityButton.setImage(Images.hidePwd, for: .normal)
         
         Utilities.customizePopoverView(customizedView: self.adminView)
         Utilities.createDismissButton(button: self.dismissAdminViewButton)
@@ -194,18 +194,18 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         if PersonalDBRules.currentLogin == nil || PersonalDBRules.currentPassword == nil {
             if self.adminPwdTextField.isSecureTextEntry {
                 self.adminPwdTextField.isSecureTextEntry = false
-                self.passwordVisibilityButton.setImage(UIImage(named: "OpenPwd"), for: .normal)
+                self.passwordVisibilityButton.setImage(Images.openPwd, for: .normal)
             } else {
                 self.adminPwdTextField.isSecureTextEntry = true
-                self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+                self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
             }
         } else {
             if self.pwdTextField.isSecureTextEntry {
                 self.pwdTextField.isSecureTextEntry = false
-                self.adminPwdVisibilityButton.setImage(UIImage(named: "OpenPwd"), for: .normal)
+                self.adminPwdVisibilityButton.setImage(Images.openPwd, for: .normal)
             } else {
                 self.pwdTextField.isSecureTextEntry = true
-                self.adminPwdVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+                self.adminPwdVisibilityButton.setImage(Images.hidePwd, for: .normal)
             }
         }
     }
@@ -304,7 +304,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         self.dismissAdminViewButton.tintColor = Utilities.accentColor
         
         self.adminPwdTextField.isSecureTextEntry = true
-        self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
     }
     
     @IBAction func cancelAdminView(_ sender: UIButton) {

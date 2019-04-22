@@ -53,9 +53,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let dtCommand = FPAbstractCommand()
     
-    let showPurchaseViewImage = UIImage(named: "ArrowsLeft")
-    let hidePurchaseViewImage = UIImage(named: "ArrowsRight")
-    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.landscape
     }
@@ -102,16 +99,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.closeSessionImageView.isUserInteractionEnabled = false
     }
     
-    func getParentViewCenterPoint() -> CGPoint {
-        
-        let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)!
-        
-        return CGPoint(x: centerX, y: centerY)
-    }
-    
     @objc func showPersonView() {
-        self.personView.center = self.getParentViewCenterPoint()
+        self.personView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.personView.alpha = 0.0
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
@@ -198,7 +187,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.sessionViewBarButtonItem = UIBarButtonItem(title: self.getSessionStateStr(),  style: .done, target: self, action: #selector(self.showSessionView(_:)))
         self.navigationItem.leftBarButtonItem = self.sessionViewBarButtonItem
         
-        self.purchaseViewBarButtonItem = UIBarButtonItem(image: showPurchaseViewImage, style: .plain, target: self, action: #selector(self.showOrHidePurchaseView(_:)))
+        self.purchaseViewBarButtonItem = UIBarButtonItem(image: Images.arrowLeft, style: .plain, target: self, action: #selector(self.showOrHidePurchaseView(_:)))
         self.navigationItem.rightBarButtonItem = self.purchaseViewBarButtonItem
         
         self.purchaseContainerView.frame.origin.x = self.view.frame.width
@@ -258,7 +247,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         if self.isPurchaseViewPresented {
             self.purchaseContainerView.frame.origin.x = self.view.frame.width -  self.purchaseContainerView.frame.width - self.purchaseViewUpperRightCornerOffest["x"]!
             self.purchaseContainerView.frame.origin.y = self.purchaseViewUpperRightCornerOffest["y"]!
-            self.purchaseViewBarButtonItem?.image = self.hidePurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = Images.arrowRight
             
             self.purchaseTableView.reloadData()
         }
@@ -428,7 +417,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 success(true)
             })
             deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
-            deleteAction.image = UIImage(named: "Delete")
+            deleteAction.image = Images.delete
             
             return UISwipeActionsConfiguration(actions: [deleteAction])
         } else {
@@ -596,7 +585,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func showSessionView() {
-        self.sessionView.center = self.getParentViewCenterPoint()
+        self.sessionView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.sessionView.alpha = 0.0
         
         self.dismissSessionViewButton.tintColor = Utilities.accentColor
@@ -637,7 +626,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
 
             self.isPurchaseViewPresented = true
         }, completion: { (completed: Bool) -> Void in
-            self.purchaseViewBarButtonItem?.image = self.hidePurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = Images.arrowRight
             self.purchaseContainerView.isHidden = false
         })
     }
@@ -649,7 +638,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             self.isPurchaseViewPresented = false
         }, completion: { (completed: Bool) -> Void in
-            self.purchaseViewBarButtonItem?.image = self.showPurchaseViewImage
+            self.purchaseViewBarButtonItem?.image = Images.arrowLeft
         })
     }
     
@@ -853,7 +842,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             coordinator.animate(alongsideTransition: { _ in
                 self.parentView?.addSubview(self.sessionView)
-                self.sessionView.center = self.getParentViewCenterPoint()
+                self.sessionView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
             })
         }
     
@@ -862,7 +851,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
             coordinator.animate(alongsideTransition: { _ in
                 self.parentView?.addSubview(self.personView)
-                self.personView.center = self.getParentViewCenterPoint()
+                self.personView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
             })
         }
     }

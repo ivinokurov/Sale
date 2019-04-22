@@ -86,10 +86,11 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.personNameUnderView, self.personItnUnderView, self.personLoginUnderView, self.personPwdUnderView])
         
         Utilities.makeButtonRounded(button: self.adminPersonButton)
-        self.adminPersonButton.layer.borderColor = UIColor.red.cgColor
-        self.adminPersonButton.tintColor = UIColor.red
         Utilities.makeButtonRounded(button: self.merchPersonButton)
         Utilities.makeButtonRounded(button: self.cashPersonButton)
+        
+        self.adminPersonButton.layer.borderColor = UIColor.red.cgColor
+        self.adminPersonButton.tintColor = UIColor.red
         
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         
@@ -120,17 +121,17 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         switch sender.tag {
         case Utilities.personRole.admin.rawValue:
             do {
-                self.adminPersonButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.adminPersonButton.setImage(Images.check, for: .normal)
                 self.selectedPersonRole = Utilities.personRole.admin.rawValue
             }
         case Utilities.personRole.merchandiser.rawValue:
             do {
-                self.merchPersonButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.merchPersonButton.setImage(Images.check, for: .normal)
                 self.selectedPersonRole = Utilities.personRole.merchandiser.rawValue
             }
         case Utilities.personRole.cashier.rawValue:
             do {
-                self.cashPersonButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.cashPersonButton.setImage(Images.check, for: .normal)
                 self.selectedPersonRole = Utilities.personRole.cashier.rawValue
             }
         default: break
@@ -167,7 +168,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.dismissPersonButton.tintColor = Utilities.accentColor
         
         self.personPasswordTextField.isSecureTextEntry = true
-        self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+        self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
     }
     
     func setPersonaViewActionTitles() {
@@ -403,7 +404,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
     func createLougoutButton() -> UIButton {
         let accessoryButton = LogoutButton(type: .custom)
-        accessoryButton.setImage(UIImage(named: "Logout"), for: .normal)
+        accessoryButton.setImage(Images.logout, for: .normal)
         accessoryButton.tintColor = Utilities.accentColor
         accessoryButton.addTarget(self, action: #selector(logoutPerson(sender:)), for: .touchUpInside)
         accessoryButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
@@ -485,10 +486,10 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func showOrHidePassword(_ sender: UIButton) {
         if self.personPasswordTextField.isSecureTextEntry {
             self.personPasswordTextField.isSecureTextEntry = false
-            self.passwordVisibilityButton.setImage(UIImage(named: "OpenPwd"), for: .normal)
+            self.passwordVisibilityButton.setImage(Images.openPwd, for: .normal)
         } else {
             self.personPasswordTextField.isSecureTextEntry = true
-            self.passwordVisibilityButton.setImage(UIImage(named: "HidePwd"), for: .normal)
+            self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
         }
     }
     

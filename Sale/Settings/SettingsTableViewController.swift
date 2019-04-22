@@ -158,7 +158,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         }
         
         let colorIndex = SettingsDBRules.getAccentColorIndex()!
-        self.accentColorButtons[Int(colorIndex)].setImage(UIImage(named: "Check"), for: .normal)
+        self.accentColorButtons[Int(colorIndex)].setImage(Images.check, for: .normal)
         
         Utilities.createDismissButton(button: self.dismissColorsViewButton)
         Utilities.createDismissButton(button: self.dismissOrgInfoButton)
@@ -242,7 +242,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
             taxTypeButton.setImage(nil, for: .normal)
         }
         
-        sender.setImage(UIImage(named: "Check"), for: .normal)
+        sender.setImage(Images.check, for: .normal)
         self.taxTypeIndex = sender.tag
     }
     
@@ -392,13 +392,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.orgInfoView.frame.origin.y =  productViewY < statusBarHeight ? statusBarHeight : productViewY
     }
     
-    func getColorsViewCenterPoint() -> CGPoint {
-        let centerX = (self.parentView?.center.x)!
-        let centerY = (self.parentView?.center.y)!
-        
-        return CGPoint(x: centerX, y: centerY)
-    }
-    
     func setHostNameViewFrame() {
         self.hostNameView.center.x = self.view.center.x
         self.hostNameView.frame.origin.y = (UIScreen.main.bounds.height -  self.keyboardHeight - self.hostNameView.frame.height) / 2
@@ -427,7 +420,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     }
     
     func showBtDevicesView() {
-        self.btDevicesView.center = self.getColorsViewCenterPoint()
+        self.btDevicesView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.btDevicesView.alpha = 0.0
         self.btDevicesView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
@@ -445,7 +438,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     }
     
     func showAccentColorsView() {
-        self.colorsView.center = self.getColorsViewCenterPoint()
+        self.colorsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.colorsView.alpha = 0.0
         self.colorsView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
@@ -512,7 +505,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
             button.setImage(nil, for: .normal)
         }
         
-        sender.setImage(UIImage(named: "Check"), for: .normal)
+        sender.setImage(Images.check, for: .normal)
         
         let colorIndex = Int16(self.accentColorButtons.firstIndex(of: sender)!)
         
@@ -547,12 +540,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         coordinator.animate(alongsideTransition: { _ in
             if self.isColorsViewPresented {
                 self.parentView?.addSubview(self.colorsView)
-                self.colorsView.center = self.getColorsViewCenterPoint()
+                self.colorsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
             }
             
             if self.isBtDevicesViewPresented {
                 self.parentView?.addSubview(self.btDevicesView)
-                self.btDevicesView.center = self.getColorsViewCenterPoint()
+                self.btDevicesView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
             }
             
             if self.isHostNameViewPresented {

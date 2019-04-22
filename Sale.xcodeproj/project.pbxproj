@@ -40,6 +40,7 @@
 		EA74305C224F534500333B9D /* SettingsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305B224F534500333B9D /* SettingsNavigationController.swift */; };
 		EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA74305D224F608600333B9D /* SettingsTableViewController.swift */; };
 		EA89795D2268579100B93A70 /* SessionDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA89795C2268579100B93A70 /* SessionDBRules.swift */; };
+		EA953033226D7C3B00EDCE9D /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA953032226D7C3B00EDCE9D /* Images.swift */; };
 		EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */; };
 		EAA01FB3225082E600C46257 /* SettingsDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA01FB2225082E600C46257 /* SettingsDBRules.swift */; };
 		EAA7761A2259DA7400C0D596 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA776192259DA7400C0D596 /* Launch Screen.storyboard */; };
@@ -99,6 +100,7 @@
 		EA74305B224F534500333B9D /* SettingsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationController.swift; sourceTree = "<group>"; };
 		EA74305D224F608600333B9D /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		EA89795C2268579100B93A70 /* SessionDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDBRules.swift; sourceTree = "<group>"; };
+		EA953032226D7C3B00EDCE9D /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		EA9EEDD9223FC41400C22B50 /* ProductsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsTableViewCell.swift; sourceTree = "<group>"; };
 		EAA01FB2225082E600C46257 /* SettingsDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDBRules.swift; sourceTree = "<group>"; };
 		EAA776192259DA7400C0D596 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -135,8 +137,8 @@
 		EA0FFA31222510AB00703EB0 = {
 			isa = PBXGroup;
 			children = (
-				EA0FFA3C222510AB00703EB0 /* Sale */,
 				EA4C7E1D2227B80200425BE8 /* Frameworks */,
+				EA0FFA3C222510AB00703EB0 /* Sale */,
 			);
 			sourceTree = "<group>";
 		};
@@ -152,27 +154,28 @@
 		EA0FFA3C222510AB00703EB0 /* Sale */ = {
 			isa = PBXGroup;
 			children = (
-				EAF22AA9225868FF006FDA14 /* Reports */,
-				EAF22AA622577D02006FDA14 /* Perosns */,
-				EA74305F224F60D200333B9D /* Settings */,
 				EA4BEB1822489BA3008BFEDD /* AllCategories */,
 				EAAA59E5223D140A0096D990 /* AllProducts */,
+				EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */,
+				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
+				EA26536D224C80AA00586769 /* AuthorizeViewController.swift */,
+				EAACF6D82255BDA9000C178D /* BluetoothDevicesInterconnection.swift */,
 				EA4C7E302227C2DD00425BE8 /* Buttons */,
 				EA4C7E292227C17900425BE8 /* Cashbox */,
+				EAAA59E8223E03190096D990 /* CommonDBRules.swift */,
+				EA953032226D7C3B00EDCE9D /* Images.swift */,
+				EA0FFA4C222510AB00703EB0 /* Info.plist */,
+				EAA776192259DA7400C0D596 /* Launch Screen.storyboard */,
 				EA4C7E112227B60D00425BE8 /* Library */,
-				EA0FFA3D222510AB00703EB0 /* AppDelegate.swift */,
-				EAACF6D82255BDA9000C178D /* BluetoothDevicesInterconnection.swift */,
-				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
-				EA26536D224C80AA00586769 /* AuthorizeViewController.swift */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
 				EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */,
-				EA0FFA47222510AB00703EB0 /* Assets.xcassets */,
-				EAA776192259DA7400C0D596 /* Launch Screen.storyboard */,
-				EA0FFA4C222510AB00703EB0 /* Info.plist */,
-				EA0FFA44222510AB00703EB0 /* Sale.xcdatamodeld */,
-				EA0FFA5C22256FF700703EB0 /* Utilities.swift */,
-				EAAA59E8223E03190096D990 /* CommonDBRules.swift */,
+				EAF22AA622577D02006FDA14 /* Perosns */,
 				EA0FFA3B222510AB00703EB0 /* Products */,
+				EAF22AA9225868FF006FDA14 /* Reports */,
+				EA0FFA44222510AB00703EB0 /* Sale.xcdatamodeld */,
+				EA74305F224F60D200333B9D /* Settings */,
+				EA0FFA5C22256FF700703EB0 /* Utilities.swift */,
+				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
 			);
 			path = Sale;
 			sourceTree = "<group>";
@@ -208,12 +211,12 @@
 		EA4C7E292227C17900425BE8 /* Cashbox */ = {
 			isa = PBXGroup;
 			children = (
-				EA953031226A2CAB00EDCE9D /* Commands */,
 				EA743055224F3AFB00333B9D /* CashboxNavigationController.swift */,
-				EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */,
-				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */,
+				EA953031226A2CAB00EDCE9D /* Commands */,
+				EA4C7E31222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift */,
 				EA551FCB224212FF00B02E72 /* PurchaseDBRules.swift */,
+				EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */,
 				EA89795C2268579100B93A70 /* SessionDBRules.swift */,
 			);
 			path = Cashbox;
@@ -389,6 +392,7 @@
 				EAF22AA8225868CE006FDA14 /* ReportsSplitViewController.swift in Sources */,
 				EA4C7E32222A8D3400425BE8 /* ProductTypeCollectionViewCell.swift in Sources */,
 				EAF22AAD22588095006FDA14 /* PersonSalesDBRules.swift in Sources */,
+				EA953033226D7C3B00EDCE9D /* Images.swift in Sources */,
 				EA74305E224F608700333B9D /* SettingsTableViewController.swift in Sources */,
 				EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */,
 				EAAA59EB223E2C6F0096D990 /* ProductsViewController.swift in Sources */,

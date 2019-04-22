@@ -6,7 +6,7 @@
 
 import UIKit
 
-class Utilities: Any {
+class Utilities: NSObject {
     
     enum measures: Int {
         case items = 1, kilos = 2, liters = 3
@@ -122,7 +122,7 @@ class Utilities: Any {
     class func decorateButtonTap(buttonToDecorate button: UIButton) {
         button.layer.backgroundColor = self.accentColor.withAlphaComponent(0.04).cgColor
         UIView.animate(withDuration:self.animationDuration, animations: ({
-            button.layer.backgroundColor = UIColor.white.cgColor
+            button.layer.backgroundColor = UIColor.clear.cgColor // UIColor.white.cgColor
         }), completion: { (completed: Bool) in
         })
     }
@@ -168,12 +168,12 @@ class Utilities: Any {
     
     class func customizePopoverView(customizedView view: UIView) {
         view.layer.borderColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
-        view.layer.borderWidth = 0.3
+        view.layer.borderWidth = 0.2
         view.layer.cornerRadius = 12
         view.layer.shadowColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
         view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        view.layer.shadowOpacity = 0.4
-        view.layer.shadowRadius = 2
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowRadius = 3
     }
     
     class func setAccentColorForSomeViews(viewsToSetAccentColor views: [UIView]) {
@@ -219,7 +219,7 @@ class Utilities: Any {
     
     class func createDismissButton(button: UIButton) {
         button.tintColor = Utilities.accentColor
-        button.setImage(UIImage(named: "Cross"), for: .normal)
+        button.setImage(Images.cross, for: .normal)
         self.makeButtonRounded(button: button)
         button.layer.borderColor = UIColor.clear.cgColor
     }
@@ -251,6 +251,19 @@ class Utilities: Any {
                 (view as! UITextField).textColor = UIColor.lightGray
             }
         })
+    }
+    
+    class func getDateStr(dateToString date: Date) -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+        return dateFormatter.string(from: date)
+    }
+    
+    class func getParentViewCenterPoint(parentView view: UIView?) -> CGPoint {
+        let centerX = (view?.center.x)!
+        let centerY = (view?.center.y)!
+        
+        return CGPoint(x: centerX, y: centerY)
     }
 
 }

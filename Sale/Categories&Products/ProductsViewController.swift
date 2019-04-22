@@ -143,17 +143,17 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         switch sender.tag {
         case Utilities.measures.items.rawValue:
             do {
-                self.itemsButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.itemsButton.setImage(Images.check, for: .normal)
                 self.selectedProductMeasure = Utilities.measures.items.rawValue
             }
         case Utilities.measures.kilos.rawValue:
             do {
-                self.kilosButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.kilosButton.setImage(Images.check, for: .normal)
                 self.selectedProductMeasure = Utilities.measures.kilos.rawValue
             }
         case Utilities.measures.liters.rawValue:
             do {
-                self.litersButton.setImage(UIImage(named: "Check"), for: .normal)
+                self.litersButton.setImage(Images.check, for: .normal)
                 self.selectedProductMeasure = Utilities.measures.liters.rawValue
             }
         default: break
@@ -375,7 +375,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             success(true)
         })
         deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
-        deleteAction.image = UIImage(named: "Delete")
+        deleteAction.image = Images.delete
         
         let editAction = UIContextualAction(style: .normal, title:  "Изменить\nтовар", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
@@ -399,7 +399,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             success(true)
         })
         editAction.backgroundColor = Utilities.editActionBackgroundColor
-        editAction.image = UIImage(named: "Edit")
+        editAction.image = Images.edit
         
         return UISwipeActionsConfiguration(actions: [editAction, deleteAction])
     }
