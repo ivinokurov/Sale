@@ -149,10 +149,8 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
             self.setPersonRole(self.adminPersonButton)
         }
         
-        self.personView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         self.setPersonViewFrame()
         self.personView.alpha = 0.0
-        // self.fullPersonNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.personView.alpha = CGFloat(Utilities.alpha)
@@ -508,8 +506,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func dismissPersonView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.personView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.personView)
         Utilities.dismissKeyboard(conroller: self)
         self.isPersonViewPresented = false
     }

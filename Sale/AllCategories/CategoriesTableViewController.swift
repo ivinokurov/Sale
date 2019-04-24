@@ -118,8 +118,6 @@ class CategoriesTableViewController: UITableViewController {
         }
 
         self.categoryView.alpha = 0.0
-        // self.categoryNameTextField.becomeFirstResponder()
-        self.categoryView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
             
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.categoryView.alpha = CGFloat(Utilities.alpha)
@@ -229,7 +227,7 @@ class CategoriesTableViewController: UITableViewController {
         
         let category = CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!
         
-        cell.detailTextLabel!.text = "Товаров " + String(ProductsDBRules.getAllProductsForCategory(productCategory: category)!.count.description) + " на сумму " + ProductsDBRules.getCategoryProductsTotalPrice(productCategory: category).description + " руб."
+        cell.detailTextLabel!.text = "Товаров: " + String(ProductsDBRules.getAllProductsForCategory(productCategory: category)!.count.description) // + " на сумму " + ProductsDBRules.getCategoryProductsTotalPrice(productCategory: category).description + " руб."
         
         Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
         
@@ -290,8 +288,7 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     @IBAction func dismissCategoryView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.categoryView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.categoryView)
         Utilities.dismissKeyboard(conroller: self)
         self.isCategoryViewPresented = false
     }

@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Tab1Filled-25.png",
+      "filename" : "Settings.png",
       "scale" : "1x"
     },
     {
@@ -17,5 +17,8 @@
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }

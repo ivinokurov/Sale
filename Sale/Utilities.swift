@@ -24,6 +24,19 @@ class Utilities: NSObject {
     
     static let roleNames = [1: "Администратор", 2: "Товаровед", 3: "Кассир"]
     
+    static let adminPrompt = "Вы - администратор. Для вас доступны:\n\n" +
+        "1. Кассовые операции.\n" +
+        "2. Операции ведения складского учета.\n" +
+        "3. Операции с персоналом.\n" +
+        "4. Формирование отчетов и настроек приложения."
+    static let merchandiserPrompt = "Вы - товаровед. Для вас доступны:\n\n" +
+        "1. Кассовые операции.\n" +
+        "2. Операции ведения складского учета.\n" +
+        "3. Операции с персональной информацией."
+    static let cashierPrompt = "Вы - кассир. Для вас доступны:\n\n" +
+        "1. Кассовые операции.\n" +
+        "2. Операции с персональной информацией."
+    
     static let digitsOny = "0123456789"
     static let floatNumbersOnly = "0123456789."
     
@@ -119,6 +132,19 @@ class Utilities: NSObject {
         button.layer.borderColor = self.accentColor.withAlphaComponent(0.2).cgColor
     }
     
+    class func decorateDismissButtonTap(buttonToDecorate button: UIButton, viewToDismiss view: UIView, tableViewToReloadData tableView: UITableView? = nil) {
+        button.layer.backgroundColor = UIColor.clear.cgColor
+        UIView.animate(withDuration: self.animationDuration / 2, animations: ({
+            button.layer.backgroundColor = self.accentColor.withAlphaComponent(0.1).cgColor
+        }), completion: { (completed: Bool) in
+            if completed {
+                button.layer.backgroundColor = UIColor.clear.cgColor
+                Utilities.dismissView(viewToDismiss: view)
+                tableView?.reloadData()
+            }
+        })
+    }
+    
     class func decorateButtonTap(buttonToDecorate button: UIButton) {
         button.layer.backgroundColor = self.accentColor.withAlphaComponent(0.04).cgColor
         UIView.animate(withDuration:self.animationDuration, animations: ({
@@ -129,7 +155,7 @@ class Utilities: NSObject {
     
     class func decorateViewTap(viewToDecorate view: UIView) {
         view.layer.backgroundColor = self.accentColor.withAlphaComponent(0.04).cgColor
-        UIView.animate(withDuration:self.animationDuration, animations: ({
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             view.layer.backgroundColor = UIColor.white.cgColor
         }), completion: { (completed: Bool) in
         })
@@ -220,6 +246,7 @@ class Utilities: NSObject {
     class func createDismissButton(button: UIButton) {
         button.tintColor = Utilities.accentColor
         button.setImage(Images.cross, for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         self.makeButtonRounded(button: button)
         button.layer.borderColor = UIColor.clear.cgColor
     }

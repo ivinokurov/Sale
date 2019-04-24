@@ -59,12 +59,17 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func openSessionGestureAction(_ sender: UITapGestureRecognizer) {
         Utilities.decorateViewTap(viewToDecorate: self.openSessionView)
-        self.openSessionView.alpha = 0.8
-        self.closeSessionView.alpha = 1.0
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.openSessionView.alpha = 0.2
+            self.closeSessionView.alpha = 1.0
+        }), completion: { (completed: Bool) in
+        })
         
         if !SessionDBRules.isCurrentSessionOpened()! {
-            self.dismissSessionView(UIButton())
-            self.actionsInSession(sessionState: true)
+        //    self.dismissSessionView(self.dismissSessionViewButton)
+            Utilities.dismissView(viewToDismiss: self.sessionView)
+            self.isSessionViewPresented = false
+            self.setSessionStateAllowedActions(sessionState: true)
             SessionDBRules.openNewSession()
             
             let person = PersonalDBRules.getPersonByLoginAndPassword(personLogin: PersonalDBRules.currentLogin!, personPassword: PersonalDBRules.currentPassword!)!
@@ -84,13 +89,18 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func closeSessionGestureAction(_ sender: UITapGestureRecognizer) {
         Utilities.decorateViewTap(viewToDecorate: self.closeSessionView)
-        self.closeSessionView.alpha = 0.8
-        self.openSessionView.alpha = 1.0
+        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
+            self.closeSessionView.alpha = 0.2
+            self.openSessionView.alpha = 1.0
+        }), completion: { (completed: Bool) in
+        })
         
         if SessionDBRules.isCurrentSessionOpened()! {
-            self.dismissSessionView(UIButton())
+        //    self.dismissSessionView(self.dismissSessionViewButton)
+            Utilities.dismissView(viewToDismiss: self.sessionView)
+            self.isSessionViewPresented = false
             self.hidePurchaseView()
-            self.actionsInSession(sessionState: false)
+            self.setSessionStateAllowedActions(sessionState: false)
             SessionDBRules.closeCurrentSession()
         }
         
@@ -137,27 +147,21 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         switch Int(personRole) {
             case Utilities.personRole.admin.rawValue:
                 do {
-                    self.currentPersonRoleLabel.textAlignment = .left
-                    return "Вы - администратор. Для вас доступны:\n\n" +
-                        "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персоналом.\n" + "4. Формирование отчетов и настроек приложения."
+                    return Utilities.adminPrompt
                 }
             case Utilities.personRole.merchandiser.rawValue:
                 do {
-                    self.currentPersonRoleLabel.textAlignment = .left
-                    return "Вы - товаровед. Для вас доступны:\n\n" +
-                        "1. Кассовые операции.\n" + "2. Операции ведения складского учета.\n" + "3. Операции с персональной информацией."
+                   return Utilities.merchandiserPrompt
                 }
             case Utilities.personRole.cashier.rawValue:
                 do {
-                    self.currentPersonRoleLabel.textAlignment = .left
-                    return "Вы - кассир. Для вас доступны:\n\n" +
-                        "1. Кассовые операции.\n" + "2. Операции с персональной информацией."
+                    return Utilities.cashierPrompt
                 }
             default: return ""
         }
     }
     
-    func actionsInSession(sessionState state: Bool) {
+    func setSessionStateAllowedActions(sessionState state: Bool) {
         if state {
             self.buyProductButton.isHidden = false
             self.navigationItem.rightBarButtonItem = self.purchaseViewBarButtonItem
@@ -214,21 +218,23 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.showPersonView()
         self.isPersonViewPresented = true
         
+        Utilities.createDismissButton(button: self.dismissSessionViewButton)
+        
         self.productsTableView.tableFooterView = UIView()
         self.purchaseTableView.tableFooterView = UIView()
         
         if SessionDBRules.currentSession != nil {
             if let state = SessionDBRules.isCurrentSessionOpened() {
                 if state {
-                    self.openSessionView.alpha = 0.8
+                    self.openSessionView.alpha = 0.2
                 } else {
-                    self.closeSessionView.alpha = 0.8
+                    self.closeSessionView.alpha = 0.2
                 }
-                self.actionsInSession(sessionState: state)
+                self.setSessionStateAllowedActions(sessionState: state)
             }
         } else {
-            self.closeSessionView.alpha = 0.8
-            self.actionsInSession(sessionState: false)
+            self.closeSessionView.alpha = 0.2
+            self.setSessionStateAllowedActions(sessionState: false)
         }
         
         lib.addDelegate(self)
@@ -239,8 +245,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewWillAppear(animated)
 
         Utilities.customizePopoverView(customizedView: self.sessionView)
-    //    Utilities.customizePopoverView(customizedView: self.openSessionView)
-    //    Utilities.customizePopoverView(customizedView: self.closeSessionView)
         Utilities.customizePopoverView(customizedView: self.purchaseContainerView)
         Utilities.customizePopoverView(customizedView: self.productTypesCollectionView)
         
@@ -818,8 +822,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func dismissSessionView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.sessionView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.sessionView)
         self.isSessionViewPresented = false
     }
     

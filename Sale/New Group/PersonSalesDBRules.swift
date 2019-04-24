@@ -25,29 +25,23 @@ class PersonSalesDBRules: NSObject {
                     if person?.mutableSetValue(forKey: "sales").allObjects.count == 0 {
                         return nil
                     }
-                    
                     var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
                     allPersonSales = allPersonSales.filter({sale in
-                        let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date
-                        if date == nil { return false }
-                        
-                        let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
-                        if sessionOpenDate == nil { return false }
-                        
-                        let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
-                        if sessionCloseDate == nil { return false }
-                        
-                        if date! >= sessionOpenDate! && date! <= sessionCloseDate! {
+                        guard let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date else { return false }
+                        guard let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
+                            else { return false }
+                        guard let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
+                            else { return false }
+                        if date >= sessionOpenDate && date <= sessionCloseDate {
                             return true
                         } else {
                             return false
                         }
                     })
-                    
                     if allPersonSales.count == 0 {
                         return nil
                     }
-                    
+                
                     return allPersonSales.sorted(by: {(($0 as! NSManagedObject).value(forKeyPath: "date") as! Date) < (($1 as! NSManagedObject).value(forKeyPath: "date") as! Date)}) as? [NSManagedObject]
                 }
             }
@@ -73,28 +67,21 @@ class PersonSalesDBRules: NSObject {
                 } else {
                     var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
                     allPersonSales = allPersonSales.filter({sale in
-                        let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date
-                        if date == nil { return false }
-                        
-                        let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
-                        if sessionOpenDate == nil { return false }
-                        
-                        let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
-                        if sessionCloseDate == nil { return false }
-                        
-                        if date! >= sessionOpenDate! && date! <= sessionCloseDate! {
+                        guard let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date else { return false }
+                        guard let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
+                            else { return false }
+                        guard let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
+                            else { return false }
+                        if date >= sessionOpenDate && date <= sessionCloseDate {
                             return true
                         } else {
                             return false
                         }
                     })
-
-                
                     for sale in allPersonSales {
                         viewContext!.delete(sale as! NSManagedObject)
                         try viewContext!.save()
                     }
-                    
                     person!.setValue(nil, forKey: "sales")
                     try viewContext!.save()
                 }
@@ -123,7 +110,6 @@ class PersonSalesDBRules: NSObject {
                     if allPersonSales.count == 0 {
                         return found
                     }
-                    
                     allPersonSales.forEach({
                         if ($0 as! NSManagedObject).value(forKey: "code") as! String == code {
                             found = true
@@ -147,7 +133,6 @@ class PersonSalesDBRules: NSObject {
         do {
             let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
             if fetchResult.count > 0 {
-                
                 let newSale = NSEntityDescription.insertNewObject(forEntityName: "Sales", into: viewContext!)
                 newSale.setValue(name, forKey: "name")
                 newSale.setValue(count, forKey: "count")
@@ -180,22 +165,17 @@ class PersonSalesDBRules: NSObject {
                 } else {
                     var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
                     allPersonSales = allPersonSales.filter({sale in
-                        let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date
-                        if date == nil { return false }
-                        
-                        let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
-                        if sessionOpenDate == nil { return false }
-                        
-                        let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
-                        if sessionCloseDate == nil { return false }
-                        
-                        if date! >= sessionOpenDate! && date! <= sessionCloseDate! {
+                        guard let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date else { return false }
+                        guard let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date
+                        else { return false }
+                        guard let sessionCloseDate = SessionDBRules.selectedSession!.value(forKeyPath: "closeDate") as? Date
+                        else { return false }
+                        if date >= sessionOpenDate && date <= sessionCloseDate {
                             return true
                         } else {
                             return false
                         }
                     })
-                    
                     if allPersonSales.count == 0 {
                         return totalSum
                     }

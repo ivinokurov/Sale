@@ -27,13 +27,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ReportPersonsTableViewController.tableView(_:numberOfRowsInSection:):ReportPersonsTableViewController.swift">
+         contextName = "AuthorizeViewController.keyboardWillShow(_:):AuthorizeViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "(SessionDBRules.selectedSession?.mutableSetValue(forKey: &quot;persons&quot;))?.count">
-            </PersistentString>
-            <PersistentString
-               value = "(SessionDBRules.selectedSession?.value(forKey: &quot;persons&quot;) as? [NSManagedObject])">
+               value = "keyboardHeight">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -55,18 +52,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static PersonSalesDBRules.getSelectedSessionPersonAllSales(personName:personRole:):PersonSalesDBRules.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "SessionDBRules.selectedSession">
-            </PersistentString>
-            <PersistentString
-               value = "($0 as! NSManagedObject).value(forKeyPath: &quot;date&quot;) as! Date">
-            </PersistentString>
-            <PersistentString
-               value = "person!.mutableSetValue(forKey: &quot;sales&quot;).allObjects">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "DTFiscalPrinterCommand.stringToBytesASCII(str:):DTFiscalPrinterCommand.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in static PersonSalesDBRules.getSelectedSessionPersonAllSales(personName:personRole:):PersonSalesDBRules.swift">
@@ -192,13 +178,13 @@
          contextName = "PersonalTableViewController.tableView(_:numberOfRowsInSection:):PersonalTableViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "originLogin">
+            </PersistentString>
+            <PersistentString
                value = "originPassword">
             </PersistentString>
             <PersistentString
                value = "PersonalDBRules.currentLogin">
-            </PersistentString>
-            <PersistentString
-               value = "originLogin">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -298,10 +284,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CategoriesTableViewController.tableView(_:cellForRowAt:):CategoriesTableViewController.swift">
+         contextName = "ReportSalesViewController.tableView(_:viewForFooterInSection:):ReportSalesViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count">
+               value = "Utilities.reportsSplitController!.selectedReportPersonName">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -326,10 +312,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
+         contextName = "CategoriesTableViewController.tableView(_:cellForRowAt:):CategoriesTableViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "error.localizedDescription">
+               value = "ProductsDBRules.getAllProductsForCategory(productCategory: CategoriesDBRules.getCategiryByName(categoryName: categoryName!)!)!.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -388,14 +374,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ReportSalesViewController.tableView(_:viewForFooterInSection:):ReportSalesViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "Utilities.reportsSplitController!.selectedReportPersonName">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "CashboxViewController.showPersonView():CashboxViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -404,16 +382,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "static ProductsDBRules.addNewProduct(productCategory:productName:productDesc:productCount:productMeasure:productPrice:productBarCode:):ProductsDBRules.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "error.localizedDescription">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "SettingsTableViewController.viewDidLoad():SettingsTableViewController.swift">
          <PersistentStrings>
+            <PersistentString
+               value = "fp.buildCommandAbstract()">
+            </PersistentString>
             <PersistentString
                value = "&quot;0&quot;.data(using: .windowsCP1251)">
             </PersistentString>
             <PersistentString
                value = "self.hostName">
             </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReportPersonsTableViewController.showSessionsView():ReportPersonsTableViewController.swift">
+         <PersistentStrings>
             <PersistentString
-               value = "fp.buildCommandAbstract()">
+               value = "self.sessionsTableView">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -456,13 +450,13 @@
          contextName = "SettingsTableViewController.getHostName(_:):SettingsTableViewController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "self.hostNameTextEdit.text.isEmpty">
+            </PersistentString>
+            <PersistentString
                value = "self.hostNameTextEdit.text?.isEmpty">
             </PersistentString>
             <PersistentString
                value = "self.hostName">
-            </PersistentString>
-            <PersistentString
-               value = "self.hostNameTextEdit.text.isEmpty">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -484,10 +478,10 @@
          contextName = "ProductsViewController.setProductMeasure(_:):ProductsViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "sender.tag">
+               value = "Utilities.measures.items.rawValue">
             </PersistentString>
             <PersistentString
-               value = "Utilities.measures.items.rawValue">
+               value = "sender.tag">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -544,10 +538,10 @@
                value = "PersonSalesDBRules.getAllPersonSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)?.count">
             </PersistentString>
             <PersistentString
-               value = "Utilities.reportsSplitController!.selectedReportPersonRole">
+               value = "PersonSalesDBRules.getSelectedSessionPersonAllSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)">
             </PersistentString>
             <PersistentString
-               value = "PersonSalesDBRules.getSelectedSessionPersonAllSales(personName: (Utilities.reportsSplitController!.selectedReportPersonName)!, personRole: (Utilities.reportsSplitController!.selectedReportPersonRole)!)">
+               value = "Utilities.reportsSplitController!.selectedReportPersonRole">
             </PersistentString>
             <PersistentString
                value = "Utilities.reportsSplitController">
@@ -587,6 +581,14 @@
             </PersistentString>
             <PersistentString
                value = "peripherals[indexPath.row]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ReportPersonsTableViewController.tableView(_:trailingSwipeActionsConfigurationForRowAt:):ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tableView.indexPathForSelectedRow">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -681,6 +683,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReportPersonsTableViewController.tableView(_:numberOfRowsInSection:):ReportPersonsTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(SessionDBRules.selectedSession?.mutableSetValue(forKey: &quot;persons&quot;))?.count">
+            </PersistentString>
+            <PersistentString
+               value = "SessionDBRules.getAllSessions()?.count ">
+            </PersistentString>
+            <PersistentString
+               value = "(SessionDBRules.selectedSession?.value(forKey: &quot;persons&quot;) as? [NSManagedObject])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in SettingsTableViewController.write(data:outStream:):SettingsTableViewController.swift">
       </ContextState>
       <ContextState
@@ -715,13 +731,27 @@
          contextName = "MainTabBarController.viewDidLoad():MainTabBarController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "self.tabBarController">
+            </PersistentString>
+            <PersistentString
                value = "PersonalDBRules.currentLogin">
             </PersistentString>
             <PersistentString
                value = "self.viewControllers![1]">
             </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static PersonSalesDBRules.getSelectedSessionPersonAllSales(personName:personRole:):PersonSalesDBRules.swift">
+         <PersistentStrings>
             <PersistentString
-               value = "self.tabBarController">
+               value = "($0 as! NSManagedObject).value(forKeyPath: &quot;date&quot;) as! Date">
+            </PersistentString>
+            <PersistentString
+               value = "person!.mutableSetValue(forKey: &quot;sales&quot;).allObjects">
+            </PersistentString>
+            <PersistentString
+               value = "SessionDBRules.selectedSession">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -743,17 +773,6 @@
                value = "self.isSessionViewPresented">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "AuthorizeViewController.keyboardWillShow(_:):AuthorizeViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "keyboardHeight">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "DTFiscalPrinterCommand.stringToBytesASCII(str:):DTFiscalPrinterCommand.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

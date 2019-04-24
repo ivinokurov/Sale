@@ -46,7 +46,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.pwdTextField.isSecureTextEntry = true
+    //    self.pwdTextField.isSecureTextEntry = true
         self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
         self.adminPwdVisibilityButton.setImage(Images.hidePwd, for: .normal)
         
@@ -127,8 +127,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
+        if let _: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             keyboardHeight = 0
             self.setAuthorizeViewFrame()
             self.setAdminViewFrame()
@@ -194,9 +193,11 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         if PersonalDBRules.currentLogin == nil || PersonalDBRules.currentPassword == nil {
             if self.adminPwdTextField.isSecureTextEntry {
                 self.adminPwdTextField.isSecureTextEntry = false
+                self.pwdTextField.isSecureTextEntry = false
                 self.passwordVisibilityButton.setImage(Images.openPwd, for: .normal)
             } else {
                 self.adminPwdTextField.isSecureTextEntry = true
+                self.pwdTextField.isSecureTextEntry = true
                 self.passwordVisibilityButton.setImage(Images.hidePwd, for: .normal)
             }
         } else {
@@ -284,10 +285,8 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func showAdminView() {
-        self.adminView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         self.setAdminViewFrame()
         self.adminView.alpha = 0.0
-        // self.fullPersonNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.adminView.alpha = 1.0
@@ -321,8 +320,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func dismissAdminView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.adminView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.adminView)
         Utilities.dismissKeyboard(conroller: self)
         self.isAdminViewPresented = false
     }

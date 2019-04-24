@@ -214,10 +214,8 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
             self.setProductMeasure(self.itemsButton)
         }
         
-        self.productView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         self.setProductViewFrame()
         self.productView.alpha = 0.0
-        // self.productNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.productView.alpha = CGFloat(Utilities.alpha)
@@ -357,13 +355,12 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let barcode = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
-        
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить\nтовар", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
             let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
                 
-                ProductsDBRules.deleteProductByBarcode(code: barcode!)
+                let code = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
+                ProductsDBRules.deleteProductByBarcode(code: code!)
                 
                 self.productsTableView.beginUpdates()
                 self.productsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
@@ -425,8 +422,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     @IBAction func dismissProductView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.productView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.productView)
         Utilities.dismissKeyboard(conroller: self)
         self.isProductViewPresented = false
     }

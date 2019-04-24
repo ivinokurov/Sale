@@ -24,10 +24,10 @@ class PurchaseDBRules: Any {
         }
     }
     
-    class func isTheSameProductPresentsInPurchase(productBarcode barcode: String) -> Bool {
+    class func isTheSameProductPresentsInPurchase(productBarcode code: String) -> Bool {
         if let allProductsInPurchase = self.getAllProductsInPurchase() {
             if allProductsInPurchase.count != 0 {
-                if allProductsInPurchase.filter ({ $0.value(forKeyPath: "code") as! String == barcode }).count > 0 {
+                if allProductsInPurchase.filter ({ $0.value(forKeyPath: "code") as! String == code }).count > 0 {
                     return true
                 }
             }

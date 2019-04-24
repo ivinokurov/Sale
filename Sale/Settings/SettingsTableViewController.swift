@@ -300,34 +300,26 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     }
     
     @IBAction func dismissBtDevicesView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.btDevicesView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.btDevicesView, tableViewToReloadData: self.tableView)
         self.isBtDevicesViewPresented = false
-        self.tableView.reloadData()
     }
         
     @IBAction func dismissOrgInfoView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.orgInfoView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.orgInfoView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
         self.isOrgInfoViewPresented = false
-        self.tableView.reloadData()
     }
     
     @IBAction func dismissColorsView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.colorsView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.colorsView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
         self.isColorsViewPresented = false
-        self.tableView.reloadData()
     }
     
     @IBAction func dismissHostNameView(_ sender: UIButton) {
-        Utilities.decorateButtonTap(buttonToDecorate: sender)
-        Utilities.dismissView(viewToDismiss: self.hostNameView)
+        Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.hostNameView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
         self.isHostNameViewPresented = false
-        self.tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -399,7 +391,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     
     func showHostNameView() {
         self.hostNameView.alpha = 0.0
-        self.hostNameView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.hostNameView.alpha = CGFloat(Utilities.alpha)
@@ -422,7 +413,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     func showBtDevicesView() {
         self.btDevicesView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.btDevicesView.alpha = 0.0
-        self.btDevicesView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.btDevicesView.alpha = CGFloat(Utilities.alpha)
@@ -440,7 +430,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     func showAccentColorsView() {
         self.colorsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.colorsView.alpha = 0.0
-        self.colorsView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.colorsView.alpha = CGFloat(Utilities.alpha)
@@ -458,7 +447,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     
     func showOrgInfoView() {
         self.orgInfoView.alpha = 0.0
-        self.orgInfoView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.orgInfoView.alpha = CGFloat(Utilities.alpha)
@@ -468,7 +456,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.changeAccentColorForOrgInfoView()
         
         self.isOrgInfoViewPresented = true
-    //    self.orgNameTextField.becomeFirstResponder()
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.orgInfoView)
         

@@ -120,6 +120,11 @@ class SessionDBRules: NSObject {
                     viewContext!.delete(sale as! NSManagedObject)
                     try viewContext!.save()
                 }
+                
+                let name = person.value(forKey: "name") as! String
+                let role = person.value(forKey: "role") as! Int16
+                
+                PersonSalesDBRules.deleteSessionPersonSales(personName: name, personRole: role)
                 person.setValue(nil, forKey: "sales")
             }
             viewContext!.delete(session)

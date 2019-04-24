@@ -132,10 +132,10 @@ class ProductsDBRules: NSObject {
         return nil
     }
     
-    class func isTheSameBarcodePresents(productBarcode barcode: String) -> Bool {
+    class func isTheSameBarcodePresents(productBarcode code: String) -> Bool {
         if let allProducts = self.getAllProducts() {
             if allProducts.count != 0 {
-                if allProducts.filter ({ $0.value(forKeyPath: "code") as! String == barcode }).count > 0 {
+                if allProducts.filter ({ $0.value(forKeyPath: "code") as! String == code }).count > 0 {
                     return true
                 }
             }
@@ -246,11 +246,11 @@ class ProductsDBRules: NSObject {
         return nil
     }
     
-    class func getProductPriceByBarcode(productBarcode barcode: String) -> Float? {
+    class func getProductPriceByBarcode(productBarcode code: String) -> Float? {
         let viewContext = CommonDBRules.getManagedView()
         if viewContext != nil {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
-            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [barcode])
+            fetchRequest.predicate = NSPredicate(format: "code == %@", argumentArray: [code])
             do {
                 let fetchResult = try viewContext!.fetch(fetchRequest) as! [NSManagedObject]
                 if fetchResult.count > 0 {
@@ -263,8 +263,8 @@ class ProductsDBRules: NSObject {
         return nil
     }
     
-    class func getCategoryProductIndexByName(productCategory category: NSManagedObject, productBarcode barcode: String) -> Int? {
-        return self.getAllProductsForCategory(productCategory: category)?.firstIndex(of: self.getProductByBarcode(code: barcode)!)
+    class func getCategoryProductIndexByName(productCategory category: NSManagedObject, productBarcode code: String) -> Int? {
+        return self.getAllProductsForCategory(productCategory: category)?.firstIndex(of: self.getProductByBarcode(code: code)!)
     }
     
     class func getProductMeasure(product: NSManagedObject) -> String {
