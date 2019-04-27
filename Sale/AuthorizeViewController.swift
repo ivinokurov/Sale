@@ -32,16 +32,9 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var loginUnderView: UIView!    
     @IBOutlet weak var passwordUnderView: UIView!
     
-    @IBOutlet var alertView: UIView!
-    @IBOutlet weak var alertImageView: UIImageView!
-    @IBOutlet weak var alertTextLabel: UILabel!
-    @IBOutlet weak var dismissAlertButton: UIButton!
-    
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     var parentView: UIView? = nil
     var keyboardHeight: CGFloat = 0.0
-    var isAdminViewPresented: Bool = false
-    var isAlertViewPresented: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,8 +45,6 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         
         Utilities.customizePopoverView(customizedView: self.adminView)
         Utilities.createDismissButton(button: self.dismissAdminViewButton)
-        
-        Utilities.customizePopoverView(customizedView: self.alertView)
         
         Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.adminNameTextField, self.adminItnTextField, self.adminLoginTextField, self.adminPwdTextField, self.enterButton, self.addAdminButton, self.cancelAdminButton])
         
@@ -80,41 +71,6 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         } else {
             self.textUnderlineDecorationDic = [self.loginTextField : self.loginUnderView, self.pwdTextField : self.passwordUnderView]
         }
-    }
-    
-    func initAndShowAlertView(imageName: String, text: String) {
-        self.alertImageView.image = UIImage(named: imageName)
-        self.alertTextLabel.text = text
-
-        self.showAlertView()
-    }
-    
-    func showAlertView() {
-        self.isAlertViewPresented = true
-        
-        Utilities.addOverlayViewToParent(parent: self.view)
-            
-        self.alertView.center = self.view.center
-        self.view.addSubview(self.alertView)
-        self.isAlertViewPresented = true
-            
-        UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.alertView.alpha = 1.0
-        }), completion: { (completed: Bool) in
-        })
-            
-        self.dismissAlertButton.tintColor = Utilities.accentColor
-    }
-    
-    @IBAction func dismissAlertView(_ sender: Any) {
-        Utilities.decorateButtonTap(buttonToDecorate: self.dismissAlertButton)
-        Utilities.removeOverlayView()
-        
-        UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
-            self.alertView.alpha = 0.0
-        }), completion: { (completed: Bool) in
-            self.isAlertViewPresented = false
-        })
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
@@ -150,6 +106,9 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     
     @objc func showPersonView() {
         self.authorizeView.alpha = 0.0
+        
+        self.authorizeView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
     //    self.loginTextField.becomeFirstResponder()
         self.setAuthorizeViewFrame()
         
@@ -162,31 +121,6 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     func setAuthorizeViewFrame() {
         self.authorizeView.center.x = self.view.center.x
         self.authorizeView.frame.origin.y = (UIScreen.main.bounds.height -  self.keyboardHeight - self.authorizeView.frame.height) / 2
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size , with: coordinator)
-        
-        self.authorizeView.removeFromSuperview()
-        self.adminView.removeFromSuperview()
-        self.alertView.removeFromSuperview()
-
-        coordinator.animate(alongsideTransition: { _ in
-        //    self.loginTextField.becomeFirstResponder()
-            self.setAuthorizeViewFrame()
-            self.view.addSubview(self.authorizeView)
-            
-            if self.isAdminViewPresented {
-                self.setAdminViewFrame()
-                self.view.addSubview(self.adminView)
-            }
-            
-            if self.isAlertViewPresented {
-                self.alertView.center = self.view.center
-                self.view.addSubview(self.alertView)
-                self.isAlertViewPresented = true
-            }
-        })
     }
     
     @IBAction func showOrHidePassword(_ sender: UIButton) {
@@ -220,14 +154,15 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         if PersonalDBRules.getAllPersons()?.count == 0 {
             self.authorizeView.isHidden = true
             self.showAdminView()
-            self.initAndShowAlertView(imageName: "Error", text: "Необходимо зарегистрировать как минимум одного сотруднка!")
         }
         
-        if login == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует логин!")
+        if login == Utilities.blankString {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: "Отсутствует логин!")
+            return
         }
-        if password == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует пароль!")
+        if password == Utilities.blankString {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: "Отсутствует пароль!")
+            return
         }
 
         if PersonalDBRules.isPersonPresents(personLogin: login, personPassword: password) {
@@ -236,9 +171,9 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
             Utilities.dismissView(viewToDismiss: self.authorizeView)
             self.performSegue(withIdentifier: "enterForSomePerson", sender: self)
         } else {
-            self.loginTextField.text = ""
+            self.loginTextField.text = Utilities.blankString
         //    self.loginTextField.becomeFirstResponder()
-            self.pwdTextField.text = ""
+            self.pwdTextField.text = Utilities.blankString
         }
     }
     
@@ -257,24 +192,20 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     }
     
     func checkAdminInfo() -> Bool {
-        if self.adminNameTextField.text == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует имя администратора!")
-            return false
-        }
-        if self.adminItnTextField.text == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует ИНН администратора!")
-            return false
-        }
-        if self.adminLoginTextField.text == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует логин администратора!")
-            return false
-        }
-        if self.adminPwdTextField.text == "" {
-            self.initAndShowAlertView(imageName: "Error", text: "Отсутствует пароль администратора!")
-            return false
-        }
+        let adminInfoDictionary = [self.adminNameTextField: "Отсутствует имя администратора!",
+                                   self.adminItnTextField: "Отсутствует ИНН администратора!",
+                                   self.adminLoginTextField: "Отсутствует логин администратора!",
+                                   self.adminPwdTextField: "Отсутствует пароль администратора!"]
         
-        return true
+        let emptyItem = adminInfoDictionary.sorted { $0.key!.tag < $1.key!.tag }.first(where: {key, value in
+            return key?.text == Utilities.blankString
+        })
+        if emptyItem != nil {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: (emptyItem?.value)!)
+            return false
+        } else {
+            return true
+        }
     }
     
     func setAdminViewFrame() {
@@ -288,12 +219,13 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         self.setAdminViewFrame()
         self.adminView.alpha = 0.0
         
+        self.adminView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.adminView.alpha = 1.0
         }), completion: { (completed: Bool) in
         })
         
-        self.isAdminViewPresented = true
         self.adminView.alpha = CGFloat(Utilities.alpha)
         
     //    Utilities.addOverlayViewToParent(parent: self.view)
@@ -314,7 +246,6 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.adminView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isAdminViewPresented = false
             self.authorizeView.isHidden = false
         })
     }
@@ -322,7 +253,6 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
     @IBAction func dismissAdminView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.adminView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isAdminViewPresented = false
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

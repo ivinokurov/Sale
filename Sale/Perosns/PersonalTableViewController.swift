@@ -31,7 +31,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     
     var parentView: UIView? = nil
     var isPersonEditing: Bool = false
-    var isPersonViewPresented: Bool = false
     var swipedRowIndex: Int? = nil
     var keyboardHeight: CGFloat = 0.0
     var selectedPersonRole: Int = Utilities.personRole.admin.rawValue
@@ -152,12 +151,12 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.setPersonViewFrame()
         self.personView.alpha = 0.0
         
+        self.personView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.personView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
-        
-        self.isPersonViewPresented = true
         
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.personView)
@@ -213,7 +212,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         if self.checkPersonInfo() {
             if !self.isPersonEditing && PersonalDBRules.isTheSameNameRoleAndItnPresent(personName: newName, personRole: newRole, personItn: itn) {
-                Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Сотрудник с таким именем и должностью уже присутствует!")
+                InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Сотрудник с таким именем и должностью уже присутствует!")
                 return
             }
             if !self.isPersonEditing {
@@ -223,7 +222,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                     self.removePersonView()
                     self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                 } else {
-                    Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Такой логин уже присутствует!")
+                        InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Такой логин уже присутствует!")
                 }
             } else {
                 if !self.isLoginMuchTheSame(personLogin: PersonalDBRules.selectedPerson!.value(forKeyPath: "login") as? String ?? "", personNewLogin: newLogin)
@@ -236,7 +235,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
                         self.self.swipedRowIndex = nil
                     } else {
-                        Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Такой логин уже присутствует!")
+                        InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Такой логин уже присутствует!")
                     }
                 } else {
                     PersonalDBRules.changePerson(originItn: itn, personNewName: newName, personNewLogin: newLogin, personNewPassword: newPassword, personNewRole: newRole)
@@ -296,7 +295,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.personView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isPersonViewPresented = false
         })
     }
     
@@ -308,48 +306,25 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.personView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isPersonViewPresented = false
             self.isPersonEditing = false
         })
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size , with: coordinator)
+    func checkPersonInfo() -> Bool {
+        let personInfoDictionary = [self.fullPersonNameTextField: "Отсутствует имя сотрудника!",
+                                    self.personItnTextField: "Отсутствует ИНН сотрудника!",
+                                    self.personLoginTextField: "Отсутствует логин сотрудника!",
+                                    self.personPasswordTextField: "Отсутствует пароль сотрудника!"]
         
-        self.personView.removeFromSuperview()
-        
-        coordinator.animate(alongsideTransition: { _ in
-            if self.isPersonViewPresented {
-                self.personView.alpha = CGFloat(Utilities.alpha)
-                self.parentView?.addSubview(self.personView)
-                self.setPersonViewFrame()
-                
-                if (Utilities.productsSplitController?.isAlertViewPresented)! {
-                    _ = self.checkPersonInfo()
-                }
-            }
+        let emptyItem = personInfoDictionary.sorted { $0.key!.tag < $1.key!.tag }.first(where: {key, value in
+            return key?.text == Utilities.blankString
         })
-    }
-    
-    func checkPersonInfo() -> Bool {        
-        if self.fullPersonNameTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует имя сотрудника!")
+        if emptyItem != nil {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.parentView!, messageToShow: (emptyItem?.value)!)
             return false
+        } else {
+            return true
         }
-        if self.personItnTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует ИНН сотрудника!")
-            return false
-        }
-        if self.personLoginTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует логин сотрудника!")
-            return false
-        }
-        if self.personPasswordTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ПЕРСОНАЛ", alertMessage: "Отсутствует пароль сотрудника!")
-            return false
-        }
-        
-        return true
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -411,14 +386,15 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @objc func logoutPerson(sender: AnyObject) {
-        let logoutHandler: ((UIAlertAction) -> Void)? = { _ in
+        let logoutPerson: (() -> ()) = {
             let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
             let initialController = storyboard.instantiateViewController(withIdentifier: "authorizeControllerId")
             self.present(initialController, animated: true, completion: nil)
             Utilities.isPersonLogout = true
         }
         
-        Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "ВЫХОД", alertMessage: "Сменить пользователя?", okButtonHandler: logoutHandler,  cancelButtonHandler: nil)
+        let logoutPersonAlert = DeleteAlertView()
+        logoutPersonAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Сменить пользователя?", deleteHandler: logoutPerson, deleteButtonText: "СМЕНИТЬ")
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -431,7 +407,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
-            let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
+            let deletePerson: (() -> ())? = {
                 PersonalDBRules.deletePerson(personName: name!, personRole: role!)
                 
                 self.tableView.beginUpdates()
@@ -439,7 +415,8 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                 self.tableView.endUpdates()
             }
             
-            Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ СОТРУДНИКА", alertMessage: "Удалить этого сотрудника?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
+            let deletePersonAlert = DeleteAlertView()
+            deletePersonAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этого сотрудника?", deleteHandler: deletePerson)
             
             success(true)
         })
@@ -508,7 +485,6 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func dismissPersonView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.personView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isPersonViewPresented = false
     }
     
 }

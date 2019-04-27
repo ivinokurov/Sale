@@ -79,7 +79,6 @@ class BtDevicesDataSource: UITableView, UITableViewDataSource, UITableViewDelega
         
         self.parent?.tableView.reloadData()
         Utilities.dismissView(viewToDismiss: (self.parent?.btDevicesView)!)
-        self.parent?.isBtDevicesViewPresented = false
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -127,11 +126,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var btDevices: BtDevicesDataSource?
-    
-    var isColorsViewPresented: Bool = false
-    var isOrgInfoViewPresented: Bool = false
-    var isBtDevicesViewPresented: Bool = false
-    var isHostNameViewPresented: Bool = false
     var parentView: UIView? = nil
     var keyboardHeight: CGFloat = 0.0
     var taxTypeIndex: Int = 0
@@ -213,6 +207,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         
         Utilities.setAccentColorForSomeViews(viewsToSetAccentColor: [self.orgNameTextField, self.pointNameTextField, self.pointAddressTextField, self.itnTextField, self.kppTextField, self.saveOrgInfoButton, self.cancelOrgInfoButton, self.hostNameTextEdit, self.hostNameOKButton])
         Utilities.setBkgColorForSomeViews(viewsToSetAccentColor: [self.orgNameUnderView, self.pointNameUnderView, self.pointAddressUnderView, self.itnUnderView, self.kppUnderView, self.hostNameUnderView])
+        
+        self.showSelectedAccentColor()
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -274,7 +270,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.orgInfoView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isOrgInfoViewPresented = false
         })
     }
     
@@ -301,25 +296,21 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     
     @IBAction func dismissBtDevicesView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.btDevicesView, tableViewToReloadData: self.tableView)
-        self.isBtDevicesViewPresented = false
     }
         
     @IBAction func dismissOrgInfoView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.orgInfoView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isOrgInfoViewPresented = false
     }
     
     @IBAction func dismissColorsView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.colorsView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isColorsViewPresented = false
     }
     
     @IBAction func dismissHostNameView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.hostNameView, tableViewToReloadData: self.tableView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isHostNameViewPresented = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -392,6 +383,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     func showHostNameView() {
         self.hostNameView.alpha = 0.0
         
+        self.hostNameView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.hostNameView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
@@ -399,7 +392,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         
         self.changeAccentColorForHostNameView()
         
-        self.isHostNameViewPresented = true
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.hostNameView)
         
@@ -414,12 +406,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.btDevicesView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.btDevicesView.alpha = 0.0
         
+        self.btDevicesView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.btDevicesView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
-        self.isBtDevicesViewPresented = true
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.btDevicesView)
         
@@ -431,12 +424,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.colorsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.colorsView.alpha = 0.0
         
+        self.colorsView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.colorsView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
-        self.isColorsViewPresented = true
         Utilities.addOverlayView()
         
         self.parentView?.addSubview(self.colorsView)
@@ -445,8 +439,17 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.dismissColorsViewButton.tintColor = Utilities.accentColor
     }
     
+    func showSelectedAccentColor() {
+        let accessoryView = UIView(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
+        accessoryView.backgroundColor = Utilities.accentColor
+        accessoryView.layer.cornerRadius = accessoryView.frame.width / 2
+        self.tableView.cellForRow(at: IndexPath(row: 0, section: 1))?.accessoryView = accessoryView
+    }
+    
     func showOrgInfoView() {
         self.orgInfoView.alpha = 0.0
+        
+        self.orgInfoView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.orgInfoView.alpha = CGFloat(Utilities.alpha)
@@ -455,7 +458,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         
         self.changeAccentColorForOrgInfoView()
         
-        self.isOrgInfoViewPresented = true
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.orgInfoView)
         
@@ -467,24 +469,20 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     }
     
     func checkOrgInfo() -> Bool {
-        if self.orgNameTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ОРГАНИЗАЦИЯ", alertMessage: "Отсутствует название организации!")
-            return false
-        }
-        if self.pointNameTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ОРГАНИЗАЦИЯ", alertMessage: "Отсутствует наименование торгового объекта!")
-            return false
-        }
-        if self.pointAddressTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ОРГАНИЗАЦИЯ", alertMessage: "Отсутствует адрес торгового объекта!")
-            return false
-        }
-        if self.itnTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ОРГАНИЗАЦИЯ", alertMessage: "Отсутствует ИНН организации!")
-            return false
-        }
+        let orgInfoDictionary = [self.orgNameTextField: "Отсутствует название организации!",
+                                 self.pointNameTextField: "Отсутствует наименование торгового объекта!",
+                                 self.pointAddressTextField: "Отсутствует адрес торгового объекта!",
+                                 self.itnTextField: "Отсутствует ИНН организации!"]
         
-        return true
+        let emptyItem = orgInfoDictionary.sorted { $0.key!.tag < $1.key!.tag }.first(where: {key, value in
+            return key?.text == Utilities.blankString
+        })
+        if emptyItem != nil {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.parentView!, messageToShow: (emptyItem?.value)!)
+            return false
+        } else {
+            return true
+        }
     }
     
     @IBAction func setAccentColor(_ sender: UIButton) {
@@ -505,50 +503,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         
         Utilities.mainController!.tabBar.tintColor = Utilities.accentColor
         Utilities.dismissView(viewToDismiss: self.colorsView)
-        self.isColorsViewPresented = false
-        
-        Utilities.productsSplitController!.alertView.layer.borderColor = Utilities.accentColor.cgColor
         
         self.colorsView.layer.borderColor = Utilities.accentColor.cgColor
         self.orgInfoView.layer.borderColor = Utilities.accentColor.cgColor
         self.btDevicesView.layer.borderColor = Utilities.accentColor.cgColor
         self.hostNameView.layer.borderColor = Utilities.accentColor.cgColor
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
-        super.viewWillTransition(to: size , with: coordinator)
-        
-        self.colorsView.removeFromSuperview()
-        self.orgInfoView.removeFromSuperview()
-        self.btDevicesView.removeFromSuperview()
-        self.hostNameView.removeFromSuperview()
-        
-        coordinator.animate(alongsideTransition: { _ in
-            if self.isColorsViewPresented {
-                self.parentView?.addSubview(self.colorsView)
-                self.colorsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
-            }
-            
-            if self.isBtDevicesViewPresented {
-                self.parentView?.addSubview(self.btDevicesView)
-                self.btDevicesView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
-            }
-            
-            if self.isHostNameViewPresented {
-                self.parentView?.addSubview(self.hostNameView)
-                self.setHostNameViewFrame()
-            }
-            
-            if self.isOrgInfoViewPresented {
-                self.parentView?.addSubview(self.orgInfoView)
-                self.setOrgInfoViewFrame()
-                
-                if (Utilities.productsSplitController?.isAlertViewPresented)! {
-                    _ = self.checkOrgInfo()
-                }
-            }
-        })
+        self.showSelectedAccentColor()
     }
     
     @IBAction func addUnderView(_ sender: UITextField) {

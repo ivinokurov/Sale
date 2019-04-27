@@ -44,7 +44,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     var sessionViewBarButtonItem: UIBarButtonItem?
     var isPurchaseViewPresented: Bool = false
     var isSessionViewPresented: Bool = false
-    var isPersonViewPresented: Bool = false
     var selectedCategoryIndexPath: IndexPath = IndexPath(row: 0, section: 0)
     var getFromScaner: Bool = false
     var selectedProductRow: Int?
@@ -113,6 +112,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.personView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.personView.alpha = 0.0
         
+         self.personView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.personView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
@@ -179,7 +180,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.personView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isPersonViewPresented = false
         })
     }
     
@@ -216,7 +216,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         Utilities.customizePopoverView(customizedView: self.personView!)
         self.showPersonView()
-        self.isPersonViewPresented = true
         
         Utilities.createDismissButton(button: self.dismissSessionViewButton)
         
@@ -397,8 +396,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         if tableView == self.purchaseTableView {
             let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
                 
-                let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
-
+                let deleteProduct: (() -> ())? = {
                     if let productCode = PurchaseDBRules.getAllProductsInPurchase()![indexPath.row].value(forKeyPath: "code") as? String {
                         
                         let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
@@ -416,7 +414,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
                 
-                Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ ТОВАРА", alertMessage: "Удалить этот товар?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
+                let deletePersonAlert = DeleteAlertView()
+                deletePersonAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар из покупки?", deleteHandler: deleteProduct)
                 
                 success(true)
             })
@@ -468,7 +467,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } else {
-                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Товар не выбран!")
+                InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Товар не выбран!")
                 }
             self.calulateAndPrintPurchaseSumm()
             self.getFromScaner = false
@@ -492,7 +491,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     }
         } else {
-            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Товар не выбран!")
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Товар не выбран!")
         }
         self.calulateAndPrintPurchaseSumm()
         self.getFromScaner = false
@@ -515,7 +514,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } else {
-                Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: "Нет товара с таким штрих кодом!")
+                InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Нет товара с таким штрих кодом!")
             }
         }
         self.calulateAndPrintPurchaseSumm()
@@ -540,21 +539,24 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func deletePurchase(_ sender: Any) {
-        for productInPurchase in PurchaseDBRules.getAllProductsInPurchase()! {
-            let productCode = productInPurchase.value(forKey: "code") as! String
-            let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
-            ProductsDBRules.changeProductCount(productBarcode: productCode, productCount: ProductsDBRules.getProductCountByBarcode(productBarcode: productCode)! + productCountInPurchase!)
+        let deleteAllProducts: (() -> ()) = {
+            for productInPurchase in PurchaseDBRules.getAllProductsInPurchase()! {
+                let productCode = productInPurchase.value(forKey: "code") as! String
+                let productCountInPurchase = PurchaseDBRules.getProductCountInPurchase(productBarcode: productCode)
+                ProductsDBRules.changeProductCount(productBarcode: productCode, productCount: ProductsDBRules.getProductCountByBarcode(productBarcode: productCode)! + productCountInPurchase!)
+            }
+            
+            self.productsTableView.reloadData()
+            PurchaseDBRules.deleteAllProductsInPurchase()
+            self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
+            self.calulateAndPrintPurchaseSumm()
+            self.selectedProductRow = nil
         }
-        
-        self.productsTableView.reloadData()
-        
-        PurchaseDBRules.deleteAllProductsInPurchase()
-        
-        self.purchaseTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .fade)
-        
-        self.calulateAndPrintPurchaseSumm()
-        
-        self.selectedProductRow = nil
+        guard let allProducts = PurchaseDBRules.getAllProductsInPurchase() else { return }
+        if allProducts.count > 0 {
+            let deleteCategoryAlert = DeleteAlertView()
+            deleteCategoryAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все товары из покупки?", deleteHandler: deleteAllProducts)
+        }
     }
     
     func calulateAndPrintPurchaseSumm() {
@@ -592,6 +594,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.sessionView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.sessionView.alpha = 0.0
         
+        self.sessionView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         self.dismissSessionViewButton.tintColor = Utilities.accentColor
         self.sessionStateLabel.text = self.getSessionStateStr()
         self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
@@ -612,8 +616,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         if !UIDevice.current.orientation.isLandscape && !UIDevice.current.orientation.isFlat {
             self.purchaseContainerView.frame.size.height = 728
             self.purchaseTableView.frame.size.height = 646
-            self.buyProductsButton.center.y = 441
-            self.deleteProductsButton.center.y = 573
+            self.buyProductsButton.center.y = 307
+            self.deleteProductsButton.center.y = 441
             self.purchaseSummLabel.center.y = 714
         } else {
             self.purchaseContainerView.frame.size.height = 472
@@ -706,7 +710,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 try lib.barcodeStartScan()
             }
         } catch let error as NSError {
-            Utilities.showErrorAlertView(alertTitle: "ОШИБКА", alertMessage: error.localizedDescription)
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: error.localizedDescription)
         }
     }
     
@@ -727,7 +731,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                 status += "Номер: \(card!.accountNumber!)"
             }
         }
-        Utilities.showOkAlertView(alertTitle: "КАРТА", alertMessage: status)
+        InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.success.rawValue, parentView: Utilities.mainController!.view, messageToShow: status)
     }
     
     
@@ -742,7 +746,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
     func demoPrintCheck() -> Bool {
         let hostName = SettingsDBRules.getTCPDeviceName()
         if hostName == nil || (hostName?.isEmpty)! {
-            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Не выбрано устройство контрольно-кассовой техники!")
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Не выбрано устройство контрольно-кассовой техники!")
             return false
         }
         
@@ -780,7 +784,8 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             if true /*self.demoPrintCheck()*/ {
                 self.addSaleForPerson()
                 
-                Utilities.showOkAlertView(alertTitle: "ПОКУПКА", alertMessage: "Покупка выполнена!")
+                InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.success.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Покупка выполнена!")
+
                 PurchaseDBRules.deleteAllProductsInPurchase()
                 
                 self.calulateAndPrintPurchaseSumm()
@@ -792,7 +797,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
         } else {
-            Utilities.showErrorAlertView(alertTitle: "ПОКУПКА", alertMessage: "Нет товаров для покупки!")
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Нет товаров для покупки!")
         }
     }
         
@@ -838,24 +843,6 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
         } else {
             self.purchaseContainerView.isHidden = true
-        }
-        
-        if self.isSessionViewPresented {
-            self.sessionView.removeFromSuperview()
-            
-            coordinator.animate(alongsideTransition: { _ in
-                self.parentView?.addSubview(self.sessionView)
-                self.sessionView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
-            })
-        }
-    
-        if self.isPersonViewPresented {
-            self.personView.removeFromSuperview()
-        
-            coordinator.animate(alongsideTransition: { _ in
-                self.parentView?.addSubview(self.personView)
-                self.personView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
-            })
         }
     }
             

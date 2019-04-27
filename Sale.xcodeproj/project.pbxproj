@@ -27,7 +27,11 @@
 		EA181A66226627B000DA719A /* PaymentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA181A65226627B000DA719A /* PaymentCommand.swift */; };
 		EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */; };
 		EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA26536D224C80AA00586769 /* AuthorizeViewController.swift */; };
+		EA2E34652271704000EA1F82 /* DeleteAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2E34642271704000EA1F82 /* DeleteAlertView.swift */; };
+		EA2E34672271794900EA1F82 /* DeleteAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2E34662271794900EA1F82 /* DeleteAlertView.xib */; };
 		EA2E6C962251EBB100EB8F22 /* OrgInfoDBRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */; };
+		EA369F09227414060037F2AD /* InfoAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA369F08227414060037F2AD /* InfoAlertView.xib */; };
+		EA369F0B227418830037F2AD /* InfoAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA369F0A227418830037F2AD /* InfoAlertView.swift */; };
 		EA4C7E1A2227B7C600425BE8 /* libdtdev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4C7E152227B7C600425BE8 /* libdtdev.a */; };
 		EA4C7E262227C13000425BE8 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E232227C13000425BE8 /* PurchaseTableViewCell.swift */; };
 		EA4C7E2F2227C17900425BE8 /* CashboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4C7E2C2227C17900425BE8 /* CashboxViewController.swift */; };
@@ -85,7 +89,11 @@
 		EA181A65226627B000DA719A /* PaymentCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCommand.swift; sourceTree = "<group>"; };
 		EA1DD67A22477B7B00EED010 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EA26536D224C80AA00586769 /* AuthorizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeViewController.swift; sourceTree = "<group>"; };
+		EA2E34642271704000EA1F82 /* DeleteAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAlertView.swift; sourceTree = "<group>"; };
+		EA2E34662271794900EA1F82 /* DeleteAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAlertView.xib; sourceTree = "<group>"; };
 		EA2E6C952251EBB100EB8F22 /* OrgInfoDBRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgInfoDBRules.swift; sourceTree = "<group>"; };
+		EA369F08227414060037F2AD /* InfoAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoAlertView.xib; sourceTree = "<group>"; };
+		EA369F0A227418830037F2AD /* InfoAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoAlertView.swift; sourceTree = "<group>"; };
 		EA4C7E142227B7C500425BE8 /* DTDevices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTDevices.h; sourceTree = "<group>"; };
 		EA4C7E152227B7C600425BE8 /* libdtdev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdtdev.a; sourceTree = "<group>"; };
 		EA4C7E202227B96C00425BE8 /* DTDevices-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DTDevices-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -137,6 +145,8 @@
 		EA0FFA31222510AB00703EB0 = {
 			isa = PBXGroup;
 			children = (
+				EA369F08227414060037F2AD /* InfoAlertView.xib */,
+				EA2E34662271794900EA1F82 /* DeleteAlertView.xib */,
 				EA4C7E1D2227B80200425BE8 /* Frameworks */,
 				EA0FFA3C222510AB00703EB0 /* Sale */,
 			);
@@ -163,6 +173,8 @@
 				EA4C7E302227C2DD00425BE8 /* Buttons */,
 				EA4C7E292227C17900425BE8 /* Cashbox */,
 				EAAA59E8223E03190096D990 /* CommonDBRules.swift */,
+				EA2E34642271704000EA1F82 /* DeleteAlertView.swift */,
+				EA369F0A227418830037F2AD /* InfoAlertView.swift */,
 				EA953032226D7C3B00EDCE9D /* Images.swift */,
 				EA0FFA4C222510AB00703EB0 /* Info.plist */,
 				EAA776192259DA7400C0D596 /* Launch Screen.storyboard */,
@@ -359,6 +371,8 @@
 			files = (
 				EA0FFA48222510AB00703EB0 /* Assets.xcassets in Resources */,
 				EAA7761A2259DA7400C0D596 /* Launch Screen.storyboard in Resources */,
+				EA369F09227414060037F2AD /* InfoAlertView.xib in Resources */,
+				EA2E34672271794900EA1F82 /* DeleteAlertView.xib in Resources */,
 				EA0FFA43222510AB00703EB0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -373,6 +387,7 @@
 				EA89795D2268579100B93A70 /* SessionDBRules.swift in Sources */,
 				EA0FFA46222510AB00703EB0 /* Sale.xcdatamodeld in Sources */,
 				EA26536E224C80AB00586769 /* AuthorizeViewController.swift in Sources */,
+				EA369F0B227418830037F2AD /* InfoAlertView.swift in Sources */,
 				EA9EEDDA223FC41400C22B50 /* ProductsTableViewCell.swift in Sources */,
 				EA1DD67B22477B7B00EED010 /* MainTabBarController.swift in Sources */,
 				EA181A642265C21100DA719A /* PrintTextCommand.swift in Sources */,
@@ -400,6 +415,7 @@
 				EAACF6D62255BC95000C178D /* PersonalNavigationController.swift in Sources */,
 				EA0FFA672226BB9100703EB0 /* BarCodeButton.swift in Sources */,
 				EA0FFA6522267FAF00703EB0 /* DeleteButton.swift in Sources */,
+				EA2E34652271704000EA1F82 /* DeleteAlertView.swift in Sources */,
 				EAACF6D72255BC95000C178D /* PersonalTableViewController.swift in Sources */,
 				EAAA59E7223E02E10096D990 /* CategoriesDBRules.swift in Sources */,
 				EA551FCC224212FF00B02E72 /* PurchaseDBRules.swift in Sources */,

@@ -183,7 +183,7 @@ class FPAbstractCommand: UIViewController, StreamDelegate {
         switch c {
         case Stream.Event.errorOccurred:
             self.error = true
-            Utilities.showErrorAlertView(alertTitle: "ПЕЧАТЬ", alertMessage: "Ошибка печати чека!")
+            InfoAlertView().showInfoAlertView(infoTypeImageName:Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Ошибка печати чека!")
         default:
             break
         }

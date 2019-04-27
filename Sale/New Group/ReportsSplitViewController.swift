@@ -8,8 +8,8 @@ import UIKit
 
 class ReportsSplitViewController: UISplitViewController {
     
-    var selectedReportPersonName: String? = nil
-    var selectedReportPersonRole: Int16? = nil
+    var reportsSelectedPersonName: String? = nil
+    var reportsSelectedPersonRole: Int16? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()

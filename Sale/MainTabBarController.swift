@@ -45,12 +45,6 @@ class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDel
         
         Utilities.productsSplitController = productsSplitController
         Utilities.reportsSplitController = reportsSplitontroller
-        
-        Utilities.customizePopoverView(customizedView: productsSplitController.alertView)
-
-    //    self.btDevices.findBluetoothDevices()
-
-        productsSplitController.alertView.alpha = 0.0
     }
     
     func accessoryDidDisconnect(_ accessory: EAAccessory) {

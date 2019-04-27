@@ -26,6 +26,7 @@ class PersonSalesDBRules: NSObject {
                         return nil
                     }
                     var allPersonSales = person!.mutableSetValue(forKey: "sales").allObjects
+                    
                     allPersonSales = allPersonSales.filter({sale in
                         guard let date = (sale as! NSManagedObject).value(forKeyPath: "date") as? Date else { return false }
                         guard let sessionOpenDate = SessionDBRules.selectedSession!.value(forKeyPath: "openDate") as? Date

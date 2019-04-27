@@ -273,17 +273,11 @@ class ProductsDBRules: NSObject {
         var measureTail: String!
         switch measure {
             case Utilities.measures.items.rawValue:
-            do {
-                measureTail = " шт."
-            }
+            do { measureTail = " шт." }
             case Utilities.measures.kilos.rawValue:
-            do {
-                measureTail = " кг."
-            }
+            do { measureTail = " кг." }
             case Utilities.measures.liters.rawValue:
-            do {
-                measureTail = " л."
-            }
+            do { measureTail = " л." }
             default: break
         }
         return measureTail

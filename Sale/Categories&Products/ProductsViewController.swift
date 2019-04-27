@@ -35,7 +35,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     var textUnderlineDecorationDic: Dictionary<UITextField, UIView>!
     
     var parentView: UIView? = nil
-    var isProductViewPresented: Bool = false
     var isProductEditing: Bool = false
     var swipedRowIndex: Int? = nil
     var selectedProductBarcode: String? = nil
@@ -168,7 +167,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.productView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isProductViewPresented = false
             self.isProductEditing = false
         })
     }
@@ -201,7 +199,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     
     @objc func showProductView() {
         if self.getSelectedCategoryName() == nil {
-            Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Не выбрана категория товара!")
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Не выбрана категория товара!")
             return
         }
         
@@ -217,13 +215,14 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.setProductViewFrame()
         self.productView.alpha = 0.0
         
+        self.productView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.productView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
         
         self.setProductViewActionTitles()
-        self.isProductViewPresented = true
         
         Utilities.addOverlayView()
         self.parentView?.addSubview(self.productView)
@@ -238,20 +237,8 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.productView.alpha = 0.0
         }), completion: { (completed: Bool) in
-            self.isProductViewPresented = false
-        })
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size , with: coordinator)
-        
-        self.productView.removeFromSuperview()
-        
-        coordinator.animate(alongsideTransition: { _ in
-            if self.isProductViewPresented {
-                self.productView.alpha = CGFloat(Utilities.alpha)
-                self.parentView?.addSubview(self.productView)
-                self.setProductViewFrame()
+            if completed {
+                self.setProductMeasure(self.itemsButton)
             }
         })
     }
@@ -275,7 +262,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                 if !ProductsDBRules.isTheSameBarcodePresents(productBarcode: newCode) {
                     ProductsDBRules.addNewProduct(productCategory: selectedCategory!, productName: newName, productDesc: newDesc, productCount: newCount, productMeasure: newMeasure, productPrice: newPrice, productBarCode: newCode)
                 } else {
-                    Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Товар с таким штрих кодом уже присутствует!")
+                    InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: Utilities.mainController!.view, messageToShow: "Товар с таким штрих кодом уже присутствует!")
                     return
                 }
             } else {
@@ -285,7 +272,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                     
                     ProductsDBRules.changeProduct(originBarcode: originCode!, productNewName: newName, productNewDesc: newDesc, productNewCount: newCount, productNewMeasure: newMeasure, productNewPrice: newPrice, productNewBarcode: newCode)
                 
-                    self.setProductMeasure(self.itemsButton)
                     self.updateCategoriesTable()
                 }
             
@@ -300,25 +286,20 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     func checkProductInfo() -> Bool {
+        let productInfoDictionary = [self.productNameTextField: "Отсутствует название товара!",
+                                     self.productCountTextField: "Отсутствует количество товара!",
+                                     self.productPriceTextField: "Отсутствует цена товара!",
+                                     self.productBarcodeTextField: "Отсутствует штрих код товара!"]
 
-        if self.productNameTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует название товара!")
+        let emptyItem = productInfoDictionary.sorted { $0.key!.tag < $1.key!.tag }.first(where: {key, value in
+            return key?.text == Utilities.blankString
+        })
+        if emptyItem != nil {
+            InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.parentView!, messageToShow: (emptyItem?.value)!)
             return false
+        } else {
+            return true
         }
-        if self.productCountTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует количество товара!")
-            return false
-        }
-        if self.productPriceTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует цена товара!")
-            return false
-        }
-        if self.productBarcodeTextField.text == "" {
-            Utilities.showErrorAlertView(alertTitle: "ТОВАРЫ", alertMessage: "Отсутствует штрих код товара!")
-            return false
-        }
-        
-        return true
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -357,8 +338,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         let deleteAction = UIContextualAction(style: .normal, title:  "Удалить\nтовар", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             
-            let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
-                
+            let deleteProduct: (() -> ()) = {
                 let code = (tableView.cellForRow(at: indexPath) as! ProductsTableViewCell).productBarcodeLabel.text
                 ProductsDBRules.deleteProductByBarcode(code: code!)
                 
@@ -367,7 +347,8 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                 self.productsTableView.endUpdates()
             }
             
-            Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ КАТЕГОРИИ ТОВАРОВ", alertMessage: "Удалить эту категорию?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
+            let deleteProductAlert = DeleteAlertView()
+            deleteProductAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар?", deleteHandler: deleteProduct)
             
             success(true)
         })
@@ -424,7 +405,6 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
     @IBAction func dismissProductView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.productView)
         Utilities.dismissKeyboard(conroller: self)
-        self.isProductViewPresented = false
     }
     
 }

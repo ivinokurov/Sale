@@ -16,7 +16,6 @@ class ReportPersonsTableViewController: UITableViewController {
         
     var parentView: UIView? = nil
     var currentPersonItn: String? = nil
-    var isSessionsViewPresented: Bool = false
     var selectedIndexPath: IndexPath? = nil
 
     override func viewDidLoad() {
@@ -53,23 +52,24 @@ class ReportPersonsTableViewController: UITableViewController {
         self.sessionsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
         self.sessionsView.alpha = 0.0
         
+        self.sessionsView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
             self.sessionsView.alpha = CGFloat(Utilities.alpha)
         }), completion: { (completed: Bool) in
         })
-        
-        self.isSessionsViewPresented = true
-        Utilities.addOverlayView()
-        self.parentView?.addSubview(self.sessionsView)
-        
-        Utilities.makeViewFlexibleAppearance(view: self.sessionsView)
-        self.dismissSessionsButton.tintColor = Utilities.accentColor
         
         if self.selectedIndexPath == nil && (SessionDBRules.getAllSessions()?.count ?? 0) > 0 {
             let indexPath = IndexPath(row: 0, section: 0)
             self.sessionsTableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             self.sessionsTableView.delegate?.tableView!(self.sessionsTableView, didSelectRowAt: indexPath)
         }
+        
+        Utilities.addOverlayView()
+        self.parentView?.addSubview(self.sessionsView)
+        
+        Utilities.makeViewFlexibleAppearance(view: self.sessionsView)
+        self.dismissSessionsButton.tintColor = Utilities.accentColor
     }
     
     func addSessionBarItem() {
@@ -85,7 +85,6 @@ class ReportPersonsTableViewController: UITableViewController {
     
     @IBAction func dismissSessionsView(_ sender: UIButton) {
         Utilities.decorateDismissButtonTap(buttonToDecorate: sender, viewToDismiss: self.sessionsView)
-        self.isSessionsViewPresented = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -129,30 +128,20 @@ class ReportPersonsTableViewController: UITableViewController {
                     }
                 })[indexPath.row] as! NSManagedObject
             
-            Utilities.reportsSplitController!.selectedReportPersonName = person.value(forKeyPath: "name") as? String
-            Utilities.reportsSplitController!.selectedReportPersonRole = person.value(forKeyPath: "role") as? Int16
+            Utilities.reportsSplitController!.reportsSelectedPersonName = person.value(forKeyPath: "name") as? String
+            Utilities.reportsSplitController!.reportsSelectedPersonRole = person.value(forKeyPath: "role") as? Int16
             
             self.updateSalesTable()
         } else {
             SessionDBRules.selectedSession = SessionDBRules.getAllSessions()![indexPath.row]
             
-            let cell = self.sessionsTableView.cellForRow(at: indexPath)
-            cell?.accessoryType = .checkmark
-            cell?.tintColor = Utilities.accentColor
+            self.sessionsTableView.cellForRow(at: indexPath)?.tintColor = Utilities.accentColor
             
-            if self.selectedIndexPath != nil {
-            //    self.dismissSessionsView(UIButton())
-            } else {
+            if self.selectedIndexPath == nil {
                 self.selectedIndexPath = indexPath
             }
+            
             self.tableView.reloadData()
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if tableView == self.sessionsTableView {
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.accessoryType = .none
         }
     }
     
@@ -161,65 +150,68 @@ class ReportPersonsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if tableView == self.sessionsTableView /*&& indexPath == tableView.indexPathForSelectedRow*/ {
-                let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in                    
-                    let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
+        if tableView == self.sessionsTableView {
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
+            
+            let deleteAction = UIContextualAction(style: .normal, title:  "Удалить", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+                let deleteSession: (() -> ()) = {
+                    let session = SessionDBRules.getAllSessions()?[indexPath.row]
+                    SessionDBRules.deleteSession(sessionToDelete: session!)
                         
-                        let session = SessionDBRules.getAllSessions()?[indexPath.row]
-                        SessionDBRules.deleteSession(sessionToDelete: session!)
+                    tableView.beginUpdates()
+                    tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
+                    tableView.endUpdates()
                         
-                        self.sessionsTableView.beginUpdates()
-                        self.sessionsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
-                        self.sessionsTableView.endUpdates()
-                        
-                        if SessionDBRules.getAllSessions()?.count == 0 || indexPath == self.selectedIndexPath {
-                            SessionDBRules.selectedSession = session
-                            self.tableView.reloadData()
-                            self.updateSalesTable()
-                        }
-                    }
+                    SessionDBRules.selectedSession = session
+                    self.tableView.reloadData()
+                    self.updateSalesTable()
+                }
                     
-                    Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ СМЕНЫ", alertMessage: "Удалить эту смену?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
-                    
-                    success(true)
-                })
-                deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
+            let deleteSessionAlert = DeleteAlertView()
+            deleteSessionAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить эту смену?", deleteHandler: deleteSession)
+
+            success(true)
+            })
+            deleteAction.backgroundColor = Utilities.deleteActionBackgroundColor
                 
-                return UISwipeActionsConfiguration(actions: [deleteAction])
+            return UISwipeActionsConfiguration(actions: [deleteAction])
             } else {
             return UISwipeActionsConfiguration(actions: [])
-        }
+            }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if tableView != self.sessionsTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reportsRersonsCellId", for: indexPath)
                 
-            let person = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: { (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String)})[indexPath.row] as! NSManagedObject
-            
-            let name = person.value(forKeyPath: "name") as? String
-            let role = person.value(forKeyPath: "role") as! Int16
-            let itn = person.value(forKeyPath: "itn") as? String
-            
-            cell.textLabel?.text = name
-            cell.detailTextLabel?.text = Utilities.roleNames[Int(role)]!
-            if Int(role) == Utilities.personRole.admin.rawValue {
-                cell.detailTextLabel?.textColor = Utilities.accentColor
-            } else {
-                cell.detailTextLabel?.textColor = UIColor.black
-            }
-            cell.accessoryView?.addSubview(UILabel())
-            
-            Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
-            
-            if self.currentPersonItn != nil && self.currentPersonItn == itn {
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                let allPersons = SessionDBRules.selectedSession?.mutableSetValue(forKey: "persons").allObjects.sorted(by: { (($0 as! NSManagedObject).value(forKeyPath: "name") as! String) < (($1 as! NSManagedObject).value(forKeyPath: "name") as! String)})
                 
-                Utilities.reportsSplitController!.selectedReportPersonName = name
-                Utilities.reportsSplitController!.selectedReportPersonRole = role
+                let cellPerson = allPersons![indexPath.row] as! NSManagedObject
+                
+                let cellPersonName = cellPerson.value(forKeyPath: "name") as? String
+                let cellPersonRole = cellPerson.value(forKeyPath: "role") as! Int16
+                
+                cell.textLabel?.text = cellPersonName
+                cell.detailTextLabel?.text = Utilities.roleNames[Int(cellPersonRole)]!
+                if Int(cellPersonRole) == Utilities.personRole.admin.rawValue {
+                    cell.detailTextLabel?.textColor = Utilities.accentColor
+                } else {
+                    cell.detailTextLabel?.textColor = UIColor.black
+                }
+                cell.accessoryView?.addSubview(UILabel())
+                
+                Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
+                
+                let firstPerson = allPersons![0] as! NSManagedObject
+                let firstPersonName = firstPerson.value(forKeyPath: "name") as? String
+                let firstPersonRole = firstPerson.value(forKeyPath: "role") as! Int16
+                tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+                
+                Utilities.reportsSplitController!.reportsSelectedPersonName = firstPersonName
+                Utilities.reportsSplitController!.reportsSelectedPersonRole = firstPersonRole
                 
                 self.updateSalesTable()
-            }
 
             return cell
             } else {
@@ -235,14 +227,9 @@ class ReportPersonsTableViewController: UITableViewController {
                 
                 if let session = SessionDBRules.selectedSession {
                     if session.value(forKeyPath: "openDate") as? Date == openDate && session.value(forKeyPath: "closeDate") as? Date == closeDate {
-                        cell.accessoryType = .checkmark
                         cell.tintColor = Utilities.accentColor
                         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-                    } else {
-                        cell.accessoryType = .none
                     }
-                } else {
-                    cell.accessoryType = .none
                 }
                 
                 Utilities.setCellSelectedColor(cellToSetSelectedColor: cell)
@@ -252,7 +239,7 @@ class ReportPersonsTableViewController: UITableViewController {
     }
     
     @IBAction func deleteAllSessions(_ sender: UIButton) {
-        let deleteHandler: ((UIAlertAction) -> Void)? = { _ in
+        let deleteAllSessions: (() -> ()) = {
             guard let sessions = SessionDBRules.getAllSessions() else { return }
             sessions.forEach({ session in
                 SessionDBRules.deleteSession(sessionToDelete: session)
@@ -264,20 +251,8 @@ class ReportPersonsTableViewController: UITableViewController {
             self.updateSalesTable()
         }
         if SessionDBRules.getAllSessions()?.count ?? 0 > 0 {
-            Utilities.showTwoButtonsAlert(controllerInPresented: self, alertTitle: "УДАЛЕНИЕ СМЕН", alertMessage: "Удалить все смены?", okButtonHandler: deleteHandler,  cancelButtonHandler: nil)
-        }
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size , with: coordinator)
-        
-        if self.isSessionsViewPresented {
-            self.sessionsView.removeFromSuperview()
-        
-            coordinator.animate(alongsideTransition: { _ in
-                self.parentView?.addSubview(self.sessionsView)
-                self.sessionsView.center = Utilities.getParentViewCenterPoint(parentView: self.parentView)
-            })
+            let deleteAllSessionsAlert = DeleteAlertView()
+            deleteAllSessionsAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все смены?", deleteHandler: deleteAllSessions)
         }
     }
 

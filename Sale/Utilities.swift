@@ -16,6 +16,12 @@ class Utilities: NSObject {
         case admin = 1, merchandiser = 2, cashier = 3
     }
     
+    enum infoViewImageNames: String {
+        case success = "Ok", error = "Error"
+    }
+    
+    static let blankString = ""
+    
     static let colors = [0: UIColor(red: 255/255, green: 59/255, blue: 48/255, alpha: 1.0),
                          3: UIColor(red: 0/255, green: 107/255, blue: 109/255, alpha: 1.0),
                          1: UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1.0),
@@ -62,28 +68,28 @@ class Utilities: NSObject {
     static let inactiveColor: UIColor = UIColor.lightGray.withAlphaComponent(0.3)
     static var isPersonLogout: Bool = false
     
-    class func addOverlayView() {
+    class func addOverlayView(parentView view: UIView? = nil) {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.1 // 0.6
+        self.overlayView.alpha = 0.6
         self.overlayView.backgroundColor = UIColor.darkGray
-        self.mainController!.view.addSubview(self.overlayView)
+        if view == nil {
+            self.mainController!.view.addSubview(self.overlayView)
+        } else {
+            view!.addSubview(self.overlayView)
+        }
     }
     
-    class func addOverlayViewToParent(parent: UIView) {
-        self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
-        self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.1 // 0.6
-        self.overlayView.backgroundColor = UIColor.darkGray
-        parent.addSubview(self.overlayView)
-    }
-    
-    class func addAlertOverlayView() {
+    class func addAlertOverlayView(parentView view: UIView? = nil) {
         self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.alertOverlayView.isOpaque = false
-        self.alertOverlayView.alpha = 0.1 // 0.6
+        self.alertOverlayView.alpha = 0.6
         self.alertOverlayView.backgroundColor = UIColor.darkGray
-        self.mainController!.view.addSubview(self.alertOverlayView)
+        if view == nil {
+            self.mainController!.view.addSubview(self.overlayView)
+        } else {
+            view!.addSubview(self.alertOverlayView)
+        }
     }
     
     class func removeOverlayView() {
@@ -100,14 +106,6 @@ class Utilities: NSObject {
         }), completion: { (completed: Bool) in
             self.alertOverlayView.removeFromSuperview()
         })
-    }
-    
-    class func showOkAlertView(alertTitle title: String, alertMessage message: String) {
-        self.productsSplitController!.initAndShowAlertView(imageName: "Ok", text: message)
-    }
-
-    class func showErrorAlertView(alertTitle title: String, alertMessage message: String) {
-        self.productsSplitController!.initAndShowAlertView(imageName: "Error", text: message)
     }
     
     class func showSimpleAlert(controllerToShowFor controller: UIViewController, messageToShow message: String) {
