@@ -218,7 +218,7 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
         self.productView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.productView.alpha = CGFloat(Utilities.alpha)
+            self.productView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -271,9 +271,9 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                     let originCode = product?.value(forKey: "code") as? String
                     
                     ProductsDBRules.changeProduct(originBarcode: originCode!, productNewName: newName, productNewDesc: newDesc, productNewCount: newCount, productNewMeasure: newMeasure, productNewPrice: newPrice, productNewBarcode: newCode)
-                
-                    self.updateCategoriesTable()
                 }
+            
+            self.updateCategoriesTable()
             
             self.removeProductView()
             self.productsTableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .automatic)
@@ -345,10 +345,11 @@ class ProductsViewController: UIViewController, UITextFieldDelegate, UITableView
                 self.productsTableView.beginUpdates()
                 self.productsTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
                 self.productsTableView.endUpdates()
+                
+                self.updateCategoriesTable()
             }
             
-            let deleteProductAlert = DeleteAlertView()
-            deleteProductAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар?", deleteHandler: deleteProduct)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар?", deleteHandler: deleteProduct)
             
             success(true)
         })

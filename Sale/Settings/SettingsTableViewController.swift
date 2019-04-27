@@ -3,6 +3,7 @@
 //  Sale
 //
 
+
 class BtDevicesDataSource: UITableView, UITableViewDataSource, UITableViewDelegate, CBCentralManagerDelegate  {
     var centralManager: CBCentralManager?
     var peripherals: [CBPeripheral] = []
@@ -98,6 +99,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
     @IBOutlet var accentColorButtons: [UIButton]!
     @IBOutlet weak var dismissColorsViewButton: UIButton!
     @IBOutlet weak var dismissOrgInfoButton: UIButton!
+    
     @IBOutlet var orgInfoView: UIView!
     @IBOutlet weak var orgNameTextField: UITextField!
     @IBOutlet weak var orgNameUnderView: UIView!
@@ -386,7 +388,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.hostNameView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.hostNameView.alpha = CGFloat(Utilities.alpha)
+            self.hostNameView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -409,7 +411,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.btDevicesView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.btDevicesView.alpha = CGFloat(Utilities.alpha)
+            self.btDevicesView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -427,7 +429,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.colorsView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.colorsView.alpha = CGFloat(Utilities.alpha)
+            self.colorsView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -452,7 +454,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         self.orgInfoView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.orgInfoView.alpha = CGFloat(Utilities.alpha)
+            self.orgInfoView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -479,6 +481,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, S
         })
         if emptyItem != nil {
             InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.parentView!, messageToShow: (emptyItem?.value)!)
+            Utilities.dismissKeyboard(conroller: self)
             return false
         } else {
             return true

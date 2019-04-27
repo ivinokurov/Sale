@@ -43,7 +43,7 @@ class ReportPersonsTableViewController: UITableViewController {
         Utilities.customizePopoverView(customizedView: self.sessionsView)
         Utilities.createDismissButton(button: self.dismissSessionsButton)
         
-        self.deleteAllSessionsButton.tintColor = Utilities.accentColor
+        self.deleteAllSessionsButton.tintColor = UIColor.red // Utilities.accentColor
         self.navigationItem.rightBarButtonItem?.tintColor = Utilities.accentColor
         self.tableView.reloadData()
     }
@@ -55,7 +55,7 @@ class ReportPersonsTableViewController: UITableViewController {
         self.sessionsView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.sessionsView.alpha = CGFloat(Utilities.alpha)
+            self.sessionsView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -111,9 +111,9 @@ class ReportPersonsTableViewController: UITableViewController {
     func updateSalesTable() {
         let navController = Utilities.reportsSplitController!.viewControllers[1] as! UINavigationController
         let salesController = navController.topViewController as! ReportSalesViewController
-        if salesController.personSalesTableView != nil {
-            salesController.personSalesTableView.reloadData()
-        }
+        salesController.showWaitView()
+        salesController.personSalesTableView.reloadData()
+        salesController.dismissWaitView()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -168,8 +168,7 @@ class ReportPersonsTableViewController: UITableViewController {
                     self.updateSalesTable()
                 }
                     
-            let deleteSessionAlert = DeleteAlertView()
-            deleteSessionAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить эту смену?", deleteHandler: deleteSession)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить эту смену?", deleteHandler: deleteSession)
 
             success(true)
             })
@@ -251,8 +250,7 @@ class ReportPersonsTableViewController: UITableViewController {
             self.updateSalesTable()
         }
         if SessionDBRules.getAllSessions()?.count ?? 0 > 0 {
-            let deleteAllSessionsAlert = DeleteAlertView()
-            deleteAllSessionsAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все смены?", deleteHandler: deleteAllSessions)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все смены?", deleteHandler: deleteAllSessions)
         }
     }
 

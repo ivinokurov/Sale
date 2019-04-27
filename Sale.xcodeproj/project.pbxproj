@@ -145,8 +145,6 @@
 		EA0FFA31222510AB00703EB0 = {
 			isa = PBXGroup;
 			children = (
-				EA369F08227414060037F2AD /* InfoAlertView.xib */,
-				EA2E34662271794900EA1F82 /* DeleteAlertView.xib */,
 				EA4C7E1D2227B80200425BE8 /* Frameworks */,
 				EA0FFA3C222510AB00703EB0 /* Sale */,
 			);
@@ -174,9 +172,9 @@
 				EA4C7E292227C17900425BE8 /* Cashbox */,
 				EAAA59E8223E03190096D990 /* CommonDBRules.swift */,
 				EA2E34642271704000EA1F82 /* DeleteAlertView.swift */,
-				EA369F0A227418830037F2AD /* InfoAlertView.swift */,
 				EA953032226D7C3B00EDCE9D /* Images.swift */,
 				EA0FFA4C222510AB00703EB0 /* Info.plist */,
+				EA369F0A227418830037F2AD /* InfoAlertView.swift */,
 				EAA776192259DA7400C0D596 /* Launch Screen.storyboard */,
 				EA4C7E112227B60D00425BE8 /* Library */,
 				EA0FFA41222510AB00703EB0 /* Main.storyboard */,
@@ -188,8 +186,18 @@
 				EA74305F224F60D200333B9D /* Settings */,
 				EA0FFA5C22256FF700703EB0 /* Utilities.swift */,
 				EA0FFA3F222510AB00703EB0 /* ViewController.swift */,
+				EA369F0C22746ECF0037F2AD /* Xib */,
 			);
 			path = Sale;
+			sourceTree = "<group>";
+		};
+		EA369F0C22746ECF0037F2AD /* Xib */ = {
+			isa = PBXGroup;
+			children = (
+				EA369F08227414060037F2AD /* InfoAlertView.xib */,
+				EA2E34662271794900EA1F82 /* DeleteAlertView.xib */,
+			);
+			path = Xib;
 			sourceTree = "<group>";
 		};
 		EA4BEB1822489BA3008BFEDD /* AllCategories */ = {

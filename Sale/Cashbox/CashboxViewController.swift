@@ -115,7 +115,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
          self.personView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.personView.alpha = CGFloat(Utilities.alpha)
+            self.personView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -414,8 +414,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
                 
-                let deletePersonAlert = DeleteAlertView()
-                deletePersonAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар из покупки?", deleteHandler: deleteProduct)
+                DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этот товар из покупки?", deleteHandler: deleteProduct)
                 
                 success(true)
             })
@@ -554,8 +553,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         guard let allProducts = PurchaseDBRules.getAllProductsInPurchase() else { return }
         if allProducts.count > 0 {
-            let deleteCategoryAlert = DeleteAlertView()
-            deleteCategoryAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все товары из покупки?", deleteHandler: deleteAllProducts)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить все товары из покупки?", deleteHandler: deleteAllProducts)
         }
     }
     
@@ -601,7 +599,7 @@ class CashboxViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationItem.leftBarButtonItem?.title = self.getSessionStateStr()
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.sessionView.alpha = CGFloat(Utilities.alpha)
+            self.sessionView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
             self.isSessionViewPresented = true
         })

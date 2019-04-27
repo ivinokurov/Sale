@@ -30,7 +30,7 @@ class InfoAlertView: UIView {
             infoView.alpha = 0.0
             
             UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-                infoView.alpha = CGFloat(Utilities.alpha)
+                infoView.alpha = CGFloat(Utilities.popoverViewAlpha)
             }), completion: { (completed: Bool) in
             })
             

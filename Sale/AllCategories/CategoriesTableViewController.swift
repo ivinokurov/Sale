@@ -121,7 +121,7 @@ class CategoriesTableViewController: UITableViewController {
         self.categoryView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
             
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.categoryView.alpha = CGFloat(Utilities.alpha)
+            self.categoryView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -253,8 +253,7 @@ class CategoriesTableViewController: UITableViewController {
                 self.updateProductsTable()
             }
             
-            let deleteCategoryAlert = DeleteAlertView()
-            deleteCategoryAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить эту категорию?", deleteHandler: deleteCategory)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить эту категорию?", deleteHandler: deleteCategory)
             
             success(true)
         })

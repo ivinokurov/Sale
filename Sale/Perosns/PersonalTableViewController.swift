@@ -154,7 +154,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         self.personView.autoresizingMask =  [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         
         UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-            self.personView.alpha = CGFloat(Utilities.alpha)
+            self.personView.alpha = CGFloat(Utilities.popoverViewAlpha)
         }), completion: { (completed: Bool) in
         })
         
@@ -321,6 +321,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
         })
         if emptyItem != nil {
             InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.parentView!, messageToShow: (emptyItem?.value)!)
+            Utilities.dismissKeyboard(conroller: self)
             return false
         } else {
             return true
@@ -415,8 +416,7 @@ class PersonalTableViewController: UITableViewController, UITextFieldDelegate {
                 self.tableView.endUpdates()
             }
             
-            let deletePersonAlert = DeleteAlertView()
-            deletePersonAlert.showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этого сотрудника?", deleteHandler: deletePerson)
+            DeleteAlertView().showDeleteAlertView(parentView: self.parentView!, messageToShow: "Удалить этого сотрудника?", deleteHandler: deletePerson)
             
             success(true)
         })

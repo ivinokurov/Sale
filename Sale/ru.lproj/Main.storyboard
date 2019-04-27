@@ -338,7 +338,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gqs-8a-sX1" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="anU-cK-UPp">
-                    <rect key="frame" x="0.0" y="0.0" width="300" height="230"/>
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SqU-ao-f5o">
@@ -361,18 +361,18 @@
                             <size key="shadowOffset" width="-2" height="-2"/>
                         </label>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sm3-h9-CS6">
-                            <rect key="frame" x="21" y="42" width="120" height="169"/>
+                            <rect key="frame" x="21" y="48" width="120" height="128"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ОТКРЫТЬ СМЕНУ" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z3H-tM-wsj">
-                                    <rect key="frame" x="20" y="14" width="80" height="41"/>
+                                    <rect key="frame" x="20" y="4" width="80" height="48"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="16"/>
                                     <color key="textColor" red="0.02903876826" green="0.19797247649999999" blue="0.34716036919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Purchase" translatesAutoresizingMaskIntoConstraints="NO" id="p8p-8Z-f7i">
-                                    <rect key="frame" x="30" y="76" width="60" height="60"/>
+                                    <rect key="frame" x="30" y="60" width="60" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="tintColor" red="0.0" green="0.56031829119999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <userDefinedRuntimeAttributes>
@@ -394,18 +394,18 @@
                             </connections>
                         </view>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zt6-7A-n52">
-                            <rect key="frame" x="160" y="42" width="120" height="169"/>
+                            <rect key="frame" x="160" y="48" width="120" height="128"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ЗАКРЫТЬ СМЕНУ" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cX-83-abG">
-                                    <rect key="frame" x="20" y="14" width="80" height="41"/>
+                                    <rect key="frame" x="20" y="4" width="80" height="48"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="16"/>
                                     <color key="textColor" red="0.02903876826" green="0.19797247649999999" blue="0.34716036919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Purchase" translatesAutoresizingMaskIntoConstraints="NO" id="yAt-NH-VI8">
-                                    <rect key="frame" x="30" y="76" width="60" height="60"/>
+                                    <rect key="frame" x="30" y="60" width="60" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </imageView>
@@ -1552,37 +1552,37 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Sr-ri-gB5" customClass="AnimatedView" customModule="Sale" customModuleProvider="target">
-                            <rect key="frame" x="42" y="22" width="16" height="16"/>
+                            <rect key="frame" x="44" y="22" width="12" height="12"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.92156862750000001" green="0.47058823529999999" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="8"/>
+                                    <integer key="value" value="6"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y1O-e8-I0n" customClass="AnimatedView" customModule="Sale" customModuleProvider="target">
-                            <rect key="frame" x="12" y="22" width="16" height="16"/>
+                            <rect key="frame" x="14" y="22" width="12" height="12"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.92156862750000001" green="0.47058823529999999" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="8"/>
+                                    <integer key="value" value="6"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2W3-qS-PLp" customClass="AnimatedView" customModule="Sale" customModuleProvider="target">
-                            <rect key="frame" x="72" y="22" width="16" height="16"/>
+                            <rect key="frame" x="74" y="22" width="12" height="12"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.92156862750000001" green="0.47058823529999999" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="8"/>
+                                    <integer key="value" value="6"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <viewLayoutGuide key="safeArea" id="ncD-QZ-IRW"/>
                 </view>
             </objects>
@@ -1696,8 +1696,22 @@
                                 </tableViewCell>
                             </prototypes>
                         </tableView>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dY4-59-bJA" customClass="PurchaseButton" customModule="Sale" customModuleProvider="target">
+                            <rect key="frame" x="507" y="283" width="40" height="40"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="makePurchase:" destination="sVV-Ky-VVb" eventType="touchUpInside" id="gX0-6z-898"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uk2-LP-ERJ">
-                            <rect key="frame" x="20" y="10" width="22" height="22"/>
+                            <rect key="frame" x="517" y="292" width="22" height="22"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="Delete"/>
                             <connections>
@@ -2748,7 +2762,7 @@
                             <size key="shadowOffset" width="-2" height="-2"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="CSJ-GB-C0d" firstAttribute="trailing" secondItem="qGs-WH-NCh" secondAttribute="trailing" constant="6" id="Xpk-Vp-ECN"/>
                         <constraint firstItem="qGs-WH-NCh" firstAttribute="top" secondItem="lJY-Jt-hVd" secondAttribute="top" constant="6" id="dNl-Hb-0LQ"/>

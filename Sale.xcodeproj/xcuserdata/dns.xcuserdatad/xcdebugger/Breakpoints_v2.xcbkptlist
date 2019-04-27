@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sale/Cashbox/CashboxViewController.swift"
-            timestampString = "578042939.6346"
+            timestampString = "578058756.664223"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "542"
-            endingLineNumber = "542"
+            startingLineNumber = "541"
+            endingLineNumber = "541"
             landmarkName = "deletePurchase(_:)"
             landmarkType = "7">
          </BreakpointContent>

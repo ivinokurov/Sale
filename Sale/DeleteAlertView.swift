@@ -42,11 +42,11 @@ class DeleteAlertView: UIView {
             deleteView.alpha = 0.0
             
             UIView.animate(withDuration: Utilities.animationDuration, animations: ({
-                deleteView.alpha = CGFloat(Utilities.alpha)
+                deleteView.alpha = CGFloat(Utilities.popoverViewAlpha)
             }), completion: { (completed: Bool) in
             })
             
-            Utilities.addOverlayView()
+            Utilities.addAlertOverlayView(parentView: view)
             view.addSubview(deleteView)
             
             deleteView.center = Utilities.getParentViewCenterPoint(parentView: view)
@@ -54,7 +54,7 @@ class DeleteAlertView: UIView {
     }
     
     func removeDeleteAlertView() {
-        Utilities.removeOverlayView()
+        Utilities.removeAlertOverlayView()
         
         UIView.animate(withDuration: Utilities.animationDuration, delay: 0.0, options: .curveEaseOut, animations: ({
             self.alpha = 0.0

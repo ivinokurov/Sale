@@ -25,6 +25,7 @@ class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDel
         let personalController = storyboard.instantiateViewController(withIdentifier: "personalControllerId") as! PersonalNavigationController
         let reportsSplitontroller = storyboard.instantiateViewController(withIdentifier: "reportsControllerId") as! ReportsSplitViewController
         let settingsController = storyboard.instantiateViewController(withIdentifier: "settingsControllerId") as! SettingsNavigationController
+        
         Utilities.settingsNavController = settingsController
         
         switch self.getCurrentPersonRole() {
@@ -48,11 +49,9 @@ class MainTabBarController: UITabBarController, EAAccessoryDelegate, DTDeviceDel
     }
     
     func accessoryDidDisconnect(_ accessory: EAAccessory) {
-        Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: accessory.name)
     }
     
     @objc func accessoryConnected(_ notification: NSNotification) {
-        Utilities.showSimpleAlert(controllerToShowFor: self, messageToShow: notification.description)
     }
     
     override func viewWillAppear(_ animated: Bool) {

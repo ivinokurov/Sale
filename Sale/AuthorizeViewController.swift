@@ -158,10 +158,12 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         
         if login == Utilities.blankString {
             InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: "Отсутствует логин!")
+            Utilities.dismissKeyboard(conroller: self)
             return
         }
         if password == Utilities.blankString {
             InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: "Отсутствует пароль!")
+            Utilities.dismissKeyboard(conroller: self)
             return
         }
 
@@ -202,6 +204,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         })
         if emptyItem != nil {
             InfoAlertView().showInfoAlertView(infoTypeImageName: Utilities.infoViewImageNames.error.rawValue, parentView: self.view, messageToShow: (emptyItem?.value)!)
+            Utilities.dismissKeyboard(conroller: self)
             return false
         } else {
             return true
@@ -226,7 +229,7 @@ class AuthorizeViewController: UIViewController, UITextFieldDelegate {
         }), completion: { (completed: Bool) in
         })
         
-        self.adminView.alpha = CGFloat(Utilities.alpha)
+        self.adminView.alpha = CGFloat(Utilities.popoverViewAlpha)
         
     //    Utilities.addOverlayViewToParent(parent: self.view)
         self.view.addSubview(self.adminView)

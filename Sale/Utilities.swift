@@ -11,17 +11,13 @@ class Utilities: NSObject {
     enum measures: Int {
         case items = 1, kilos = 2, liters = 3
     }
-    
     enum personRole: Int {
         case admin = 1, merchandiser = 2, cashier = 3
     }
-    
     enum infoViewImageNames: String {
         case success = "Ok", error = "Error"
     }
-    
-    static let blankString = ""
-    
+   
     static let colors = [0: UIColor(red: 255/255, green: 59/255, blue: 48/255, alpha: 1.0),
                          3: UIColor(red: 0/255, green: 107/255, blue: 109/255, alpha: 1.0),
                          1: UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1.0),
@@ -45,6 +41,11 @@ class Utilities: NSObject {
     
     static let digitsOny = "0123456789"
     static let floatNumbersOnly = "0123456789."
+    static let cornerRadius: CGFloat = 12
+    static let overlayAlpha: CGFloat = 0.6
+    static let animationDuration = 0.4
+    static let popoverViewAlpha = 0.94
+    static let blankString = "" 
     
     static var mainController: MainTabBarController? = nil    
     static var productsSplitController: ProductsSplitViewController? = nil
@@ -52,8 +53,6 @@ class Utilities: NSObject {
     static var settingsNavController: SettingsNavigationController? = nil
     static let deleteActionBackgroundColor = UIColor.red.withAlphaComponent(0.6)
     static let editActionBackgroundColor = UIColor.green.withAlphaComponent(0.6)
-    static let animationDuration = 0.4
-    static let alpha = 0.94
     static let overlayView: UIView = UIView()
     static let alertOverlayView: UIView = UIView()
     static let lightGrayColor: UIColor = UIColor(red: 235/255, green: 235/255, blue: 241/255, alpha: 1.0)
@@ -71,7 +70,7 @@ class Utilities: NSObject {
     class func addOverlayView(parentView view: UIView? = nil) {
         self.overlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height) 
         self.overlayView.isOpaque = false
-        self.overlayView.alpha = 0.6
+        self.overlayView.alpha = self.overlayAlpha
         self.overlayView.backgroundColor = UIColor.darkGray
         if view == nil {
             self.mainController!.view.addSubview(self.overlayView)
@@ -83,7 +82,7 @@ class Utilities: NSObject {
     class func addAlertOverlayView(parentView view: UIView? = nil) {
         self.alertOverlayView.frame = CGRect(x: 0, y: 0, width: 2 * UIScreen.main.bounds.height, height: 2 * UIScreen.main.bounds.height)
         self.alertOverlayView.isOpaque = false
-        self.alertOverlayView.alpha = 0.6
+        self.alertOverlayView.alpha = self.overlayAlpha
         self.alertOverlayView.backgroundColor = UIColor.darkGray
         if view == nil {
             self.mainController!.view.addSubview(self.overlayView)
@@ -108,6 +107,7 @@ class Utilities: NSObject {
         })
     }
     
+    /*
     class func showSimpleAlert(controllerToShowFor controller: UIViewController, messageToShow message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Ок", style: UIAlertAction.Style.destructive, handler: nil))
@@ -122,10 +122,11 @@ class Utilities: NSObject {
         
         controller.present(alert, animated: true, completion: nil)
     }
+    */
     
     class func decorateButton(buttonToDecorate button: UIButton) {
         button.layer.borderWidth = 0.4
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = self.cornerRadius
         button.backgroundColor = self.accentColor
         button.layer.borderColor = self.accentColor.withAlphaComponent(0.2).cgColor
     }
@@ -146,7 +147,7 @@ class Utilities: NSObject {
     class func decorateButtonTap(buttonToDecorate button: UIButton) {
         button.layer.backgroundColor = self.accentColor.withAlphaComponent(0.04).cgColor
         UIView.animate(withDuration:self.animationDuration, animations: ({
-            button.layer.backgroundColor = UIColor.clear.cgColor // UIColor.white.cgColor
+            button.layer.backgroundColor = UIColor.clear.cgColor
         }), completion: { (completed: Bool) in
         })
     }
@@ -191,10 +192,10 @@ class Utilities: NSObject {
     }
     
     class func customizePopoverView(customizedView view: UIView) {
-        view.layer.borderColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
+        view.layer.borderColor = UIColor.darkGray.cgColor
         view.layer.borderWidth = 0.2
-        view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.darkGray.cgColor // Utilities.accentColor.cgColor
+        view.layer.cornerRadius = self.cornerRadius
+        view.layer.shadowColor = UIColor.darkGray.cgColor 
         view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         view.layer.shadowOpacity = 0.2
         view.layer.shadowRadius = 3
